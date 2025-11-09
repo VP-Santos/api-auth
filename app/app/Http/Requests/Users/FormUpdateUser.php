@@ -4,7 +4,7 @@ namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormStoreUsers extends FormRequest
+class FormUpdateUser extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,11 @@ class FormStoreUsers extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                      => 'required|regex:/^[A-Za-z]+$/',
-            'user_name'                 => 'required|string|unique:users,user_name',
-            'email'                     => 'required|email|unique:users,email',
-            'password'                  => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-            'cpf_cnpj'                  => 'required|string|min:11|max:14|regex:/(\d+)/',
-            'access_level'              => 'required|string',
+            'name'                      => 'nullable|regex:/^[A-Za-z]+$/',
+            'user_name'                 => 'nullable|string|unique:users,user_name',
+            'email'                     => 'nullable|email|unique:users,email',
+            'password'                  => 'nullable|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+            'cpf_cnpj'                  => 'nullable|string|min:11|max:14|regex:/(\d+)/',
         ];
     }
 
@@ -35,7 +34,6 @@ class FormStoreUsers extends FormRequest
     {
         // ... (as mensagens continuam as mesmas)
         return [
-            'required'                  => 'O campo :attribute deve ser obrigatório.',
             'unique'                    => 'O :attribute cadastrado já existe.',
             'email'                     => 'O campo :attribute deve ser um endereço de e-mail válido.',
             'user_name.string'          => 'O campo :attribute deve ser um texto.',
@@ -47,5 +45,4 @@ class FormStoreUsers extends FormRequest
             'cpf_cnpj.regex'            => 'deve conter apenas numeros',
         ];
     }
-    
 }

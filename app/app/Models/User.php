@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'user_name',
         'password',
+        'access_level',
+        'cpf_cnpj'
     ];
 
     /**
@@ -33,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'updated_at'
     ];
 
     /**

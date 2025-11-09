@@ -2,90 +2,120 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\FormLoginRequest;
+use App\Http\Requests\Users\FormStoreUsers;
+use App\Http\Requests\Users\FormUpdateUser;
+use App\Models\User;
 use App\Repositories\UserRepository;
-use Exception;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
-class AuthController extends AbstractAuthController
+class AuthController
 {
     private $userRepository;
     private $user;
 
-    public function __construct()
-    {
-        $this->userRepository = new UserRepository(new \App\Models\User);
-        $this->user = Auth::user();
-    }
+    // public function __construct()
+    // {
+    //     $this->userRepository = new UserRepository(new \App\Models\User);
+    // }
 
-    public function storeRequest($userData): object
+
+    public function register(FormStoreUsers $request)
     {
+        $userData = $request->validated();
+
+        // 1. Criptografa a senha antes de criar o usuário
         $userData['password'] = bcrypt($userData['password']);
-        $user = $this->userRepository->create($userData);
-        $token = $this->userRepository->generateToken($user);
 
-        return response()->json([
-            'message' => 'Usuário criado com sucesso',
-            'token' => $token,
-            'user_info' => [
-                'id_register' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'user_name' => $user->user_name,
-                'is_adm' => $user->adm,
-                'created_at' => $user->created_at->format('d/m/Y H:i:s')
-            ]
-        ]);
+        // 2. Cria o usuário no banco de dados
+        $user = User::create($userData);
+
+        // 3. Define as habilidades (abilities) como um array
+        $abilities = [$user->access_level];
+
+        // 4. Cria o token usando o Sanctum
+        $token = $user->createToken('access', $abilities)->plainTextToken;
+
+        // 5. 🎯 GRAVAÇÃO DO TOKEN ATUAL (AQUI ESTÁ A MUDANÇA)
+        $user->current_token = $token;
+        $user->save(); // Salva a instância do usuário com o novo token
+
+        return [
+            'token'  => $token,
+            'credenciais' => $user
+        ];
     }
 
-    public function loginRequest($userData): object
+    public function login(FormLoginRequest $request)
     {
-        $user = $this->userRepository->authenticate($userData);
-        $token = $this->userRepository->generateToken($user);
+        // 1. Encontra o usuário pelo e-mail
+        $user = User::where('email', $request->email)->first();
 
-        return response()->json([
-            'message' => 'Login realizado com sucesso',
-            'token' => $token,
-            'user_info' => [
-                'id_register' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'user_name' => $user->user_name,
-                'is_adm' => $user->adm,
-                'created_at' => $user->created_at->format('d/m/Y H:i:s')
-            ]
-        ]);
-    }
-    public function showRequest():object
-    {
-        $user = $this->user;
-        return response()->json([
-            'id_register' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'user_name' => $user->user_name,
-            'is_adm' => $user->adm,
-            'created_at' => $user->created_at->format('d/m/Y H:i:s')
-        ]);
-    }
-
-    public function logoutRequest(): object
-    {
-        $user = $this->user;
-
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Usuário não autenticado ou token inválido.'
-            ], 401);
+        // 2. Verifica se o usuário existe e se a senha está correta
+        if (!$user || ! Hash::check($request->password, $user->password)) {
+            // Se a autenticação falhar, lança uma exceção
+            // Isso retorna uma resposta 401 ou 422 para o cliente
+            throw ValidationException::withMessages([
+                'error' => ['As credenciais fornecidas estão incorretas.']
+            ]);
         }
 
-        $this->userRepository->logout($user);
+        // 3. Define as habilidades (abilities) como um array
+        // Usando o access_level do usuário logado
+        $abilities = [$user->access_level];
 
+        // 4. Cria o novo token do Sanctum
+        // O primeiro argumento é o nome do token ('access' é comum)
+        $token = $user->createToken('access', $abilities)->plainTextToken;
+
+        // 5. 🎯 ATUALIZAÇÃO DO current_token
+        // Grava o token puro (plaintext) na coluna current_token
+        $user->current_token = $token;
+        $user->save();
+
+        // 6. Retorna o token na resposta
         return response()->json([
-            'message' => 'Logout realizado com sucesso'
+            'token' => $token
         ]);
     }
+    public function update(FormUpdateUser $request) {
+        $userData = $request->validated();
+        
+        $user = $request->user();
 
-    public function updateRequest() {}
+        $user->update($userData);
+
+        return [
+            'user' => $user
+        ];
+    }
+    public function logout(Request $request) {
+        $user = $request->user();
+
+        $user->currentAccessToken()->delete();
+
+        return ['info' => 'usuario deslogado'];
+    }
+    public function show(Request $request)
+    {
+        // 1. O usuário é injetado no objeto Request pelo middleware 'auth:sanctum'.
+        $user = $request->user();
+
+        // Verificação de segurança (Embora não estritamente necessária em rotas protegidas)
+        if (!$user) {
+            // Isso só ocorreria se o middleware falhasse ou não estivesse aplicado
+            return response()->json(['message' => 'Não autenticado'], 401);
+        }
+
+        // 2. Retorna as informações do usuário
+        return response()->json([
+            'id'             => $user->id,
+            'name'           => $user->name,
+            'email'          => $user->email,
+            'access_level'   => $user->access_level,
+            'current_token'  => $user->current_token,
+        ]);
+    }
 }

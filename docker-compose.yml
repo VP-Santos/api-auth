@@ -5,12 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-fpm
+    container_name: api_php
     volumes:
       - ./app/:/var/www/html
     expose:
       - "9000"  # apenas exposto à rede interna
 
   nginx:
+    container_name: api_nginx
     image: nginx:latest
     volumes:
       - ./app/:/var/www/html
@@ -21,6 +23,7 @@ services:
       - php
 
   mysql:
+    container_name: api_mysql
     image: mysql:8.0
     restart: always
     environment:
