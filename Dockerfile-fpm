@@ -1,9 +1,7 @@
 
 FROM php:8.3-fpm
 
-
 WORKDIR /var/www/html
-
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -15,8 +13,6 @@ RUN apt-get update && apt-get install -y \
 
 COPY ./app .
 
-COPY ./app/.env.example ./.env
-
 RUN curl -sS https://getcomposer.org/installer | php -- \
 --install-dir=/usr/bin --filename=composer
 
@@ -26,7 +22,10 @@ RUN composer install
 
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
+RUN mv .env.example .env
+
 EXPOSE ${PORT:-80} ${PROD_PORT:-443} 9000
+
 
 
 CMD ["php-fpm"]
