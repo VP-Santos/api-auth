@@ -1,20 +1,28 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm 
+
+RUN apt-get update && apt-get install -y \ 
+    git \ 
+    unzip \ 
+    libzip-dev \ 
+    libpng-dev \ 
+    libjpeg-dev \ 
+    && docker-php-ext-install pdo_mysql mysqli gd zip 
 
 WORKDIR /var/www/html
 
-RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev libpng-dev libjpeg-dev \
-    && docker-php-ext-install pdo_mysql mysqli gd zip
+COPY ./app . 
 
-RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/local/bin --filename=composer
+# RUN cp .env.example .env 
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN curl -sS https://getcomposer.org/installer | php -- \ 
+    --install-dir=/usr/bin --filename=composer 
 
-COPY ./app .
+# COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer 
 
-EXPOSE 9000
+# RUN composer install 
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache 
+
+EXPOSE ${PORT:-80} ${PROD_PORT:-443} 9000 
+
 CMD ["php-fpm"]
