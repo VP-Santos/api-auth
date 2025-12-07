@@ -15,6 +15,15 @@ RUN apt-get update && apt-get install -y \
 
 COPY ./app .
 
+COPY ./app/.env.example ./.env
+
+RUN curl -sS https://getcomposer.org/installer | php -- \
+--install-dir=/usr/bin --filename=composer
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+RUN composer install
+
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE ${PORT:-80} ${PROD_PORT:-443} 9000
