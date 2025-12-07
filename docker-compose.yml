@@ -9,7 +9,7 @@ services:
     volumes:
       - ./app/:/var/www/html
     expose:
-      - "9000"  # apenas exposto à rede interna
+      - "9000" 
 
   nginx:
     container_name: api_nginx
