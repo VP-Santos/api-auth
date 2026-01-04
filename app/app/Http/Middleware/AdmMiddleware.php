@@ -15,8 +15,13 @@ class AdmMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {   
-        dd('aqui');
-        return $next($request);
+    {
+        $user = $request->user();
+        
+        $response = ($user['access_level'] !== 'adm')
+            ? response()->json(['error' => 'unauthorized', 'message' => 'Unauthorized access'], 403)
+            : $next($request);
+
+        return $response;
     }
 }

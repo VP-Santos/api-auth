@@ -10,19 +10,14 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
-
 RUN curl -sS https://getcomposer.org/installer | php -- \ 
     --install-dir=/usr/bin --filename=composer 
 
-# RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache 
-
-# Copia apenas o entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Configura o entrypoint
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
+    && chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE ${PORT:-80} ${PROD_PORT:-443} 9000 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]

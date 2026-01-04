@@ -1,26 +1,24 @@
 #!/bin/bash
-set -e  # Para sair se algum comando falhar
+set -e  
 
-# Caminho da aplicação
 APP_DIR="/var/www/html"
 
 cd $APP_DIR
 
-# Copiar .env se ainda não existir
-if [ ! -f "$APP_DIR/.env" ]; then
+if [ ! -f "$APP_DIR/.env" ] && [ -f "$APP_DIR/.env.example" ]; then
     echo "Criando .env a partir do .env.example..."
     cp .env.example .env
 fi
 
-# Instalar dependências do Composer
+
 if [ ! -d "$APP_DIR/vendor" ]; then
     echo "Instalando dependências PHP via Composer..."
-    composer install
+    composer install --no-interaction --optimize-autoloader
 fi
 
-# Ajustar permissões
 echo "Ajustando permissões..."
-chmod -R 777 $APP_DIR/storage $APP_DIR/bootstrap/cache
+[ -d "$APP_DIR/storage" ] && chmod -R 777 $APP_DIR/storage
+[ -d "$APP_DIR/bootstrap/cache" ] && chmod -R 777 $APP_DIR/bootstrap/cache
 
-# Executar o comando passado para o container
+echo "Iniciando PHP-FPM..."
 exec "$@"

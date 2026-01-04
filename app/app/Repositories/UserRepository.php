@@ -8,9 +8,24 @@ use Exception;
 
 class UserRepository extends AbstractRepository
 {
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->model = $user;
+        $this->model = new User;
+    }
+
+    public function getAll(){
+        return $this->model->get();
+    }
+
+    public function getUser(array $user){
+        return $this->model->where($user)->first();
+    }
+
+    public function updateUser(array $user, array $fields){
+        return $this->model->where($user)->update($fields);
+    }
+    public function deleteUser(array $user){
+        return $this->model->where($user)->delete();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use App\App\Http\Controllers\Auth\AdmController;
+use App\Http\Controllers\Auth\AdmController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,12 +17,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(AuthController::class)->group(function () {
 
         Route::get('/user', 'show');
-        Route::post('/update', 'update');
-        Route::post('/logout', 'logout');
+        Route::put('/update', 'update');
+        Route::delete('/logout', 'logout');
     });
 
-    Route::controller(AdmController::class)->prefix('/adm')->group(function () {
+    Route::middleware('adm')->controller(AdmController::class)->prefix('/adm')->group(function () {
         Route::get('/all-users', 'getAllUsers');
-        Route::get('/update-user', 'updateUser');
+        Route::get('/get-user/{id}', 'getUser');
+        Route::put('/update-user/{id}', 'updateUser');
+        Route::delete('/delete-user/{id}', 'deleteUser');
     });
 });
