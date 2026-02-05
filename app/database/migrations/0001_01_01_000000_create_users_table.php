@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('status')->default('pending');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('user_name')->unique();
@@ -21,6 +22,9 @@ return new class extends Migration
             $table->string('access_level')->default('basic');
             $table->string('cpf_cnpj');
             $table->string('current_token')->nullable();
+            $table->boolean('is_logged_in')->default(0);
+            $table->boolean('two_factor_enabled')->default(false);
+            $table->text('two_factor_secret')->nullable();
             $table->timestamps();
         });
 

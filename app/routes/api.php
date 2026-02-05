@@ -12,6 +12,9 @@ Route::get('/status', function () {
 Route::post('/register',    [AuthController::class, 'register'])->name('register.auth');
 Route::post('/login',       [AuthController::class, 'login'])->name('login.auth');
 
+Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::post('/verify-twoFactor', [AuthController::class, 'verifyTwoFactor']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(AuthController::class)->group(function () {
