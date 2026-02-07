@@ -9,11 +9,14 @@ Route::get('/status', function () {
     return response()->json(['status' => 'connected'], 200);
 });
 
-Route::post('/register',    [AuthController::class, 'register'])->name('register.auth');
-Route::post('/login',       [AuthController::class, 'login'])->name('login.auth');
+Route::controller(AuthController::class)->group(function () {
 
-Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
-Route::post('/verify-twoFactor', [AuthController::class, 'verifyTwoFactor']);
+    Route::post('/register', 'register')->name('register.auth');
+    Route::post('/login', 'login')->name('login.auth');
+    Route::get('/verify-email',  'verifyEmail');
+    Route::post('/verify-twoFactor',  'verifyTwoFactor');
+    Route::post('/reset-password',  'resetPassword');
+});
 
 Route::middleware('auth:sanctum')->group(function () {
 

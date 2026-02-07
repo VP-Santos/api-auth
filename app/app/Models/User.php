@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
         'access_level',
         'cpf_cnpj',
+        'two_factor_enabled',
+        'two_factor_secret',
     ];
 
     /**
