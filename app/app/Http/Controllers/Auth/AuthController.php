@@ -5,15 +5,24 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
-    FormUpdateUser
+    FormUpdateUser,
+    VerifyTwoFactorRequest
 };
-use App\Mail\{TwoFactorVerify, VerifyEmailMail};
-use App\Models\EmailVerification;
-use App\Models\TwoFactor;
-use Illuminate\Support\Facades\{DB, Hash, Mail, Log};
-use App\Models\User;
-use Exception;
-use Illuminate\Database\QueryException;
+use App\Mail\{
+    TwoFactorVerify,
+    VerifyEmailMail
+};
+use App\Models\{
+    EmailVerification,
+    TwoFactor,
+    User
+};
+use Illuminate\Support\Facades\{
+    DB,
+    Hash,
+    Mail,
+    Log
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -23,7 +32,7 @@ class AuthController
     public function register(FormStoreUsers $request)
     {
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($request, &$verificationToken) {
                 //validação dos campos
                 $userData = $request->validated();
 
@@ -54,6 +63,7 @@ class AuthController
             return response()->json([
                 'success'   => true,
                 'message'  => 'Account created. Please verify your email.',
+                'code_verification' => $verificationToken,
             ], 201);
         } catch (\Illuminate\Database\QueryException $e) {
 
@@ -66,7 +76,7 @@ class AuthController
                 'message' => 'Our database is currently unavailable. Please try again later.',
             ], 503);
         } catch (\Throwable $e) {
-
+            
             Log::error('Unexpected registry error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -87,11 +97,11 @@ class AuthController
                 $user = User::where('email', $request->email)->first();
 
                 if (!$user || !Hash::check($request->password, $user->password)) {
-                    throw new Exception('The credentials provided are incorrect.');
+                    throw new \Exception('The credentials provided are incorrect.');
                 }
 
                 if (!$user->email_verified_at) {
-                    throw new Exception('Email not yet verified');
+                    throw new \Exception('Email not yet verified');
                 }
 
                 $code = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -109,7 +119,7 @@ class AuthController
 
             return response()->json([
                 'success' => true,
-                'message' => 'codigo enviado ao email'
+                'message' => 'codigo enviado ao email',
             ], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('Login DB Error: ' . $e->getMessage());
@@ -118,9 +128,8 @@ class AuthController
                 'success' => false,
                 'message' => 'Error searching the database.',
             ], 503);
-
         } catch (\Throwable $e) {
-           
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -128,12 +137,12 @@ class AuthController
         }
     }
 
-    public function show(Request $request)
+    public function show()
     {
         try {
 
-            $user = $request->user();
-
+            $user = request()->user();
+            
             if (!$user) {
                 return response()->json(['message' => 'Não autenticado'], 401);
             }
@@ -142,12 +151,12 @@ class AuthController
                 'token'  => $user['current_token'],
                 'credenciais' => $user
             ], 200);
-        } catch (QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error searching the database.',
             ], 500);
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error searching the database.',
@@ -168,8 +177,8 @@ class AuthController
             return [
                 'user' => $user
             ];
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Throwable $e) {
         }
     }
     public function logout(Request $request)
@@ -180,67 +189,72 @@ class AuthController
             $user->currentAccessToken()->delete();
 
             return response()->json(['info' => 'usuario deslogado'], 200);
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Throwable $e) {
         }
     }
 
     public function verifyEmail(Request $request)
     {
         try {
+            $token = $request->query('token', null);
 
-            $token = $request->query('token');
-            $user = null;
-            DB::transaction(function () use ($token, $user) {
+            if (!$token) {
+                throw new \Exception('the token not found', 400);
+            }
+
+            DB::transaction(function () use ($token, &$tokenCreated) {
 
                 $record = DB::table('email_verifications')->where('token', $token)->first();
 
-                if (!$record) {
-                    return response()->json(['message' => 'Token inválido ou expirado'], 400);
-                }
-                if ($record->expires_at < now()) {
-                    return response()->json(['message' => 'Token inválido ou expirado'], 400);
+                if (!$record || $record->expires_at < now()) {
+                    throw new \App\Exceptions\Auth\InvalidTokenException();
                 }
 
-                $user = User::find($record->user_id);
+                $user = User::findOrFail($record->user_id);
                 $user->email_verified_at = now();
                 $user->status = 'actived';
-                $user->save();
 
-                // gerar token de login agora que o e-mail foi verificado
                 $abilities = [$user->access_level];
-                $token = $user->createToken('access', $abilities)->plainTextToken;
-                $user->current_token = $token;
+                $tokenCreated = $user->createToken('access', $abilities)->plainTextToken;
+                $user->current_token = $tokenCreated;
                 $user->save();
             });
 
             return response()->json([
-                'message' => 'E-mail verificado com sucesso!',
-                'token' => $token,
-                'credenciais' => $user
-            ], 200);
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+                'success' => true,
+                'message' => 'E-mail verificado com sucesso',
+                'token' => $tokenCreated
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error searching the database.',
+            ], 503);
+        } catch (\Throwable $e) {
+            $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $status);
         }
     }
 
-    public function verifyTwoFactor(Request $request)
+    public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
         try {
+            $fields = $request->validated();
 
-            $email  = $request->input('email', false);
-            $code   = $request->input('code', false);
-
-            $user = DB::table('users')->where('email', '=', $email)->first();
-
-            $twoFactor = DB::table('two_factor')->where('user_id', '=', $user->id)->first();
-
-            if (now() > $twoFactor->expires_at) {
-                throw new Exception('o tempo limite foi expirado');
+            if (!$fields['email'] || !$fields['code']) {
+                throw new \Exception('email e código obrigatórios', 400);
             }
 
-            if ($code != $twoFactor->code) {
-                throw new Exception('codigo divergente');
+            $user = User::where('email', '=', $fields['email'])->firstOrFail();
+
+            $twoFactor = TwoFactor::where('user_id', '=', $user->id)->firstOrFail();
+
+            if (now() > $twoFactor->expires_at || !hash_equals($twoFactor->code, $fields['code'])) {
+                throw new \App\Exceptions\Auth\InvalidTwoFactorCodeException();
             }
 
             $abilities = [$user->access_level];
@@ -248,31 +262,41 @@ class AuthController
             $user->current_token = $token;
             $user->save();
 
-            DB::table('two_factor')->where('user_id', '=', $user->id)->delete();
+            // $twoFactor->delete();
 
             return response()->json([
                 'success' => true,
                 'message' => 'login aceito',
+                'user_id' => $user->id,
                 'token' => $token,
             ], 200);
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error searching the database.',
+            ], 503);
+        } catch (\Throwable $e) {
+            $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $status);
         }
     }
 
     public function resetPassword()
     {
         try {
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Throwable $e) {
         }
     }
 
     public function generateToken()
     {
         try {
-        } catch (QueryException $e) {
-        } catch (Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Throwable $e) {
         }
     }
 }

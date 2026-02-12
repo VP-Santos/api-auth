@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Middleware\AdmMiddleware;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -21,13 +22,29 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->shouldRenderJsonWhen(function ($request, $e) {
+            return true;
+        });
+
         $exceptions->render(function (RouteNotFoundException $e, Request $request) {
-            if ($request->is('api/*') ) {
+            if ($request->is('api/*')) {
                 return response()->json([
-                    'status' => 'error',
+                    'success' => false,
                     'message' => 'Usuário não autenticado.'
                 ], 401);
             }
+        });
+
+        // Captura erros de banco de dados em TODA a aplicação
+        $exceptions->render(function (QueryException $e, $request) {
+
+            Log::error('Erro de Banco de Dados: ' . $e->getMessage());
+
+            return response()->json([
+                'success'    => false,
+                'code'      => 'DATABASE_ERROR',
+                'message'   => 'A technical problem occurred...',
+            ], 500);
         });
     })
     ->create();
