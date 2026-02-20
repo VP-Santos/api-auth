@@ -33,27 +33,22 @@ class AuthController
     {
         try {
             DB::transaction(function () use ($request, &$verificationToken) {
-                //validação dos campos
+
                 $userData = $request->validated();
 
-                //criando dados do usuario
                 $userData['password'] = Hash::make($userData['password']);
                 $userData['email_verified_at'] = null;
 
-                //criando o usuario na tabela
                 $user = User::create($userData);
 
-                //codigo de verificação de email
                 $verificationToken = Str::random(64);
 
-                //table de hash do codigo
                 EmailVerification::create([
                     'user_id' => $user->id,
                     'token' => $verificationToken,
                     'expires_at' => now()->addMinutes(30),
                 ]);
 
-                //enviando email de validação
                 DB::afterCommit(function () use ($user, $verificationToken) {
                     Mail::to($user->email)
                         ->send(new VerifyEmailMail($verificationToken));
@@ -76,7 +71,7 @@ class AuthController
                 'message' => 'Our database is currently unavailable. Please try again later.',
             ], 503);
         } catch (\Throwable $e) {
-            
+
             Log::error('Unexpected registry error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -142,7 +137,7 @@ class AuthController
         try {
 
             $user = request()->user();
-            
+
             if (!$user) {
                 return response()->json(['message' => 'Não autenticado'], 401);
             }
@@ -262,7 +257,6 @@ class AuthController
             $user->current_token = $token;
             $user->save();
 
-            // $twoFactor->delete();
 
             return response()->json([
                 'success' => true,
