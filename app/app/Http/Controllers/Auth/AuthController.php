@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\AuthService;
 use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
@@ -29,164 +30,14 @@ use Illuminate\Support\Str;
 
 class AuthController
 {
-    public function register(FormStoreUsers $request)
+    public function register(FormStoreUsers $request, AuthService $service)
     {
-        try {
-            DB::transaction(function () use ($request, &$verificationToken) {
-
-                $userData = $request->validated();
-
-                $userData['password'] = Hash::make($userData['password']);
-                $userData['email_verified_at'] = null;
-
-                $user = User::create($userData);
-
-                $verificationToken = Str::random(64);
-
-                EmailVerification::create([
-                    'user_id' => $user->id,
-                    'token' => $verificationToken,
-                    'expires_at' => now()->addMinutes(30),
-                ]);
-
-                DB::afterCommit(function () use ($user, $verificationToken) {
-                    Mail::to($user->email)
-                        ->send(new VerifyEmailMail($verificationToken));
-                });
-            });
+            $service->registerUser($request->validated());
 
             return response()->json([
                 'success'   => true,
                 'message'  => 'Account created. Please verify your email.',
-                'code_verification' => $verificationToken,
             ], 201);
-        } catch (\Illuminate\Database\QueryException $e) {
-
-            Log::error('Database error during registration', [
-                'error' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Our database is currently unavailable. Please try again later.',
-            ], 503);
-        } catch (\Throwable $e) {
-
-            Log::error('Unexpected registry error', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error.',
-            ], 500);
-        }
-    }
-    public function login(FormLoginRequest $request)
-    {
-        try {
-            DB::transaction(function () use ($request) {
-
-                $user = User::where('email', $request->email)->first();
-
-                if (!$user || !Hash::check($request->password, $user->password)) {
-                    throw new \Exception('The credentials provided are incorrect.');
-                }
-
-                if (!$user->email_verified_at) {
-                    throw new \Exception('Email not yet verified');
-                }
-
-                $code = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-
-                TwoFactor::create([
-                    'user_id' => $user->id,
-                    'code' => $code,
-                    'expires_at' => now()->addMinutes(2),
-                ]);
-
-                DB::afterCommit(function () use ($user, $code) {
-                    Mail::to($user->email)->send(new TwoFactorVerify($code));
-                });
-            });
-
-            return response()->json([
-                'success' => true,
-                'message' => 'codigo enviado ao email',
-            ], 200);
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('Login DB Error: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 503);
-        } catch (\Throwable $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 401);
-        }
-    }
-
-    public function show()
-    {
-        try {
-
-            $user = request()->user();
-
-            if (!$user) {
-                return response()->json(['message' => 'Não autenticado'], 401);
-            }
-
-            return response()->json([
-                'token'  => $user['current_token'],
-                'credenciais' => $user
-            ], 200);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 500);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 500);
-        }
-    }
-    public function update(FormUpdateUser $request)
-    {
-        try {
-
-            $userData = $request->validated();
-
-            $user = $request->user();
-
-
-            $user->update($userData);
-
-            return [
-                'user' => $user
-            ];
-        } catch (\Illuminate\Database\QueryException $e) {
-        } catch (\Throwable $e) {
-        }
-    }
-    public function logout(Request $request)
-    {
-        try {
-            $user = $request->user();
-
-            $user->currentAccessToken()->delete();
-
-            return response()->json(['info' => 'usuario deslogado'], 200);
-        } catch (\Illuminate\Database\QueryException $e) {
-        } catch (\Throwable $e) {
-        }
     }
 
     public function verifyEmail(Request $request)
@@ -221,11 +72,6 @@ class AuthController
                 'message' => 'E-mail verificado com sucesso',
                 'token' => $tokenCreated
             ]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 503);
         } catch (\Throwable $e) {
             $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
             return response()->json([
@@ -234,6 +80,48 @@ class AuthController
             ], $status);
         }
     }
+
+    public function login(FormLoginRequest $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+
+                $user = User::where('email', $request->email)->first();
+
+                if (!$user || !Hash::check($request->password, $user->password)) {
+                    throw new \Exception('The credentials provided are incorrect.');
+                }
+
+                if (!$user->email_verified_at) {
+                    throw new \Exception('Email not yet verified');
+                }
+
+                $code = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+                TwoFactor::create([
+                    'user_id' => $user->id,
+                    'code' => $code,
+                    'expires_at' => now()->addMinutes(2),
+                ]);
+
+                DB::afterCommit(function () use ($user, $code) {
+                    Mail::to($user->email)->send(new TwoFactorVerify($code));
+                });
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'codigo enviado ao email',
+            ], 200);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 401);
+        }
+    }
+
 
     public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
@@ -264,11 +152,6 @@ class AuthController
                 'user_id' => $user->id,
                 'token' => $token,
             ], 200);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 503);
         } catch (\Throwable $e) {
             $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
             return response()->json([
@@ -278,10 +161,59 @@ class AuthController
         }
     }
 
+    public function show()
+    {
+        try {
+
+            $user = request()->user();
+
+            if (!$user) {
+                return response()->json(['message' => 'Não autenticado'], 401);
+            }
+
+            return response()->json([
+                'token'  => $user['current_token'],
+                'credenciais' => $user
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error searching the database.',
+            ], 500);
+        }
+    }
+    public function update(FormUpdateUser $request)
+    {
+        try {
+
+            $userData = $request->validated();
+
+            $user = $request->user();
+
+
+            $user->update($userData);
+
+            return [
+                'user' => $user
+            ];
+        } catch (\Throwable $e) {
+        }
+    }
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $user->currentAccessToken()->delete();
+
+            return response()->json(['info' => 'usuario deslogado'], 200);
+        } catch (\Throwable $e) {
+        }
+    }
+
     public function resetPassword()
     {
         try {
-        } catch (\Illuminate\Database\QueryException $e) {
         } catch (\Throwable $e) {
         }
     }
@@ -289,7 +221,6 @@ class AuthController
     public function generateToken()
     {
         try {
-        } catch (\Illuminate\Database\QueryException $e) {
         } catch (\Throwable $e) {
         }
     }

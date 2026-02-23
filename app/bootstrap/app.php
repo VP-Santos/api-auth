@@ -35,9 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // Captura erros de banco de dados em TODA a aplicação
         $exceptions->render(function (QueryException $e, $request) {
-
             Log::error('Erro de Banco de Dados: ' . $e->getMessage());
 
             return response()->json([
