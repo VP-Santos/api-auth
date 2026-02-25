@@ -8,6 +8,11 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \ 
     && docker-php-ext-install pdo_mysql mysqli gd zip 
 
+# Instalar PhpRedis
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
+
 WORKDIR /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- \ 
