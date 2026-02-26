@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Actions\CreateEmailVerification;
+use App\Actions\CreateTwoFactorVerification;
+use App\Events\TwoFactorRegistered;
 use App\Events\UserRegistered;
 use App\Models\User;
 use Illuminate\Support\Facades\{
@@ -15,7 +17,7 @@ class AuthService
 {
     public function registerUser(array $data)
     {
-        return DB::transaction(function () use ($data) {
+         DB::transaction(function () use ($data) {
 
             $data['password'] = Hash::make($data['password']);
             $data['email_verified_at'] = null;
@@ -28,8 +30,33 @@ class AuthService
                 UserRegistered::dispatch($user, $token);
             });
 
-            return $user;
         });
     }
-    public function login() {}
+    public function login(array $data)
+    {
+        DB::transaction(function () use ($data) {
+
+            $user = User::where('email', $data['email'])->first();
+
+            if (!$user || !Hash::check($data['password'], $user->password)) {
+                throw new \Exception('incorrect email or password.', 400);
+            }
+
+            if (!$user->email_verified_at) {
+                throw new \Exception('Email not yet verified', 401);
+            }
+
+            $code = app(CreateTwoFactorVerification::class)->execute($user);
+
+            DB::afterCommit(function () use ($user, $code) {
+                TwoFactorRegistered::dispatch($user, $code);
+            });
+        });
+        return '';
+    }
+
+    public function updateUser()
+    {
+        
+    }
 }

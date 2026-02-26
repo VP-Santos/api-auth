@@ -30,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Usuário não autenticado.'
+                    'message' => 'unauthenticated.'
                 ], 401);
             }
         });
@@ -40,7 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return response()->json([
                 'success'    => false,
-                'code'      => 'DATABASE_ERROR',
+                'code'      => 'database_error',
                 'message'   => 'A technical problem occurred...',
             ], 500);
         });
