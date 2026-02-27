@@ -59,4 +59,9 @@ class AuthService
     {
         dd($fieldsUpdate, $user);
     }
+
+    public function resetPassword()
+    {
+        
+    }
 }

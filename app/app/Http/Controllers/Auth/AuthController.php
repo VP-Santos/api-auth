@@ -41,16 +41,12 @@ class AuthController
     }
     public function register(FormStoreUsers $request)
     {
-        try {
+        $this->authService->registerUser($request->validated());
 
-            $this->authService->registerUser($request->validated());
-
-            return response()->json([
-                'success'   => true,
-                'message'  => 'Account created. Please verify your email.',
-            ], 201);
-        } catch (\Throwable $e) {
-        }
+        return response()->json([
+            'success'   => true,
+            'message'  => 'Account created. Please verify your email.',
+        ], 201);
     }
 
     public function verifyEmail(Request $request)
@@ -80,7 +76,6 @@ class AuthController
         ], 200);
     }
 
-
     public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
         $response = (object) $this->verifyService->verifyTwoFactor($request->validated());
@@ -95,49 +90,40 @@ class AuthController
 
     public function show()
     {
-        try {
+        $user = request()->user();
 
-            $user = request()->user();
-
-            return response()->json([
-                'current_token'  => $user['current_token'],
-                'credenciais' => $user
-            ], 200);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error searching the database.',
-            ], 500);
-        }
+        return response()->json([
+            'current_token'  => $user['current_token'],
+            'credenciais' => $user
+        ], 200);
     }
     public function update(FormUpdateUser $request)
     {
         $this->authService->updateUser($request->validated(), $request->user());
         $userData = $request->validated();
+
+        return response()->json(
+            [
+                'success' => true,
+                'message' => 'Data updated successfully.'
+            ],
+            200
+        );
     }
     public function logout(Request $request)
     {
-        try {
-            $user = $request->user();
+        $user = $request->user();
 
-            $user->currentAccessToken()->delete();
+        $user->currentAccessToken()->delete();
 
-            return response()->json(['info' => 'user logged out'], 200);
-        } catch (\Throwable $e) {
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'user logged out'
+        ], 200);
     }
 
-    public function resetPassword()
-    {
-        try {
-        } catch (\Throwable $e) {
-        }
-    }
+    public function resetPassword() {}
 
-    public function refreshToken()
-    {
-        try {
-        } catch (\Throwable $e) {
-        }
-    }
+    public function refreshAccessToken() {}
+    public function resendCodeEmail() {}
 }
