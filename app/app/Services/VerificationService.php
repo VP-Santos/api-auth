@@ -12,7 +12,9 @@ class VerificationService
     public function verifyTokenEmail(string $token)
     {
         $tokenCreated = null;
-        DB::transaction(function () use ($token) {
+
+        DB::transaction(function () use ($token, &$tokenCreated) {
+
             $record = EmailVerification::where('token', $token)->first();
 
             if (!$record || $record->expires_at < now()) {
@@ -28,6 +30,7 @@ class VerificationService
             $user->current_token = $tokenCreated;
             $user->save();
         });
+
         return $tokenCreated;
     }
 
@@ -41,7 +44,7 @@ class VerificationService
             ->firstOrFail();
 
         if (now() > $twoFactor->expires_at || !hash_equals($twoFactor->code, $data['code'])) {
-            throw new \App\Exceptions\Auth\InvalidTwoFactorCodeException();
+            throw new \App\Exceptions\Auth\InvalidTwoFactorCodeException;
         }
 
         $abilities = [$user->access_level];
@@ -51,8 +54,7 @@ class VerificationService
 
         return [
             'user' => $user,
-            'token',
-            $token
+            'token' => $token
         ];
     }
 }

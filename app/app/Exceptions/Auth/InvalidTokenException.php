@@ -11,8 +11,7 @@ class InvalidTokenException extends Exception
         return response()->json([
             'success'       => false,
             'code'          => 'TOKEN_EXPIRED',
-            'message'       => 'O seu token de acesso expirou e não é mais válido.',
-            'help'          => 'Obtenha um novo token através da rota de refresh ou login.'
+            'message'       => 'Your access token has expired and is no longer valid.',
         ], 401);
     }
 }

@@ -55,71 +55,42 @@ class AuthController
 
     public function verifyEmail(Request $request)
     {
-        try {
-            $token = $request->query('token', null);
+        $token = $request->query('token', null);
 
-            if (!$token) {
-                throw new \Exception('the token not found', 400);
-            }
-
-            $tokenCreated = $this->verifyService->verifyTokenEmail($token);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'successful verification',
-                'token' => $tokenCreated
-            ]);
-        } catch (\Throwable $e) {
-            $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $status);
+        if (!$token) {
+            throw new \Exception('the token not found', 400);
         }
+
+        $tokenCreated = $this->verifyService->verifyTokenEmail($token);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'successful verification',
+            'token' => $tokenCreated
+        ]);
     }
 
     public function login(FormLoginRequest $request)
     {
-        try {
+        $this->authService->login($request->validated());
 
-            $this->authService->login($request->validated());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Code sent, please check your email.',
-            ], 200);
-        } catch (\Throwable $e) {
-            $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
-
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => $e->getMessage(),
-                ],
-                $status
-            );
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Code sent, please check your email.',
+        ], 200);
     }
 
 
     public function verifyTwoFactor(VerifyTwoFactorRequest $request)
     {
-        try {
-            $response = (object) $this->verifyService->verifyTwoFactor($request->validated());
+        $response = (object) $this->verifyService->verifyTwoFactor($request->validated());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'successful login',
-                'user_id' => $response->user->id,
-                'token' => $response->token,
-            ], 200);
-        } catch (\Throwable $e) {
-            $status = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $status);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'successful login',
+            'user_id' => $response->user->id,
+            'token' => $response->token,
+        ], 200);
     }
 
     public function show()
@@ -129,7 +100,7 @@ class AuthController
             $user = request()->user();
 
             return response()->json([
-                'token'  => $user['current_token'],
+                'current_token'  => $user['current_token'],
                 'credenciais' => $user
             ], 200);
         } catch (\Throwable $e) {
@@ -141,20 +112,8 @@ class AuthController
     }
     public function update(FormUpdateUser $request)
     {
-        try {
-
-            $userData = $request->validated();
-
-            $user = $request->user();
-
-
-            $user->update($userData);
-
-            return [
-                'user' => $user
-            ];
-        } catch (\Throwable $e) {
-        }
+        $this->authService->updateUser($request->validated(), $request->user());
+        $userData = $request->validated();
     }
     public function logout(Request $request)
     {

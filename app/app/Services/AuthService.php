@@ -39,11 +39,11 @@ class AuthService
             $user = User::where('email', $data['email'])->first();
 
             if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw new \Exception('incorrect email or password.', 400);
+                throw new \App\Exceptions\Auth\LoginException;
             }
 
             if (!$user->email_verified_at) {
-                throw new \Exception('Email not yet verified', 401);
+                throw new \App\Exceptions\Auth\EmailNotVerifiedException;
             }
 
             $code = app(CreateTwoFactorVerification::class)->execute($user);
@@ -55,8 +55,8 @@ class AuthService
         return '';
     }
 
-    public function updateUser()
+    public function updateUser(array $fieldsUpdate, User $user)
     {
-        
+        dd($fieldsUpdate, $user);
     }
 }

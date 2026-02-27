@@ -10,11 +10,11 @@ class CreateEmailVerification
 {
     public function execute(User $user): string
     {
-        $plainToken = Str::random(64);
+        $plainToken = hash('sha256',Str::random(64));
 
         EmailVerification::create([
             'user_id' => $user->id,
-            'token' => hash('sha256', $plainToken),
+            'token' =>  $plainToken,
             'expires_at' => now()->addMinutes(30),
         ]);
 

@@ -4,13 +4,13 @@ namespace App\Exceptions\Auth;
 
 use Exception;
 
-class EmailNotVerifiedException extends Exception
+class LoginException extends Exception
 {
     public function render()
     {
         return response()->json([
             'success'       => false,
-            'message'       => 'Your Email not yet verified.',
-        ], 401);
+            'message'       => 'incorrect email or password.',
+        ], 400);
     }
 }
