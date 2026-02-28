@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Actions\CreateEmailVerification;
+use App\Actions\CreatePasswordReset;
 use App\Actions\CreateTwoFactorVerification;
+use App\Events\ForgotPassword;
 use App\Events\TwoFactorRegistered;
 use App\Events\UserRegistered;
 use App\Models\User;
@@ -17,7 +19,7 @@ class AuthService
 {
     public function registerUser(array $data)
     {
-         DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data) {
 
             $data['password'] = Hash::make($data['password']);
             $data['email_verified_at'] = null;
@@ -29,7 +31,6 @@ class AuthService
             DB::afterCommit(function () use ($user, $token) {
                 UserRegistered::dispatch($user, $token);
             });
-
         });
     }
     public function login(array $data)
@@ -55,13 +56,22 @@ class AuthService
         return '';
     }
 
-    public function updateUser(array $fieldsUpdate, User $user)
+    public function updateUser(array $dataUpdate, User $user)
     {
-        dd($fieldsUpdate, $user);
+        dd($dataUpdate, $user);
     }
 
-    public function resetPassword()
+    public function ForgetPassword(array $data)
     {
-        
+        DB::transaction(function () use ($data) {
+
+            $user = User::where('email', $data['email'])->firstOrFail();
+
+            $token = app(CreateEmailVerification::class)->execute($user);
+    
+            DB::afterCommit(function () use ($user, $token) {
+                ForgotPassword::dispatch($user, $token);
+            });
+        });
     }
 }

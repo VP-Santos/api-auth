@@ -44,12 +44,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message'   => 'A technical problem occurred...',
             ], 500);
         });
-
-        $exceptions->render(function(Throwable $e){
-            return response()->json([
-                'success'    => false,
-                'message'   => 'Internal Server Error',
-            ], 500);
-        });
+        
     })
     ->create();

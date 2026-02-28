@@ -7,7 +7,9 @@ use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
     FormUpdateUser,
-    VerifyTwoFactorRequest
+    VerifyTwoFactorRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest
 };
 use App\Services\VerificationService;
 use Illuminate\Http\Request;
@@ -106,7 +108,10 @@ class AuthController
         ], 200);
     }
 
-    public function resetPassword() {}
+    public function forgotPassword(ForgotPasswordRequest $request) {
+        $this->authService->ForgetPassword($request->validated());
+    }
+    public function resetPassword(ResetPasswordRequest $request) {}
 
     public function refreshAccessToken() {}
     public function resendCodeEmail() {}

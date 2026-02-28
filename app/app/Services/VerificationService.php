@@ -57,4 +57,8 @@ class VerificationService
             'token' => $token
         ];
     }
+    public function verifyResetPassword(array $data)
+    {
+
+    }
 }
