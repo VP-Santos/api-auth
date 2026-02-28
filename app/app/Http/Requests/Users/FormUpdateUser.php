@@ -34,15 +34,15 @@ class FormUpdateUser extends FormRequest
     {
         // ... (as mensagens continuam as mesmas)
         return [
-            'unique'                    => 'O :attribute cadastrado já existe.',
-            'email'                     => 'O campo :attribute deve ser um endereço de e-mail válido.',
-            'user_name.string'          => 'O campo :attribute deve ser um texto.',
-            'access_level.string'       => 'O campo :attribute deve ser um texto.',
-            'password.regex'            => 'A :attribute deve ter no mínimo 8 caracteres, incluindo letra maiúscula, letra minúscula, número e caracter especial.',
-            'name.regex'                => 'O campo :attribute deve conter apenas letras.',
-            'cpf_cnpj.min'              => 'deve conter no minimo 11 digitos',
-            'cpf_cnpj.max'              => 'deve conter no maximo 14 digitos',
-            'cpf_cnpj.regex'            => 'deve conter apenas numeros',
+            'unique'                    => 'The registered :attribute already exists.',
+            'email'                     => 'The :attribute field must be a valid email address.',
+            'user_name.string'          => 'The :attribute field must be a string.',
+            'access_level.string'       => 'The :attribute field must be a string.',
+            'password.regex'            => 'The :attribute must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.',
+            'name.regex'                => 'The :attribute field must contain only letters.',
+            'cpf_cnpj.min'              => 'Must contain at least 11 digits.',
+            'cpf_cnpj.max'              => 'Must contain a maximum of 14 digits.',
+            'cpf_cnpj.regex'            => 'Must contain only numbers.',
         ];
     }
 }

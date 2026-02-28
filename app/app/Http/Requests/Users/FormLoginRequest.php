@@ -22,16 +22,16 @@ class FormLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required'
+            'email'     => 'required|email',
+            'password'  => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'required' => 'o :attribute deve ser obrigatorio',
-            'email' => 'o :attribute deve ser um endereço de email válido',
+            'required'  => 'The :attribute field is required.',
+            'email'     => 'The :attribute field must be a valid email address.',
         ];
     }
 }

@@ -9,24 +9,8 @@ use App\Http\Requests\Users\{
     FormUpdateUser,
     VerifyTwoFactorRequest
 };
-use App\Mail\{
-    TwoFactorVerify,
-    VerifyEmailMail
-};
-use App\Models\{
-    EmailVerification,
-    TwoFactor,
-    User
-};
 use App\Services\VerificationService;
-use Illuminate\Support\Facades\{
-    DB,
-    Hash,
-    Mail,
-    Log
-};
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 
 class AuthController
@@ -49,9 +33,9 @@ class AuthController
         ], 201);
     }
 
-    public function verifyEmail(Request $request)
+    public function verifyEmail()
     {
-        $token = $request->query('token', null);
+        $token = request()->query('token', null);
 
         if (!$token) {
             throw new \Exception('the token not found', 400);
@@ -110,9 +94,9 @@ class AuthController
             200
         );
     }
-    public function logout(Request $request)
+    public function logout()
     {
-        $user = $request->user();
+        $user = request()->user();
 
         $user->currentAccessToken()->delete();
 
