@@ -1,51 +1,120 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Código de verificação</title>
+    <title>Two-Factor Verification</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            margin: 0 0 12px;
+            font-size: 22px;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        .description {
+            margin: 0 0 24px;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .code-box {
+            margin: 0 auto 24px;
+            padding: 16px 24px;
+            background-color: #f9fafb;
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            color: #0f172a;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .note {
+            margin: 0 0 8px;
+            font-size: 13px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .extra-note {
+            margin: 24px 0 0;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #cbd5e1;
+            text-align: center;
+        }
+    </style>
 </head>
 
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
+<body>
+    <table class="wrapper">
         <tr>
             <td align="center">
-                <table width="100%" max-width="480" cellpadding="0" cellspacing="0"
-                    style="background-color:#ffffff; border-radius:8px; padding:32px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
-                    <tr>
-                        <td align="center">
-                            <h1 style="margin:0 0 12px; font-size:22px; color:#111827;">
-                                Verificação em duas etapas
-                            </h1>
 
-                            <p style="margin:0 0 24px; font-size:16px; color:#4b5563; line-height:1.5;">
-                                Use o código abaixo para concluir seu login com segurança.
+                <table class="card">
+                    <tr>
+                        <td>
+
+                            <h1 class="title">Two-Factor Verification</h1>
+
+                            <p class="description">
+                                Use the code below to complete your secure login.
                             </p>
 
-                            <div style="margin:0 auto 24px; padding:16px 24px; background-color:#f9fafb;
-                                        border:1px dashed #d1d5db; border-radius:8px;
-                                        font-size:28px; font-weight:bold; letter-spacing:6px; color:#111827;">
+                            <div class="code-box">
                                 {{ $twoFactor }}
                             </div>
 
-                            <p style="margin:0 0 8px; font-size:14px; color:#6b7280;">
-                                Este código expira em alguns minutos.
+                            <p class="note">
+                                This code will expire in a few minutes.
                             </p>
 
-                            <p style="margin:24px 0 0; font-size:14px; color:#6b7280; line-height:1.5;">
-                                Se você não solicitou este código, ignore este e-mail ou
-                                recomendamos alterar sua senha.
+                            <p class="extra-note">
+                                If you did not request this code, you can safely ignore this email or we recommend changing your password.
                             </p>
+
                         </td>
                     </tr>
                 </table>
 
-                <p style="margin-top:16px; font-size:12px; color:#9ca3af;">
-                    © {{ date('Y') }} • Segurança em primeiro lugar
+                <p class="footer">
+                    © {{ date('Y') }} • Security first
                 </p>
+
             </td>
         </tr>
     </table>
 </body>
-
 </html>

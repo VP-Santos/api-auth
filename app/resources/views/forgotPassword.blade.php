@@ -1,46 +1,127 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Redefinição de senha</title>
+    <title>Password Reset</title>
+    <link rel="stylesheet" href="email.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            margin: 0 0 12px;
+            font-size: 24px;
+            color: #0f172a;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .note {
+            margin: 30px 0 0;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .expiry {
+            margin: 16px 0 0;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #cbd5e1;
+            text-align: center;
+        }
+    </style>
 </head>
 
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
+<body>
+
+    <table class="wrapper">
         <tr>
             <td align="center">
-                <table width="100%" max-width="480" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; padding:32px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+                <table class="card">
                     <tr>
                         <td align="center">
-                            <h1 style="margin:0 0 16px; font-size:24px; color:#111827;">
-                                Redefinir senha 🔐
+
+                            <h1 class="title">
+                                Reset Your Password 🔐
                             </h1>
 
-                            <p style="margin:0 0 24px; font-size:16px; color:#4b5563; line-height:1.5;">
-                                Recebemos uma solicitação para redefinir sua senha.<br>
-                                Clique no botão abaixo para criar uma nova senha.
+                            <p class="description">
+                                We received a request to reset your password.
+                                Click the button below to create a new one.
                             </p>
 
-                            <!-- Botão -->
-                            <a href="{{ route('reset-view') }}" 
-                               style="display:inline-block; padding:12px 24px; background-color:#111827; color:#ffffff; text-decoration:none; border-radius:6px; font-size:16px; font-weight:bold;">
-                                Redefinir senha
+                            <a href="{{ $link }}" class="button">
+                                Reset Password
                             </a>
 
-                            <p style="margin:24px 0 0; font-size:14px; color:#6b7280; line-height:1.5;">
-                                Se você não solicitou a redefinição, pode ignorar este e-mail com segurança.
+                            <p class="note">
+                                If you did not request a password reset,
+                                you can safely ignore this email.
                             </p>
+
+                            <p class="expiry">
+                                For security reasons, this link may expire.
+                            </p>
+
                         </td>
                     </tr>
                 </table>
 
-                <p style="margin-top:16px; font-size:12px; color:#9ca3af;">
-                    © {{ date('Y') }} • Todos os direitos reservados
+                <p class="footer">
+                    © {{ date('Y') }} • Security first
                 </p>
+
             </td>
         </tr>
     </table>
+
 </body>
 
 </html>

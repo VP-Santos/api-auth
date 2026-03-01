@@ -19,7 +19,8 @@ class ForgotPassword extends Mailable
 
     public function build()
     {
+        $link = url(config('domains.reset') . '?token=' . $this->forgotToken);
         return $this->subject('Verifique seu e-mail')
-                    ->view('forgotPassword');
+                    ->view('forgotPassword', ['link' => $link]);
     }
 }

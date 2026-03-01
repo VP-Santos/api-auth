@@ -1,44 +1,110 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Verifique seu e-mail</title>
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .title {
+            margin: 0 0 16px;
+            font-size: 24px;
+            color: #0f172a;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .note {
+            margin: 32px 0 0;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #cbd5e1;
+            text-align: center;
+        }
+    </style>
 </head>
 
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:40px 0;">
+<body>
+    <table class="wrapper">
         <tr>
             <td align="center">
-                <table width="100%" max-width="480" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; padding:32px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+                <table class="card">
                     <tr>
-                        <td align="center">
-                            <h1 style="margin:0 0 16px; font-size:24px; color:#111827;">
-                                Bem-vindo 👋
-                            </h1>
-                            <p style="margin:0 0 24px; font-size:16px; color:#4b5563; line-height:1.5;">
-                                Falta só um passo para ativar sua conta.<br>
-                                Clique no botão abaixo para confirmar seu e-mail.
+                        <td>
+
+                            <h1 class="title">Welcome 👋</h1>
+
+                            <p class="description">
+                                Just one more step to activate your account.<br>
+                                Click the button below to verify your email.
                             </p>
 
-                            <a href="{{ $verificationLink }}"
-                                style="display:inline-block; padding:14px 28px; background-color:#2563eb; color:#ffffff; text-decoration:none; font-size:16px; font-weight:bold; border-radius:6px;">
-                                Verificar e-mail
+                            <a href="{{ $verificationLink }}" class="button">
+                                Verify Email
                             </a>
 
-                            <p style="margin:32px 0 0; font-size:14px; color:#6b7280; line-height:1.5;">
-                                Se você não criou uma conta, pode ignorar este e-mail com segurança.
+                            <p class="note">
+                                If you did not create an account, you can safely ignore this email.
                             </p>
+
                         </td>
                     </tr>
                 </table>
 
-                <p style="margin-top:16px; font-size:12px; color:#9ca3af;">
-                    © {{ date('Y') }} • Todos os direitos reservados
+                <p class="footer">
+                    © {{ date('Y') }} • All rights reserved
                 </p>
+
             </td>
         </tr>
     </table>
 </body>
-
 </html>
