@@ -22,7 +22,7 @@ class VerifyEmailMail extends Mailable
         return $this->subject('Verifique seu e-mail')
                     ->view('email')
                     ->with([
-                        'verificationLink' => url("/api/verify-email?token={$this->token}")
+                        'tokenVerifyEmail' => $this->token
                     ]);
     }
 }

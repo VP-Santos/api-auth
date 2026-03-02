@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Verify Your Email</title>
@@ -86,11 +87,9 @@
                                 Just one more step to activate your account.<br>
                                 Click the button below to verify your email.
                             </p>
-
-                            <a href="{{ $verificationLink }}" class="button">
+                            <a href="{{ route('homepage', ['token' => $tokenVerifyEmail]) }}" class="button">
                                 Verify Email
                             </a>
-
                             <p class="note">
                                 If you did not create an account, you can safely ignore this email.
                             </p>
@@ -107,4 +106,5 @@
         </tr>
     </table>
 </body>
+
 </html>

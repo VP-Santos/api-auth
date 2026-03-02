@@ -1,12 +1,16 @@
 FROM php:8.3-fpm 
 
-RUN apt-get update && apt-get install -y \ 
-    git \ 
-    unzip \ 
-    libzip-dev \ 
-    libpng-dev \ 
-    libjpeg-dev \ 
-    && docker-php-ext-install pdo_mysql mysqli gd zip 
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends --fix-missing \
+    git \
+    unzip \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    && docker-php-ext-install pdo_mysql mysqli gd zip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar PhpRedis
 RUN pecl install redis \

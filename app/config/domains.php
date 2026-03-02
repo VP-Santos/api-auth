@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'reset' => '/reset'
+    'url' => 'http://localhost:8080',
+    'reset' => '/reset',
+    'home' => '/'
 ];

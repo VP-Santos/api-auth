@@ -26,7 +26,6 @@ class FormStoreUsers extends FormRequest
             'user_name'                 => 'required|string|unique:users,user_name',
             'email'                     => 'required|email|unique:users,email',
             'password'                  => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-            'cpf_cnpj'                  => 'required|string|min:11|max:14|regex:/(\d+)/',
             'access_level'              => 'required|string',
         ];
     }
@@ -42,9 +41,6 @@ class FormStoreUsers extends FormRequest
             'access_level.string'       => 'The :attribute field must be a string.',
             'password.regex'            => 'The :attribute must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.',
             'name.regex'                => 'The :attribute field must contain only letters.',
-            'cpf_cnpj.min'              => 'Must contain at least 11 digits.',
-            'cpf_cnpj.max'              => 'Must contain a maximum of 14 digits.',
-            'cpf_cnpj.regex'            => 'Must contain only numbers.',
         ];
     }
 }
