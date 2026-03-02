@@ -12,16 +12,6 @@
 <body>
     <div>
         <label>
-            Name:
-            <input type="text" id="full_name" placeholder="Enter your name" autocomplete="off">
-        </label>
-        <br>
-        <label>
-            Username:
-            <input type="text" id="login_user" placeholder="Enter your username" autocomplete="new-username">
-        </label>
-        <br>
-        <label>
             Email:
             <input type="email" id="user_email" placeholder="Enter your email" autocomplete="email">
         </label>
@@ -31,32 +21,26 @@
             <input type="password" id="user_password" placeholder="Enter your password" autocomplete="new-password">
         </label>
         <br>
-        <label>
-            Access Level:
-            <input type="text" id="access_level" placeholder="Enter access level" autocomplete="off">
-        </label>
     </div>
-    <button id="send_register">Send</button>
+    <button id="btn">Send</button>
     <a href="{{ route('forgotPassword.web') }}">esqueceu a senha?</a>
+    <a href="{{ route('homepage') }}">retornar</a>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const button = document.getElementById('send_register');
+            const btn = document.getElementById('btn');
 
-            button.addEventListener('click', function() {
-                // Captura os valores
+            btn.addEventListener('click', function() {
+                
                 const data = {
-                    name: document.getElementById('full_name').value,
-                    user_name: document.getElementById('login_user').value,
                     email: document.getElementById('user_email').value,
                     password: document.getElementById('user_password').value,
-                    access_level: document.getElementById('access_level').value
                 };
 
-                // Pega o token CSRF
+                
                 const token = "{{ csrf_token() }}"
-                const url = "{{ route('register.auth') }}";
-                // Envia via fetch para a rota Laravel
-                fetch(url, { // ou a rota que você criou
+                const url = "{{ route('login.auth') }}";
+                
+                fetch(url, { 
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -64,11 +48,11 @@
                         },
                         body: JSON.stringify(data)
                     })
-                    .then(response => response.json()) // Laravel normalmente retorna JSON
+                    .then(response => response.json()) 
                     .then(result => {
                         console.log('Success:', result);
                         alert(result.message || 'Registration successful');
-                        window.location.href = '/';
+                        // window.location.href = '/';
                     })
                     .catch(error => {
                         console.error('Error:', error);

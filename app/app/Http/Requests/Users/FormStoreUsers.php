@@ -43,4 +43,13 @@ class FormStoreUsers extends FormRequest
             'name.regex'                => 'The :attribute field must contain only letters.',
         ];
     }
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = response()->json([
+            'success' => false,
+            'message' => $validator->errors(),
+        ], 422);
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
 }
