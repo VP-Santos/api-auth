@@ -9,16 +9,25 @@ class WebController
     public function home(Request $request)
     {
         $token = $request->query('token', null);
-        return view('wellcome');
+        return view('web.wellcome');
         // dd($token);
     }
 
     public function register()
     {
-        return view('register');
+        return view('web.register');
     }
+
     public function login()
     {
-        // return view('login');
+        return view('web.login');
+    }
+    public function forgotPassword()
+    {
+        return view('web.forgotPassword');
+    }
+    public function resetPassword()
+    {
+        return view('web.resetPassword');
     }
 }
