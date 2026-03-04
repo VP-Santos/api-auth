@@ -2,12 +2,19 @@
 
 namespace App\Services;
 
-use App\Actions\CreateEmailVerification;
-use App\Actions\CreatePasswordReset;
-use App\Actions\CreateTwoFactorVerification;
-use App\Events\ForgotPassword;
-use App\Events\TwoFactorRegistered;
-use App\Events\UserRegistered;
+use App\Actions\{
+    CreateEmailVerification,
+    CreateTwoFactorVerification
+};
+use App\Events\{
+    ForgotPassword,
+    TwoFactorRegistered,
+    UserRegistered
+};
+use App\Exceptions\Auth\{
+    EmailNotVerifiedException,
+    LoginException
+};
 use App\Models\User;
 use Illuminate\Support\Facades\{
     DB,
@@ -40,11 +47,11 @@ class AuthService
             $user = User::where('email', $data['email'])->first();
 
             if (!$user || !Hash::check($data['password'], $user->password)) {
-                throw new \App\Exceptions\Auth\LoginException;
+                throw new LoginException;
             }
 
             if (!$user->email_verified_at) {
-                throw new \App\Exceptions\Auth\EmailNotVerifiedException;
+                throw new EmailNotVerifiedException;
             }
 
             $code = app(CreateTwoFactorVerification::class)->execute($user);
@@ -66,9 +73,12 @@ class AuthService
         DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->firstOrFail();
+            if ($user->email_verified_at) {
 
+                throw new EmailNotVerifiedException;
+            }
             $token = app(CreateEmailVerification::class)->execute($user);
-    
+
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });

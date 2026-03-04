@@ -45,4 +45,13 @@ class FormUpdateUser extends FormRequest
             'cpf_cnpj.regex'            => 'Must contain only numbers.',
         ];
     }
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = response()->json([
+            'success' => false,
+            'message' => $validator->errors(),
+        ], 422);
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
 }

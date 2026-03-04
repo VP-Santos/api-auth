@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\EmailVerification;
-use App\Models\TwoFactor;
-use App\Models\User;
+use App\Models\{
+    EmailVerification,
+    TwoFactor,
+    User
+};
 use Illuminate\Support\Facades\DB;
 
 class VerificationService
@@ -57,8 +59,5 @@ class VerificationService
             'token' => $token
         ];
     }
-    public function verifyResetPassword(array $data)
-    {
-
-    }
+    public function verifyResetPassword(array $data) {}
 }

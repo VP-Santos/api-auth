@@ -8,6 +8,7 @@
 <body>
     <a href="{{ route('register.web') }}">register</a>
     <a href="{{ route('login.web') }}">login</a>
-    <h1>wellcome</h1>
+    <h1>Bem vindo!</h1>
+    <h3>Este projeto visa mostrar meu conhecimento com laravel e php</h3>
 </body>
 </html>

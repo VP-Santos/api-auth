@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Services\AuthService;
 use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
@@ -11,8 +10,10 @@ use App\Http\Requests\Users\{
     ForgotPasswordRequest,
     ResetPasswordRequest
 };
-use App\Services\VerificationService;
-use Illuminate\Http\Request;
+use App\Services\{
+    VerificationService,
+    AuthService
+};
 
 
 class AuthController
@@ -108,7 +109,8 @@ class AuthController
         ], 200);
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request) {
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
         $this->authService->ForgetPassword($request->validated());
     }
     public function resetPassword(ResetPasswordRequest $request) {}

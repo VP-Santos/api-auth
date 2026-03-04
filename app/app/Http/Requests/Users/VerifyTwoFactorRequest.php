@@ -38,10 +38,20 @@ class VerifyTwoFactorRequest extends FormRequest
         return [
             'email.required' => 'The email field is required.',
             'email.email'    => 'The email must be a valid email address.',
-            
+
             'code.required'  => 'The verification code is required.',
             'code.string'    => 'The verification code must be a string.',
             'code.size'      => 'The verification code must be exactly 6 characters.',
         ];
+    }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = response()->json([
+            'success' => false,
+            'message' => $validator->errors(),
+        ], 422);
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
     }
 }

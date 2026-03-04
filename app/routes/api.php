@@ -14,9 +14,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register')->name('register.auth');
     Route::post('/login', 'login')->name('login.auth');
     Route::get('/verify-email',  'verifyEmail')->name('verify.auth');
-    Route::post('/verify-twoFactor',  'verifyTwoFactor');
-    Route::post('/forgot-password',  'forgotPassword');
-    Route::post('/reset-password',  'resetPassword');
+    Route::post('/verify-twoFactor',  'verifyTwoFactor')->name('verifyTwoFactor.auth');
+    Route::post('/forgot-password',  'forgotPassword')->name('forgotPassword.auth');
+    Route::post('/reset-password',  'resetPassword')->name('resetPassword.auth');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

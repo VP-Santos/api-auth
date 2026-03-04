@@ -39,4 +39,14 @@ class ResetPasswordRequest extends FormRequest
             'password.confirmed'    => 'Password confirmation does not match.',
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = response()->json([
+            'success' => false,
+            'message' => $validator->errors(),
+        ], 422);
+
+        throw new \Illuminate\Validation\ValidationException($validator, $response);
+    }
 }

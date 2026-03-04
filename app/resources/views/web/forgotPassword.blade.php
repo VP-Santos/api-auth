@@ -1,52 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+@section('title', 'login')
+@section('style')
+<style>
+    .error {
+        color: red;
+        font-size: 12px;
+        margin-top: 4px;
+    }
 
-<body>
-    <h1>forgot password</h1>
-    <label for="email">seu email</label>
-    <input type="email" name="email">
-    <button id="btn"></button>
-    <a href="{{ route('login.web') }}">Back</a>
-</body>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            const btn = document.getElementById('btn');
+    .input-error {
+        border: 1px solid red;
+    }
 
-            btn.addEventListener('click', function(){
-                
-                const data = {
-                    email: document.getElementById('user_email').value,
-                    password: document.getElementById('user_password').value,
-                };
+    input {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-                
-                const token = "{{ csrf_token() }}"
-                const url = "{{ route('login.auth') }}";
-                
-                fetch(url, { 
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json()) 
-                    .then(result => {
-                        console.log('Success:', result);
-                        alert(result.message || 'Registration successful');
-                        window.location.href = '/';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-        })
-    </script>
-</html>
+    label {
+        margin-bottom: 15px;
+        display: block;
+    }
+</style>
+
+@endsection
+
+@section('content')
+<h1>forgot Password</h1>
+<div>
+    <label>
+        Email:
+        <input type="email" id="user_email" placeholder="Enter your email" autocomplete="email">
+        <div class="error" id="error_email"></div>
+    </label>
+    <br>
+</div>
+<button id="btn">Send</button>
+<a href="{{ route('login.web') }}">retornar</a>
+
+
+@endsection
+@section('script')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const button = document.getElementById('btn');
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const REGISTER_URL = "{{ route('forgotPassword.auth') }}";
+
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(el => el.innerText = '');
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
+        }
+
+        button.addEventListener('click', function() {
+
+            clearErrors();
+
+
+            const data = {
+                email: document.getElementById('user_email').value,
+            };
+
+            fetch(REGISTER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async response => {
+                    const result = await response.json();
+
+                    if (response.status === 422) {
+
+                        const fieldMap = {
+                            email: 'user_email',
+                        };
+
+                        Object.keys(result.message || {}).forEach(field => {
+                            const inputId = fieldMap[field];
+                            const input = document.getElementById(inputId);
+                            const errorDiv = document.getElementById('error_' + field);
+
+                            if (errorDiv) errorDiv.innerText = result.message[field][0];
+                            if (input) input.classList.add('input-error');
+                        });
+
+                        return null;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Erro inesperado');
+                    }
+
+                    return result;
+                })
+                .then(result => {
+                    if (result) {
+
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: result.message,
+                            icon: 'success'
+                        });
+                    }
+                })
+                .catch(error => {
+                    if (error.message !== 'Validation error') {
+
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: error.message,
+                            icon: 'error'
+                        });
+                    }
+                });
+
+        });
+
+    });
+</script>
+
+@endsection

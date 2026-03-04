@@ -1,37 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Input</title>
+@section('title', 'register')
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('style')
 
-    <style>
-        .error {
-            color: red;
-            font-size: 12px;
-            margin-top: 4px;
-        }
+<style>
+    .error {
+        color: red;
+        font-size: 12px;
+        margin-top: 4px;
+    }
 
-        .input-error {
-            border: 1px solid red;
-        }
+    .input-error {
+        border: 1px solid red;
+    }
 
-        input {
-            display: block;
-            margin-bottom: 5px;
-        }
+    input {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-        label {
-            margin-bottom: 15px;
-            display: block;
-        }
-    </style>
-</head>
+    label {
+        margin-bottom: 15px;
+        display: block;
+    }
+</style>
 
-<body>
+@endsection
+
+@section('content')
+<h1>register</h1>
 
 <div>
     <label>
@@ -60,95 +58,110 @@
 
     <label>
         Access Level:
-        <input type="text" id="access_level" autocomplete="off">
+        <select id="access_level" autocomplete="off">
+            <option selected></option>
+            <option value="basic">user</option>
+            <option value="adm">admin</option>
+        </select>
         <div class="error" id="error_access_level"></div>
     </label>
 </div>
 
-<button id="send_register">Send</button>
+<button id="btn">Send</button>
 <a href="{{ route('homepage') }}">Return</a>
 
+@endsection
+
+@section('script')
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
 
-    const button = document.getElementById('send_register');
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const url = "{{ route('register.auth') }}";
+        const button = document.getElementById('btn');
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const REGISTER_URL = "{{ route('register.auth') }}";
 
-    function clearErrors() {
-        document.querySelectorAll('.error').forEach(el => el.innerText = '');
-        document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
-    }
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(el => el.innerText = '');
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
+        }
 
-    button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
 
-        clearErrors();
+            clearErrors();
 
-        const data = {
-            name: document.getElementById('full_name').value,
-            user_name: document.getElementById('login_user').value,
-            email: document.getElementById('user_email').value,
-            password: document.getElementById('user_password').value,
-            access_level: document.getElementById('access_level').value
-        };
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
-            },
-            body: JSON.stringify(data)
-        })
-        .then(async response => {
+            const data = {
+                name: document.getElementById('full_name').value,
+                user_name: document.getElementById('login_user').value,
+                email: document.getElementById('user_email').value,
+                password: document.getElementById('user_password').value,
+                access_level: document.getElementById('access_level').value
+            };
 
-            const result = await response.json();
+            fetch(REGISTER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async response => {
+                    const result = await response.json();
 
-            if (!response.ok) {
-                
-                if (result.message && typeof result.message === 'object') {
+                    if (response.status === 422) {
 
-                    const fieldMap = {
-                        name: 'full_name',
-                        user_name: 'login_user',
-                        email: 'user_email',
-                        password: 'user_password',
-                        access_level: 'access_level'
-                    };
+                        const fieldMap = {
+                            name: 'full_name',
+                            user_name: 'login_user',
+                            email: 'user_email',
+                            password: 'user_password',
+                            access_level: 'access_level'
+                        };
 
-                    Object.keys(result.message).forEach(field => {
+                        Object.keys(result.message || {}).forEach(field => {
+                            const inputId = fieldMap[field];
+                            const input = document.getElementById(inputId);
+                            const errorDiv = document.getElementById('error_' + field);
 
-                        const inputId = fieldMap[field];
-                        const input = document.getElementById(inputId);
-                        const errorDiv = document.getElementById('error_' + field);
+                            if (errorDiv) errorDiv.innerText = result.message[field][0];
+                            if (input) input.classList.add('input-error');
+                        });
 
-                        if (errorDiv) {
-                            errorDiv.innerText = result.message[field][0];
-                        }
+                        return null;
+                    }
 
-                        if (input) {
-                            input.classList.add('input-error');
-                        }
-                    });
-                }
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Erro inesperado');
+                    }
 
-                throw new Error('Validation error');
-            }
+                    return result;
+                })
+                .then(result => {
+                    if (result) {
 
-            return result;
-        })
-        .then(result => {
-            alert('Registration successful!');
-            console.log(result);
-        })
-        .catch(error => {
-            console.error(error.message);
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: result.message,
+                            icon: 'success'
+                        });
+                    }
+                })
+                .catch(error => {
+                    if (error.message !== 'Validation error') {
+
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: error.message,
+                            icon: 'error'
+                        });
+                    }
+                });
+
         });
 
     });
-
-});
 </script>
 
-</body>
-</html>
+@endsection
