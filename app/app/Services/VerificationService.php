@@ -11,31 +11,41 @@ use Illuminate\Support\Facades\DB;
 
 class VerificationService
 {
-    public function verifyTokenEmail(string $token)
-    {
-        $tokenCreated = null;
+ public function verifyTokenEmail(string $token)
+{
+    $tokenCreated = null;
 
-        DB::transaction(function () use ($token, &$tokenCreated) {
+    DB::transaction(function () use ($token, &$tokenCreated) {
 
-            $record = EmailVerification::where('token', $token)->first();
+        $record = EmailVerification::where('token', $token)->first();
 
-            if (!$record || $record->expires_at < now()) {
-                throw new \App\Exceptions\Auth\InvalidTokenException();
-            }
+        if (!$record) {
+            throw new \App\Exceptions\Auth\InvalidTokenException('Token is invalid or has already been used.');
+        }
 
-            $user = User::findOrFail($record->user_id);
-            $user->email_verified_at = now();
-            $user->status = 'actived';
+        if ($record->expires_at < now()) {
+            throw new \App\Exceptions\Auth\InvalidTokenException('Token has expired.');
+        }
 
-            $abilities = [$user->access_level];
-            $tokenCreated = $user->createToken('access', $abilities)->plainTextToken;
-            $user->current_token = $tokenCreated;
-            $user->save();
-        });
+        $user = User::findOrFail($record->user_id);
 
-        return $tokenCreated;
-    }
+        if ($user->email_verified_at) {
+            throw new \App\Exceptions\Auth\InvalidTokenException('Email has already been verified.', 409);
+        }
 
+        $user->email_verified_at = now();
+        $user->status = 'actived';
+
+        $abilities = [$user->access_level];
+        $tokenCreated = $user->createToken('access', $abilities)->plainTextToken;
+        $user->current_token = $tokenCreated;
+        $user->save();
+
+        $record->delete();
+    });
+
+    return $tokenCreated;
+}
     public function verifyTwoFactor(array $data)
     {
 
@@ -55,7 +65,6 @@ class VerificationService
         $user->save();
 
         return [
-            'user' => $user,
             'token' => $token
         ];
     }

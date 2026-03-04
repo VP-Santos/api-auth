@@ -1,7 +1,7 @@
 <?php
 
+$url = env('APP_URL', 'http://localhost:8080');
 return [
-    'url' => 'http://localhost:8080',
-    'reset' => '/reset',
-    'home' => '/'
+    'reset' => $url . '/reset',
+    'verifyEmail' => $url . '/verify-email'
 ];

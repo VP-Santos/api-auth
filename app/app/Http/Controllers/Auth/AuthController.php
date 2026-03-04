@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\Auth\InvalidTokenEmailNotFound;
 use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
     FormUpdateUser,
     VerifyTwoFactorRequest,
     ForgotPasswordRequest,
-    ResetPasswordRequest
+    ResetPasswordRequest,
+    VerifyTokenEmailRequest
 };
 use App\Services\{
     VerificationService,
@@ -36,12 +38,13 @@ class AuthController
         ], 201);
     }
 
-    public function verifyEmail()
+    public function verifyEmail(VerifyTokenEmailRequest $request)
     {
-        $token = request()->query('token', null);
+        $request->validated();
+        $token = $request['token'];
 
         if (!$token) {
-            throw new \Exception('the token not found', 400);
+            throw new InvalidTokenEmailNotFound;
         }
 
         $tokenCreated = $this->verifyService->verifyTokenEmail($token);
@@ -70,7 +73,6 @@ class AuthController
         return response()->json([
             'success' => true,
             'message' => 'successful login',
-            'user_id' => $response->user->id,
             'token' => $response->token,
         ], 200);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Services\VerificationService;
 use Illuminate\Http\Request;
 
 class WebController
@@ -9,6 +10,12 @@ class WebController
     public function home(Request $request)
     {
         $token = $request->query('token', null);
+        if ($token) {
+            $verification = new VerificationService;
+            $response = $verification->verifyTokenEmail($token);
+            dd($response);
+        }
+
         return view('web.wellcome');
         // dd($token);
     }

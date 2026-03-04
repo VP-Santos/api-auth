@@ -87,7 +87,7 @@
                                 Just one more step to activate your account.<br>
                                 Click the button below to verify your email.
                             </p>
-                            <a href="{{ route('homepage', ['token' => $tokenVerifyEmail]) }}" class="button">
+                            <a href="{{ $linkToken }}" class="button">
                                 Verify Email
                             </a>
                             <p class="note">

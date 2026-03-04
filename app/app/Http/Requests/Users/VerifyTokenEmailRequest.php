@@ -4,13 +4,14 @@ namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormLoginRequest extends FormRequest
+class VerifyTokenEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
+        // Allow all users to make this request
         return true;
     }
 
@@ -22,18 +23,22 @@ class FormLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'     => 'required|email',
-            'password'  => 'required'
+            'token' => 'required',
         ];
     }
 
-    public function messages()
+    /**
+     * Custom error messages in English.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
     {
         return [
-            'required'  => 'The :attribute field is required.',
-            'email'     => 'The :attribute field must be a valid email address.',
+            'required' => 'The :attribute field is required.',
         ];
     }
+
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
         $response = response()->json([
