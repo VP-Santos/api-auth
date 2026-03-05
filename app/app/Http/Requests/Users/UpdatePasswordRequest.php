@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
-class ResetPasswordRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,12 +15,12 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required|string',
             'email' => 'required|email|exists:users,email',
             'password' => [
                 'required',
                 'confirmed',
                 'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/'
+
             ],
         ];
     }
@@ -27,13 +28,13 @@ class ResetPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'token.required'     => 'Reset token is required.',
-            'email.required'     => 'The email field is required.',
-            'email.email'        => 'The email must be a valid email address.',
-            'email.exists'       => 'No account found with this email address.',
-            'password.required'  => 'The password field is required.',
-            'password.confirmed' => 'Password confirmation does not match.',
-            'password.regex'     => 'Password must contain at least 8 characters, including letters, numbers and special characters.',
+            'email.required'        => 'The email field is required.',
+            'email.email'           => 'The email must be a valid email address.',
+            'email.exists'          => 'No account found with this email address.',
+            'password.required'     => 'The password field is required.',
+            'password.confirmed'    => 'Password confirmation does not match.',
+            'password.regex'        => 'Password must contain at least 8 characters, including letters, numbers and special characters.',
+
         ];
     }
 

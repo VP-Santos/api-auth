@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', 'show');
         Route::put('/update', 'update');
         Route::delete('/logout', 'logout');
+         Route::post('/update-password',  'updatePassword')->name('updatePassword.auth');
     });
 
     Route::middleware('adm')->controller(AdmController::class)->prefix('/adm')->group(function () {

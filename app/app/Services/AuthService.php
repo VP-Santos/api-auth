@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Actions\{
     CreateEmailVerification,
+    CreatePasswordReset,
     CreateTwoFactorVerification
 };
 use App\Events\{
@@ -73,15 +74,21 @@ class AuthService
         DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->firstOrFail();
-            if ($user->email_verified_at) {
 
+            if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;
             }
-            $token = app(CreateEmailVerification::class)->execute($user);
+            
+            $token = app(CreatePasswordReset::class)->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });
         });
+    }
+
+    public function updatePassword(Array $data)
+    {
+        
     }
 }

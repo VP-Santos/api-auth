@@ -18,6 +18,7 @@ class CreatePasswordReset
             'expires_at' => now()->addMinutes(5),
         ]);
 
+
         return $plainToken;
     }
 }

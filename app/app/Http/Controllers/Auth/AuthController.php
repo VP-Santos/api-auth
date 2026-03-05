@@ -9,7 +9,9 @@ use App\Http\Requests\Users\{
     FormUpdateUser,
     VerifyTwoFactorRequest,
     ForgotPasswordRequest,
+    ResendTokenRequest,
     ResetPasswordRequest,
+    UpdatePasswordRequest,
     VerifyTokenEmailRequest
 };
 use App\Services\{
@@ -113,10 +115,23 @@ class AuthController
 
     public function forgotPassword(ForgotPasswordRequest $request)
     {
-        $this->authService->ForgetPassword($request->validated());
-    }
-    public function resetPassword(ResetPasswordRequest $request) {}
 
-    public function refreshAccessToken() {}
-    public function resendCodeEmail() {}
+        $this->authService->ForgetPassword($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'verify your email'
+        ], 200);
+    }
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $this->verifyService->verifyResetPassword($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'password reset successfully'
+        ], 200);
+    }
+    public function updatePassword(UpdatePasswordRequest $request) {}
+    public function resendCodeEmail(ResendTokenRequest $request) {}
 }
