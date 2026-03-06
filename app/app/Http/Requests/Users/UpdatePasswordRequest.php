@@ -15,7 +15,6 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
             'password' => [
                 'required',
                 'confirmed',
@@ -28,9 +27,6 @@ class UpdatePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required'        => 'The email field is required.',
-            'email.email'           => 'The email must be a valid email address.',
-            'email.exists'          => 'No account found with this email address.',
             'password.required'     => 'The password field is required.',
             'password.confirmed'    => 'Password confirmation does not match.',
             'password.regex'        => 'Password must contain at least 8 characters, including letters, numbers and special characters.',

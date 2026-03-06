@@ -132,6 +132,11 @@ class AuthController
             'message' => 'password reset successfully'
         ], 200);
     }
-    public function updatePassword(UpdatePasswordRequest $request) {}
+    public function updatePassword(UpdatePasswordRequest $request) {
+
+        $user = $request->user();
+        
+        dd($request->validated());
+    }
     public function resendCodeEmail(ResendTokenRequest $request) {}
 }

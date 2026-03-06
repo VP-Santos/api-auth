@@ -23,8 +23,8 @@ class VerifyTwoFactorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'code'  => 'required|string|size:6',
+            'email'                     => 'required|email|exists:users,email',
+            'code'                      => 'required|string|size:6',
         ];
     }
 
@@ -36,12 +36,13 @@ class VerifyTwoFactorRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'The email field is required.',
-            'email.email'    => 'The email must be a valid email address.',
+            'email.required'            => 'The email field is required.',
+            'email.exists'              => 'No account found with this email address.',
+            'email.email'               => 'The :attribute field must be a valid email address.',
 
-            'code.required'  => 'The verification code is required.',
-            'code.string'    => 'The verification code must be a string.',
-            'code.size'      => 'The verification code must be exactly 6 characters.',
+            'code.required'             => 'The verification code is required.',
+            'code.string'               => 'The verification code must be a string.',
+            'code.size'                 => 'The verification code must be exactly 6 characters.',
         ];
     }
 

@@ -51,6 +51,8 @@ class AuthService
                 throw new LoginException;
             }
 
+            app(VerificationService::class)->getTwoFactorExists($user->id);
+
             if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;
             }
@@ -61,7 +63,6 @@ class AuthService
                 TwoFactorRegistered::dispatch($user, $code);
             });
         });
-        return '';
     }
 
     public function updateUser(array $dataUpdate, User $user)
@@ -73,7 +74,11 @@ class AuthService
     {
         DB::transaction(function () use ($data) {
 
-            $user = User::where('email', $data['email'])->firstOrFail();
+            $user = User::where('email', $data['email'])->first();
+
+            if(!$user){
+
+            }
 
             if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;

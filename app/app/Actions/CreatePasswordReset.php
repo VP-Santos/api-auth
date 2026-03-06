@@ -14,6 +14,7 @@ class CreatePasswordReset
 
         PasswordReset::create([
             'user_id' => $user->id,
+            'user_email' => $user->email,
             'token' => $plainToken,
             'expires_at' => now()->addMinutes(5),
         ]);

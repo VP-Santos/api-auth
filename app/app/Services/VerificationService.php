@@ -1,98 +1,140 @@
 <?php
+?><?php
 
-namespace App\Services;
+    namespace App\Services;
 
-use App\Exceptions\Auth\InvalidTokenException;
-use App\Exceptions\Auth\SamePasswordException;
-use App\Models\{
-    EmailVerification,
-    PasswordReset,
-    TwoFactor,
-    User
-};
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+    use App\Exceptions\Auth\{
+        InvalidTokenException,
+        InvalidTwoFactorCodeException,
+        SameEmailException,
+        SamePasswordException,
+        VerificationCodeAlreadySentException
+    };
+    use App\Models\{
+        EmailVerification,
+        PasswordReset,
+        TwoFactor,
+        User
+    };
+    use Illuminate\Support\Facades\{
+        DB,
+        Hash
+    };
 
-class VerificationService
-{
-    public function verifyTokenEmail(string $token)
+    class VerificationService
     {
-        $tokenCreated = null;
+        public function verifyTokenEmail(string $token)
+        {
+            $tokenCreated = null;
 
-        DB::transaction(function () use ($token, &$tokenCreated) {
+            DB::transaction(function () use ($token, &$tokenCreated) {
 
-            $record = EmailVerification::where('token', $token)->first();
+                $record = EmailVerification::where('token', $token)->first();
 
-            if (!$record) {
-                throw new \App\Exceptions\Auth\InvalidTokenException('Token is invalid or has already been used.');
+                if (!$record) {
+                    throw new InvalidTokenException('Token is invalid or has already been used.');
+                }
+
+                if ($record->expires_at < now()) {
+                    throw new InvalidTokenException('Token has expired.');
+                }
+
+                $user = User::findOrFail($record->user_id);
+
+                if ($user->email_verified_at) {
+                    throw new InvalidTokenException('Email has already been verified.', 409);
+                }
+
+                $user->email_verified_at = now();
+                $user->status = 'actived';
+
+                $abilities = [$user->access_level];
+                $tokenCreated = $user->createToken('access', $abilities)->plainTextToken;
+                $user->current_token = $tokenCreated;
+                $user->save();
+
+                $record->delete();
+            });
+
+            return $tokenCreated;
+        }
+        public function verifyTwoFactor(array $data)
+        {
+
+            $user = User::where('email', '=', $data['email'])
+                ->first();
+
+            $twoFactor = TwoFactor::where('user_id', '=', $user->id)
+                ->orderBy('created_at', 'DESC')->first();
+            if (!$twoFactor) {
+                throw new InvalidTwoFactorCodeException;
             }
 
-            if ($record->expires_at < now()) {
-                throw new \App\Exceptions\Auth\InvalidTokenException('Token has expired.');
+            if (now() > $twoFactor->expires_at || !hash_equals($twoFactor->code, $data['code'])) {
+                throw new InvalidTwoFactorCodeException;
             }
-
-            $user = User::findOrFail($record->user_id);
-
-            if ($user->email_verified_at) {
-                throw new \App\Exceptions\Auth\InvalidTokenException('Email has already been verified.', 409);
-            }
-
-            $user->email_verified_at = now();
-            $user->status = 'actived';
 
             $abilities = [$user->access_level];
-            $tokenCreated = $user->createToken('access', $abilities)->plainTextToken;
-            $user->current_token = $tokenCreated;
+            $token = $user->createToken('access', $abilities)->plainTextToken;
+            $user->current_token = $token;
             $user->save();
 
-            $record->delete();
-        });
+            $twoFactor->where('user_id', '=', $user->id)->delete();
+            return [
+                'token' => $token
+            ];
+        }
+        public function verifyResetPassword(array $data)
+        {
+            DB::transaction(function () use ($data) {
 
-        return $tokenCreated;
-    }
-    public function verifyTwoFactor(array $data)
-    {
+                $user = User::where('email', '=', $data['email'])->first();
 
-        $user = User::where('email', '=', $data['email'])
-            ->firstOrFail();
+                $token = $data['token'];
 
-        $twoFactor = TwoFactor::where('user_id', '=', $user->id)
-            ->firstOrFail();
+                $record = PasswordReset::where('token', '=', $token)->first();
 
-        if (now() > $twoFactor->expires_at || !hash_equals($twoFactor->code, $data['code'])) {
-            throw new \App\Exceptions\Auth\InvalidTwoFactorCodeException;
+                if ($user->email != $data['email']) {
+                    throw new SameEmailException;
+                }
+
+                if (!$record) {
+                    throw new InvalidTokenException('Token not found.');
+                }
+
+                if ($record->expires_at < now()) {
+                    throw new InvalidTokenException('Token has expired.');
+                }
+
+                $data['password'] = Hash::make($data['password']);
+
+                if (!Hash::check($data['password'], $user->password)) {
+                    throw new SamePasswordException;
+                }
+
+                $user->update(['password' => $data['password']]);
+
+                $record->delete();
+            });
         }
 
-        $abilities = [$user->access_level];
-        $token = $user->createToken('access', $abilities)->plainTextToken;
-        $user->current_token = $token;
-        $user->save();
+        public function getTokenExists($token) {}
+        public function getTwoFactorExists($user_id)
+        {
+            $twoFactor = TwoFactor::where('user_id', '=', $user_id)
+                ->latest()
+                ->first();
 
-        return [
-            'token' => $token
-        ];
-    }
-    public function verifyResetPassword(array $data)
-    {
-        DB::transaction(function () use ($data) {
+            if ($twoFactor) {
+                if ($twoFactor->expires_at > now()) {
 
-            $user = User::where('email', '=', $data['email'])->firstOrFail();
+                    $secondsRemaining = now()->diffInSeconds($twoFactor->expires_at);
+                    throw new VerificationCodeAlreadySentException(
+                        "Verification code already sent. Please wait {$secondsRemaining} seconds before requesting a new one."
+                    );
+                }
 
-            $token = $data['token'];
-
-            $record = PasswordReset::where('token', '=', $token)->firstOrFail();
-
-            if ($record->expires_at < now()) {
-                throw new InvalidTokenException('Token has expired.');
+                $twoFactor->delete();
             }
-
-            $data['password'] = Hash::make($data['password']);
-
-        if (Hash::check($data['password'], $user->password)) {
-            throw new SamePasswordException;
         }
-
-            $user->update(['password' => $data['password']]);
-        });
     }
-}
