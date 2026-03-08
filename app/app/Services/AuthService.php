@@ -8,13 +8,14 @@ use App\Actions\{
     CreateTwoFactorVerification
 };
 use App\Events\{
+    EmailVerificationRequested,
     ForgotPassword,
     TwoFactorRegistered,
-    UserRegistered
 };
 use App\Exceptions\Auth\{
     EmailNotVerifiedException,
-    LoginException
+    LoginException,
+    SameEmailException
 };
 use App\Models\User;
 use Illuminate\Support\Facades\{
@@ -37,7 +38,7 @@ class AuthService
             $token = app(CreateEmailVerification::class)->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
-                UserRegistered::dispatch($user, $token);
+                EmailVerificationRequested::dispatch($user, $token);
             });
         });
     }
@@ -64,11 +65,28 @@ class AuthService
             });
         });
     }
+public function updateUser(array $dataUpdate, User $user)
+{
+    DB::transaction(function () use ($dataUpdate, $user) {
 
-    public function updateUser(array $dataUpdate, User $user)
-    {
-        dd($dataUpdate, $user);
-    }
+        $emailChanged = $user->email !== $dataUpdate['email'];
+
+        $user->update($dataUpdate);
+
+        if ($emailChanged) {
+
+            $user->email_verified_at = null;
+            $user->save();
+
+            $token = app(CreateEmailVerification::class)->execute($user);
+
+            DB::afterCommit(function () use ($user, $token) {
+                EmailVerificationRequested::dispatch($user, $token);
+            });
+        }
+
+    });
+}
 
     public function ForgetPassword(array $data)
     {
@@ -76,14 +94,14 @@ class AuthService
 
             $user = User::where('email', $data['email'])->first();
 
-            if(!$user){
-
-            }
 
             if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;
             }
-            
+
+            app(VerificationService::class)->getTokenExists($user->id);
+
+
             $token = app(CreatePasswordReset::class)->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
@@ -92,8 +110,5 @@ class AuthService
         });
     }
 
-    public function updatePassword(Array $data)
-    {
-        
-    }
+    public function updatePassword(array $data) {}
 }

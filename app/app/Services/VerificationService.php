@@ -66,6 +66,7 @@
 
             $twoFactor = TwoFactor::where('user_id', '=', $user->id)
                 ->orderBy('created_at', 'DESC')->first();
+
             if (!$twoFactor) {
                 throw new InvalidTwoFactorCodeException;
             }
@@ -118,19 +119,39 @@
             });
         }
 
-        public function getTokenExists($token) {}
+        public function getTokenExists($user_id)
+        {
+            $token = PasswordReset::where('user_id', '=', $user_id)
+                ->latest()
+                ->first();
+
+            if ($token) {
+                if ($token->expires_at > now()) {
+
+                    $secondsRemaining = now()->diffInSeconds($token->expires_at);
+
+                    $time = gmdate('i:s', $secondsRemaining);
+                    throw new VerificationCodeAlreadySentException(
+                        "Verification code already sent. Please wait {$time} seconds before requesting a new one."
+                    );
+                }
+
+                $token->delete();
+            }
+        }
         public function getTwoFactorExists($user_id)
         {
             $twoFactor = TwoFactor::where('user_id', '=', $user_id)
-                ->latest()
                 ->first();
 
             if ($twoFactor) {
                 if ($twoFactor->expires_at > now()) {
 
                     $secondsRemaining = now()->diffInSeconds($twoFactor->expires_at);
+
+                    $time = gmdate('i:s', $secondsRemaining);
                     throw new VerificationCodeAlreadySentException(
-                        "Verification code already sent. Please wait {$secondsRemaining} seconds before requesting a new one."
+                        "Verification code already sent. Please wait {$time} seconds before requesting a new one."
                     );
                 }
 
