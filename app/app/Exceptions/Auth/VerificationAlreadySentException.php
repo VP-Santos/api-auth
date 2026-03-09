@@ -4,7 +4,7 @@ namespace App\Exceptions\Auth;
 
 use Exception;
 
-class VerificationCodeAlreadySentException extends Exception
+class VerificationAlreadySentException extends Exception
 {
     protected $httpCode;
 
@@ -18,7 +18,7 @@ class VerificationCodeAlreadySentException extends Exception
     {
         return response()->json([
             'success' => false,
-            'code'    => 'VERIFICATION_CODE_ALREADY_SENT',
+            'code'    => 'VERIFICATION_ALREADY_SENT',
             'message' => $this->getMessage(),
         ], $this->httpCode);
     }

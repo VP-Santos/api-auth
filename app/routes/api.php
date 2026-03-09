@@ -18,6 +18,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/verify-twoFactor',  'verifyTwoFactor')->name('verifyTwoFactor.auth');
     Route::post('/forgot-password',  'forgotPassword')->name('forgotPassword.auth');
     Route::post('/reset-password',  'resetPassword')->name('resetPassword.auth');
+    Route::post('/resend-token-password',  'resendTokenPassword')->name('resendTokenPassword.auth');
+    Route::post('/resend-two-factor',  'resendTwoFactor')->name('resendTwoFactorEmail.auth');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

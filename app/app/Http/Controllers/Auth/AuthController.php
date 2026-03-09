@@ -9,10 +9,10 @@ use App\Http\Requests\Users\{
     FormUpdateUser,
     VerifyTwoFactorRequest,
     ForgotPasswordRequest,
-    ResendTokenRequest,
     ResetPasswordRequest,
     UpdatePasswordRequest,
-    VerifyTokenEmailRequest
+    VerifyTokenEmailRequest,
+    ResendAuthenticationCodeRequest
 };
 use App\Services\{
     VerificationService,
@@ -129,14 +129,42 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'password reset successfully'
+            'message' => 'password reset successfully.'
         ], 200);
     }
-    public function updatePassword(UpdatePasswordRequest $request) {
-
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
         $user = $request->user();
-        
-        dd($request->validated());
+
+        $this->authService->updatePassword($request->validated(), $user);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully.'
+        ], 200);
     }
-    public function resendCodeEmail(ResendTokenRequest $request) {}
+    public function resendTokenPassword(ResendAuthenticationCodeRequest $request)
+    {
+        $email = $request->validated();
+
+        $this->authService->resendTokenPassword($email);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Authentication token has been sent to your email.'
+        ], 200);
+
+    }
+    public function resendTwoFactor(ResendAuthenticationCodeRequest $request)
+    {
+        $email = $request->validated();
+
+        $this->authService->resendTwoFactorEmail($email);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Two-factor authentication code has been sent to your email.'
+        ], 200);
+
+    }
 }
