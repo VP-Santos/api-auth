@@ -27,10 +27,12 @@ use Illuminate\Support\Facades\{
     Hash
 };
 
-use function Symfony\Component\Clock\now;
-
 class AuthService
 {
+    public function __construct(
+        private TwoFactorService $twoFactorService,
+        private PasswordResetService $passwordResetService
+    ) {}
     public function registerUser(array $data)
     {
         DB::transaction(function () use ($data) {
@@ -56,12 +58,13 @@ class AuthService
             if (!$user || !Hash::check($data['password'], $user->password)) {
                 throw new LoginException;
             }
-
-            app(VerificationService::class)->getTwoFactorExists($user->id);
-
+            
             if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;
             }
+            
+            $this->twoFactorService->ensureNoActiveCode($user->id);
+
 
             $code = app(CreateTwoFactorVerification::class)->execute($user);
 
@@ -92,7 +95,7 @@ class AuthService
         });
     }
 
-    public function ForgetPassword(array $data)
+    public function forgetPassword(array $data)
     {
         DB::transaction(function () use ($data) {
 
@@ -103,7 +106,7 @@ class AuthService
                 throw new EmailNotVerifiedException;
             }
 
-            app(VerificationService::class)->getTokenExists($user->id);
+            $this->passwordResetService->ensureNoActiveToken($user->id);
 
 
             $token = app(CreatePasswordReset::class)->execute($user);
@@ -118,67 +121,5 @@ class AuthService
     {
         $user->password = Hash::make($data['password']);
         $user->save();
-    }
-
-    public function resendTokenPassword($email)
-    {
-        DB::transaction(function () use ($email) {
-
-            $user = User::where($email)->first();
-
-            if (!$user->email_verified_at) {
-                throw new InvalidTokenException('Email has already been verified.', 409);
-            }
-
-            $record = PasswordReset::where('user_id', '=', $user->id)->latest()->first();
-
-            if ($record->expires_at > Carbon::now()) {
-
-                $secondsRemaining = Carbon::now()->diffInSeconds($record->expires_at);
-
-                $time = gmdate('i:s', $secondsRemaining);
-                throw new VerificationAlreadySentException(
-                    "Verification token already sent. Please wait {$time} seconds before requesting a new one."
-                );
-            }
-
-            $record->delete();
-
-            $token = app(CreatePasswordReset::class)->execute($user);
-
-            DB::afterCommit(function () use ($user, $token) {
-                ForgotPassword::dispatch($user, $token);
-            });
-        });
-    }
-    public function resendTwoFactorEmail($email)
-    {
-        DB::transaction(function () use ($email) {
-
-            $user = User::where($email)->first();
-
-            if (!$user->email_verified_at) {
-                throw new InvalidTokenException('Email has already been verified.', 409);
-            }
-
-            $record = TwoFactor::where('user_id', '=', $user->id)->first();
-
-            if ($record->expires_at > Carbon::now()) {
-
-                $secondsRemaining = Carbon::now()->diffInSeconds($record->expires_at);
-
-                $time = gmdate('i:s', $secondsRemaining);
-                throw new VerificationAlreadySentException(
-                    "Verification token already sent. Please wait {$time} seconds before requesting a new one."
-                );
-            }
-
-            $record->delete();
-            $token = app(CreateEmailVerification::class)->execute($user);
-
-            DB::afterCommit(function () use ($user, $token) {
-                EmailVerificationRequested::dispatch($user, $token);
-            });
-        });
     }
 }
