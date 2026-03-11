@@ -14,14 +14,9 @@ use App\Events\{
 };
 use App\Exceptions\Auth\{
     EmailNotVerifiedException,
-    InvalidTokenException,
     LoginException,
-    VerificationAlreadySentException,
 };
-use App\Models\PasswordReset;
-use App\Models\TwoFactor;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\{
     DB,
     Hash

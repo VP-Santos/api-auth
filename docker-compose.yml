@@ -44,6 +44,12 @@ services:
     volumes:
       - redis_data:/data
 
+  mailhog:
+    container_name: api_mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  
+      - "8025:8025"
 volumes:
   mysql_data:
   redis_data:

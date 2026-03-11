@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Exceptions\Auth\InvalidTokenEmailNotFound;
 use App\Http\Requests\Users\{
     FormLoginRequest,
     FormStoreUsers,
