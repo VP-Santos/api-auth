@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Domains\Auth\Actions;
+
+use App\Domains\Auth\Models\PasswordReset;
+use App\Models\User;
+use Illuminate\Support\Str;
+
+class CreatePasswordReset
+{
+    public function execute(User $user): string
+    {
+        $plainToken = hash('sha256', Str::random(64));
+
+        PasswordReset::create([
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'token' => $plainToken,
+            'expires_at' => now()->addMinutes(5),
+        ]);
+
+
+        return $plainToken;
+    }
+}

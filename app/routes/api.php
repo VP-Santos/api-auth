@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\{
+use App\Http\Controllers\Api\{
     AdmController,
     AuthController
 };

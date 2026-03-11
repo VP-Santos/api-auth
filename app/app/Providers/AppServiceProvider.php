@@ -11,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->register(\App\Domains\Auth\Providers\EventServiceProvider::class);
     }
 
     /**
