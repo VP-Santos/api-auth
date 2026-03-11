@@ -26,42 +26,46 @@ class AuthService
 {
     public function __construct(
         private TwoFactorService $twoFactorService,
-        private PasswordResetService $passwordResetService
+        private PasswordResetService $passwordResetService,
+        private CreateEmailVerification $createEmailVerification,
+        private CreateTwoFactorVerification $createTwoFactorVerification,
+        private CreatePasswordReset $createPasswordReset
     ) {}
     public function registerUser(array $data)
     {
-        DB::transaction(function () use ($data) {
+        return  DB::transaction(function () use ($data) {
 
             $data['password'] = Hash::make($data['password']);
             $data['email_verified_at'] = null;
 
             $user = User::create($data);
 
-            $token = app(CreateEmailVerification::class)->execute($user);
+            $token = $this->createEmailVerification->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
                 EmailVerificationRequested::dispatch($user, $token);
             });
+
+            return $user;
         });
     }
     public function login(array $data)
     {
         DB::transaction(function () use ($data) {
 
-            $user = User::where('email', $data['email'])->first();
+            $user = User::where('email', $data['email'])->lockForUpdate()->first();
 
             if (!$user || !Hash::check($data['password'], $user->password)) {
                 throw new LoginException;
             }
-            
+
             if (!$user->email_verified_at) {
                 throw new EmailNotVerifiedException;
             }
-            
+
             $this->twoFactorService->ensureNoActiveCode($user->id);
 
-
-            $code = app(CreateTwoFactorVerification::class)->execute($user);
+            $code = $this->createTwoFactorVerification->execute($user);
 
             DB::afterCommit(function () use ($user, $code) {
                 TwoFactorRegistered::dispatch($user, $code);
@@ -92,19 +96,18 @@ class AuthService
 
     public function forgetPassword(array $data)
     {
-        DB::transaction(function () use ($data) {
 
-            $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->first();
 
+        if (!$user->email_verified_at) {
+            throw new EmailNotVerifiedException;
+        }
 
-            if (!$user->email_verified_at) {
-                throw new EmailNotVerifiedException;
-            }
-
+        DB::transaction(function () use ($user) {
             $this->passwordResetService->ensureNoActiveToken($user->id);
 
 
-            $token = app(CreatePasswordReset::class)->execute($user);
+            $token = $this->createPasswordReset->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);

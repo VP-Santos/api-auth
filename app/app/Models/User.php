@@ -50,4 +50,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function setCurrentToken(string $token): void
+    {
+        $this->update([
+            'current_token' => $token
+        ]);
+    }
 }

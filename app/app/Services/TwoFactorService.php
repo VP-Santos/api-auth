@@ -19,39 +19,40 @@ use Illuminate\Support\Facades\DB;
 class TwoFactorService
 {
     public function __construct(
-    private CreateTwoFactorVerification $createTwoFactorVerification
-) {}
+        private CreateTwoFactorVerification $createTwoFactorVerification
+    ) {}
     public function verify(array $data): array
     {
-        $user = User::where('email', $data['email'])->firstOrFail();
+        return DB::transaction(function () use ($data) {
+            $user = User::where('email', $data['email'])->firstOrFail();
 
-        $twoFactor = TwoFactor::where('user_id', $user->id)
-            ->latest()
-            ->first();
+            $twoFactor = TwoFactor::where('user_id', $user->id)
+                ->lockForUpdate()
+                ->latest()
+                ->first();
 
-        if (!$twoFactor) {
-            throw new InvalidTwoFactorCodeException();
-        }
+            if (!$twoFactor) {
+                throw new InvalidTwoFactorCodeException();
+            }
 
-        if ($twoFactor->expires_at < now()) {
-            throw new InvalidTwoFactorCodeException();
-        }
+            if ($twoFactor->expires_at < now()) {
+                throw new InvalidTwoFactorCodeException();
+            }
 
-        if (!hash_equals($twoFactor->code, $data['code'])) {
-            throw new InvalidTwoFactorCodeException();
-        }
+            if (!hash_equals($twoFactor->code, $data['code'])) {
+                throw new InvalidTwoFactorCodeException();
+            }
 
-        $token = $user->createToken('access', [$user->access_level])->plainTextToken;
+            $token = $user->createToken('access', [$user->access_level])->plainTextToken;
 
-        $user->update([
-            'current_token' => $token
-        ]);
+            $user->setCurrentToken($token);
 
-        $twoFactor->delete();
+            $twoFactor->delete();
 
-        return [
-            'token' => $token
-        ];
+            return [
+                'token' => $token
+            ];
+        });
     }
 
     public function ensureNoActiveCode(int $userId): void

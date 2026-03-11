@@ -39,9 +39,7 @@ class EmailVerificationService
 
         $token = $user->createToken('access', [$user->access_level])->plainTextToken;
 
-        $user->update([
-            'current_token' => $token
-        ]);
+        $user->setCurrentToken($token);
 
         $record->delete();
 
