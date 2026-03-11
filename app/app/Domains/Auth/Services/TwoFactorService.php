@@ -19,7 +19,7 @@ class TwoFactorService
     public function __construct(
         private CreateTwoFactorVerification $createTwoFactorVerification
     ) {}
-    public function verify(array $data): array
+    public function verify(array $data): string
     {
         return DB::transaction(function () use ($data) {
             $user = User::where('email', $data['email'])->firstOrFail();
@@ -43,13 +43,9 @@ class TwoFactorService
 
             $token = $user->createToken('access', [$user->access_level])->plainTextToken;
 
-            $user->setCurrentToken($token);
-
             $twoFactor->delete();
 
-            return [
-                'token' => $token
-            ];
+            return  $token;
         });
     }
 

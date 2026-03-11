@@ -24,6 +24,8 @@ class User extends Authenticatable
         'user_name',
         'password',
         'access_level',
+        'status',
+        'email_verified_at',
         'two_factor_enabled',
         'two_factor_secret',
     ];
@@ -43,18 +45,5 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
 
-    public function setCurrentToken(string $token): void
-    {
-        $this->update([
-            'current_token' => $token
-        ]);
-    }
 }

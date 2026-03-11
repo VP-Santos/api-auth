@@ -70,7 +70,7 @@ class AuthController
         return response()->json([
             'success' => true,
             'message' => 'successful login',
-            'token' => $response['token'],
+            'token' => $response,
         ]);
     }
 
@@ -79,7 +79,6 @@ class AuthController
         $user = request()->user();
 
         return response()->json([
-            'current_token'  => $user['current_token'],
             'credenciais' =>  $user->only([
                 'id',
                 'name',

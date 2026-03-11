@@ -5,13 +5,14 @@ namespace App\Domains\Auth\Services;
 use App\Domains\Auth\Exceptions\{
     InvalidTokenException,
 };
+
 use App\Domains\Auth\Models\EmailVerification;
 use App\Models\User;
 
 class EmailVerificationService
 {
     public function verify(string $token): string
-    {
+    {   
         $record = EmailVerification::where('token', $token)->first();
 
         if (!$record) {
@@ -27,7 +28,7 @@ class EmailVerificationService
         if ($user->email_verified_at) {
             throw new InvalidTokenException('Email has already been verified.', 409);
         }
-
+        
         $user->update([
             'email_verified_at' => now(),
             'status' => 'actived'
@@ -35,9 +36,7 @@ class EmailVerificationService
 
         $token = $user->createToken('access', [$user->access_level])->plainTextToken;
 
-        $user->setCurrentToken($token);
-
-        $record->delete();
+        // $record->delete();
 
         return $token;
     }
