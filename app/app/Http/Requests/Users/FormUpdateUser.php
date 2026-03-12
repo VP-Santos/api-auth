@@ -32,7 +32,6 @@ class FormUpdateUser extends FormRequest
 
     public function messages()
     {
-        // ... (as mensagens continuam as mesmas)
         return [
             'unique'                    => 'The registered :attribute already exists.',
             'email'                     => 'The :attribute field must be a valid email address.',

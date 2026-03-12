@@ -32,7 +32,6 @@ class FormStoreUsers extends FormRequest
 
     public function messages()
     {
-        // ... (as mensagens continuam as mesmas)
         return [
             'required'                  => 'The :attribute field is required.',
             'unique'                    => 'The registered :attribute already exists.',

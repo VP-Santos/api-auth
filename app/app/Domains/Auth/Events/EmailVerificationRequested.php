@@ -28,10 +28,4 @@ class EmailVerificationRequested
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    // public function broadcastOn(): array
-    // {
-    //     return [
-    //         new PrivateChannel('channel-name'),
-    //     ];
-    // }
 }
