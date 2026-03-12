@@ -3,6 +3,8 @@
 namespace App\Domains\Auth\Services;
 
 use App\Domains\Auth\Exceptions\{
+    EmailNotVerifiedException,
+    FlowException,
     InvalidTokenException,
     InvalidTwoFactorCodeException,
     VerificationAlreadySentException
@@ -75,13 +77,13 @@ class TwoFactorService
             $user = User::where('email', $data['email'])->first();
 
             if (!$user->email_verified_at) {
-                throw new InvalidTokenException('Email has already been verified.', 409);
+                throw new EmailNotVerifiedException();
             }
 
             $record = TwoFactor::where('user_id', '=', $user->id)->first();
 
             if (!$record) {
-                throw new InvalidTokenException();
+                throw new FlowException();
             }
 
             if ($record->expires_at > now()) {
