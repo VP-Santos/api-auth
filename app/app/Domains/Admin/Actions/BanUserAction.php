@@ -6,14 +6,8 @@ use App\Models\User;
 
 class BanUserAction
 {
-    public function execute(int $id): ?User
+    public function execute(User $user): User
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return null;
-        }
-
         $user->is_banned = true;
         $user->save();
 

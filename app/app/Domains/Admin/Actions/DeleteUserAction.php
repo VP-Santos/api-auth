@@ -6,14 +6,8 @@ use App\Models\User;
 
 class DeleteUserAction
 {
-    public function execute(int $id): bool
+    public function execute(User $user): bool
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return false;
-        }
-
         return $user->delete();
     }
 }

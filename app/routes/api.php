@@ -37,5 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/get-user/{id}', 'getUser');
         Route::put('/update-user/{id}', 'updateUser');
         Route::delete('/delete-user/{id}', 'deleteUser');
+        Route::put('/ban-user/{id}', 'banUser');
+        Route::put('/promote-user/{id}', 'promoteUser');
     });
 });

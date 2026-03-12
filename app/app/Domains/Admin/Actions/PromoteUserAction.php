@@ -6,14 +6,8 @@ use App\Models\User;
 
 class PromoteUserAction
 {
-    public function execute(int $id, string $newRole): ?User
+    public function execute(User $user, string $newRole): User
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return null;
-        }
-
         $user->role = $newRole;
         $user->save();
 
