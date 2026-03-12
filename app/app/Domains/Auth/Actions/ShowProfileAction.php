@@ -6,5 +6,8 @@ use App\Models\User;
 
 class ShowProfileAction
 {
-    public function execute() {}
+    public function execute(User $user): User
+    {
+        return $user;
+    }
 }

@@ -3,12 +3,12 @@
 namespace App\Domains\Admin\Services;
 
 use App\Domains\Admin\Actions\GetUserAction;
-use App\Domains\Admin\Actions\UpdateUserAction;
-use App\Domains\Admin\Actions\DeleteUserAction;
 use App\Domains\Admin\Actions\BanUserAction;
 use App\Domains\Admin\Actions\GetAllUsersAction;
 use App\Domains\Admin\Actions\PromoteUserAction;
 use App\Domains\Admin\Exceptions\UserNotFoundException;
+use App\Domains\Auth\Actions\DeleteUserAction;
+use App\Domains\Auth\Actions\UpdateUserAction;
 
 class AdminUserService
 {
