@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Admin\Services\AdminUserService;
 use App\Domains\Admin\Requests\{FormUpdateUserRequest};
 use App\Repositories\UserRepository;
 
-class AdmController
+class AdminController
 {
     public function __construct(public AdminUserService $adminUserServce) {}
     public function getAllUsers()

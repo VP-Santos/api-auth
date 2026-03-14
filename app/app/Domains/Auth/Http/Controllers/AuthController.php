@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Domains\Auth\Http\Controllers;
 
 use App\Domains\Auth\Requests\{
     FormForgotPasswordRequest,
