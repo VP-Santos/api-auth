@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Users;
+namespace App\Domains\Auth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class ResendAuthenticationCodeRequest extends FormRequest
+class FormResendAuthenticationCodeRequest extends FormRequest
 {
     public function authorize(): bool
     {

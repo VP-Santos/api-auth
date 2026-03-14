@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\Users\{
+use App\Domains\Auth\Requests\{
+    FormForgotPasswordRequest,
     FormLoginRequest,
-    FormStoreUsers,
-    FormUpdateUser,
-    VerifyTwoFactorRequest,
-    ForgotPasswordRequest,
-    ResetPasswordRequest,
-    UpdatePasswordRequest,
-    VerifyTokenEmailRequest,
-    ResendAuthenticationCodeRequest
+    FormRegisterUsers,
+    FormResendAuthenticationCodeRequest,
+    FormResetPasswordRequest,
+    FormVerifyTokenEmailRequest,
+    FormVerifyTwoFactorRequest,
 };
 use App\Domains\Auth\Services\{
     AuthService,
@@ -29,7 +27,7 @@ class AuthController
         private PasswordResetService $passwordResetService 
     ) {}
 
-    public function register(FormStoreUsers $request)
+    public function register(FormRegisterUsers $request)
     {
         $this->authService->registerUser($request->validated());
 
@@ -39,7 +37,7 @@ class AuthController
         ], 201);
     }
 
-    public function verifyEmail(VerifyTokenEmailRequest $request)
+    public function verifyEmail(FormVerifyTokenEmailRequest $request)
     {
         $request->validated();
         $token = $request['token'];
@@ -63,7 +61,7 @@ class AuthController
         ]);
     }
 
-    public function verifyTwoFactor(VerifyTwoFactorRequest $request)
+    public function verifyTwoFactor(FormVerifyTwoFactorRequest $request)
     {
         $response = $this->twoFactorService->verify($request->validated());
 
@@ -74,30 +72,6 @@ class AuthController
         ]);
     }
 
-    public function show()
-    {
-        $user = request()->user();
-
-        return response()->json([
-            'credenciais' =>  $user->only([
-                'id',
-                'name',
-                'email',
-            ])
-        ]);
-    }
-    public function update(FormUpdateUser $request)
-    {
-        $this->authService->updateUser($request->validated(), $request->user());
-
-        return response()->json(
-            [
-                'success' => true,
-                'message' => 'Data updated successfully.'
-            ],
-            200
-        );
-    }
     public function logout()
     {
         $user = request()->user();
@@ -110,7 +84,7 @@ class AuthController
         ]);
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request)
+    public function forgotPassword(FormForgotPasswordRequest $request)
     {
 
         $this->authService->forgetPassword($request->validated());
@@ -120,7 +94,7 @@ class AuthController
             'message' => 'verify your email'
         ]);
     }
-    public function resetPassword(ResetPasswordRequest $request)
+    public function resetPassword(FormResetPasswordRequest $request)
     {
         $this->passwordResetService->reset($request->validated());
 
@@ -129,18 +103,7 @@ class AuthController
             'message' => 'password reset successfully.'
         ]);
     }
-    public function updatePassword(UpdatePasswordRequest $request)
-    {
-        $user = $request->user();
-
-        $this->authService->updatePassword($request->validated(), $user);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password updated successfully.'
-        ]);
-    }
-    public function resendTokenPassword(ResendAuthenticationCodeRequest $request)
+    public function resendTokenPassword(FormResendAuthenticationCodeRequest $request)
     {
         $data = $request->validated();
 
@@ -151,7 +114,7 @@ class AuthController
             'message' => 'Authentication token has been sent to your email.'
         ]);
     }
-    public function resendTwoFactor(ResendAuthenticationCodeRequest $request)
+    public function resendTwoFactor(FormResendAuthenticationCodeRequest $request)
     {
         $data = $request->validated();
 

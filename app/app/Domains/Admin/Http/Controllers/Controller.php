@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Domains\Admin\Services\AdminUserService;
-use App\Http\Requests\Adm\FormDeleteUserRequest;
-use App\Http\Requests\Adm\FormGetUserRequest;
-use App\Http\Requests\Adm\FormUpdateUserRequest;
+use App\Domains\Admin\Requests\{FormUpdateUserRequest};
 use App\Repositories\UserRepository;
 
 class AdmController
