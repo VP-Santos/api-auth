@@ -2,7 +2,7 @@
 
 namespace App\Domains\Auth\Http\Controllers;
 
-use App\Domains\Auth\Requests\{
+use App\Domains\Auth\Http\Requests\{
     FormForgotPasswordRequest,
     FormLoginRequest,
     FormRegisterUsers,

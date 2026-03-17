@@ -19,6 +19,7 @@ class VerifyEmailMail extends Mailable
 
     public function build()
     {
+        // $url = config('domains.verifyEmail') . '?token=' . $this->token;
         $url = config('domains.verifyEmail') . '?token=' . $this->token;
         return $this->subject('Verifique seu e-mail')
                     ->view('email.VerifyEmail')
