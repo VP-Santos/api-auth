@@ -2,15 +2,15 @@
 
 namespace App\Domains\Auth\Exceptions;
 
-use Exception;
+use App\Exceptions\AbstractApiException;
 
-class EmailNotVerifiedException extends Exception
+class EmailNotVerifiedException extends AbstractApiException
 {
-    public function render()
+    protected int $httpCode = 403;
+    protected string $errorCode = 'EMAIL_NOT_VERIFIED';
+
+    public function __construct(string $message = 'Email not verified.')
     {
-        return response()->json([
-            'success'       => false,
-            'message'       => 'Your Email not yet verified.',
-        ], 401);
+        parent::__construct($message);
     }
 }

@@ -8,9 +8,10 @@ use App\Models\User;
 use App\Domains\Auth\Models\PasswordReset;
 
 use App\Domains\Auth\Exceptions\{
+    EmailNotVerifiedException,
+    ExpiredTokenException,
     InvalidTokenException,
     SamePasswordException,
-    VerificationAlreadySentException
 };
 
 use Illuminate\Support\Facades\{
@@ -21,7 +22,8 @@ use Illuminate\Support\Facades\{
 class PasswordResetService
 {
     public function __construct(
-        private CreatePasswordReset $createPasswordReset
+        private CreatePasswordReset $createPasswordReset,
+        private TokenThrottleService $tokenThrottleService
     ) {}
     public function reset(array $data): void
     {
@@ -30,16 +32,16 @@ class PasswordResetService
             $record = PasswordReset::where('token', $data['token'])->first();
 
             if (!$record) {
-                throw new InvalidTokenException('Token not found.');
+                throw new InvalidTokenException();
             }
 
             if ($record->expires_at < now()) {
-                throw new InvalidTokenException('Token has expired.');
+                throw new  ExpiredTokenException();
             }
 
-            $user = User::findOrFail($record->user_id);
+            $user = User::find($record->user_id);
 
-            if (Hash::check($data['password'], $user->password)) {
+            if (Hash::check($data['password'], $user?->password)) {
                 throw new SamePasswordException();
             }
 
@@ -51,48 +53,22 @@ class PasswordResetService
         });
     }
 
-    public function ensureNoActiveToken(int $userId): void
+    public function checkTokenState(int $userId): void
     {
-        $token = PasswordReset::where('user_id', $userId)->first();
-
-        if ($token?->expires_at > now()) {
-
-            $secondsRemaining = now()->diffInSeconds($token->expires_at);
-            $time = gmdate('i:s', $secondsRemaining);
-
-            throw new VerificationAlreadySentException(
-                "Verification token already sent. Please wait {$time} seconds."
-            );
-        }
-
-        if ($token) {
-            $token->delete();
-        }
+        
+        $this->tokenThrottleService->ensureNoActiveToken(PasswordReset::class, $userId);
     }
-
-    public function resend(array $data)
+    public function resend(array $data): void
     {
         DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->first();
 
             if (!$user->email_verified_at) {
-                throw new InvalidTokenException('Email has already been verified.', 409);
+                throw new EmailNotVerifiedException();
             }
 
-            $record = PasswordReset::where('user_id', '=', $user->id)->latest()->first();
-
-            if ($record->expires_at > now()) {
-
-                $secondsRemaining = now()->diffInSeconds($record->expires_at);
-
-                $time = gmdate('i:s', $secondsRemaining);
-                throw new VerificationAlreadySentException(
-                    "Verification token already sent. Please wait {$time} seconds before requesting a new one."
-                );
-            }
-
-            $record->delete();
+            $this->checkTokenState($user->id);
 
             $token = $this->createPasswordReset->execute($user);
 

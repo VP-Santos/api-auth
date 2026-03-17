@@ -2,24 +2,20 @@
 
 namespace App\Domains\Auth\Exceptions;
 
-use Exception;
+use App\Exceptions\AbstractApiException;
 
-class VerificationAlreadySentException extends Exception
+class VerificationAlreadySentException extends AbstractApiException
 {
-    protected $httpCode;
+    protected int $httpCode = 429;
+    protected string $errorCode = 'VERIFICATION_ALREADY_SENT';
 
-    public function __construct(string $message = "Verification code already sent. Please wait before requesting a new one.", int $httpCode = 429)
+    public function __construct(string $expiresAt)
     {
-        parent::__construct($message);
-        $this->httpCode = $httpCode;
-    }
+        $secondsRemaining = now()->diffInSeconds($expiresAt);
+        $time = gmdate('i:s', $secondsRemaining);
 
-    public function render()
-    {
-        return response()->json([
-            'success' => false,
-            'code'    => 'VERIFICATION_ALREADY_SENT',
-            'message' => $this->getMessage(),
-        ], $this->httpCode);
+        parent::__construct(
+            "Verification token already sent. Please wait {$time} seconds."
+        );
     }
 }

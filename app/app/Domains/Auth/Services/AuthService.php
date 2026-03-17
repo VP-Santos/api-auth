@@ -36,7 +36,6 @@ class AuthService
         return  DB::transaction(function () use ($data) {
 
             $data['password'] = Hash::make($data['password']);
-            $data['email_verified_at'] = null;
 
             $user = User::create($data);
 
@@ -63,7 +62,7 @@ class AuthService
                 throw new EmailNotVerifiedException;
             }
 
-            $this->twoFactorService->ensureNoActiveCode($user->id);
+            $this->twoFactorService->checkTwoFactorState($user->id);
 
             $code = $this->createTwoFactorVerification->execute($user);
 
@@ -72,28 +71,6 @@ class AuthService
             });
         });
     }
-    public function updateUser(array $dataUpdate, User $user)
-    {
-        DB::transaction(function () use ($dataUpdate, $user) {
-
-            $emailChanged = $user->email !== $dataUpdate['email'];
-
-            $user->update($dataUpdate);
-
-            if ($emailChanged) {
-
-                $user->email_verified_at = null;
-                $user->save();
-
-                $token = app(CreateEmailVerification::class)->execute($user);
-
-                DB::afterCommit(function () use ($user, $token) {
-                    EmailVerificationRequested::dispatch($user, $token);
-                });
-            }
-        });
-    }
-
     public function forgetPassword(array $data)
     {
 
@@ -104,20 +81,13 @@ class AuthService
         }
 
         DB::transaction(function () use ($user) {
-            $this->passwordResetService->ensureNoActiveToken($user->id);
-
-
+            $this->passwordResetService->checkTokenState($user->id);
+            
             $token = $this->createPasswordReset->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });
         });
-    }
-
-    public function updatePassword(array $data, User $user)
-    {
-        $user->password = Hash::make($data['password']);
-        $user->save();
     }
 }

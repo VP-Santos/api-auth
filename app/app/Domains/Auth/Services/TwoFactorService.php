@@ -4,10 +4,9 @@ namespace App\Domains\Auth\Services;
 
 use App\Domains\Auth\Exceptions\{
     EmailNotVerifiedException,
-    FlowException,
+    ExpiredTokenException,
     InvalidTokenException,
-    InvalidTwoFactorCodeException,
-    VerificationAlreadySentException
+    TokenNotFoundException,
 };
 
 use App\Domains\Auth\Actions\CreateTwoFactorVerification;
@@ -19,12 +18,14 @@ use Illuminate\Support\Facades\DB;
 class TwoFactorService
 {
     public function __construct(
-        private CreateTwoFactorVerification $createTwoFactorVerification
+        private CreateTwoFactorVerification $createTwoFactorVerification,
+        private TokenThrottleService $tokenThrottleService
+
     ) {}
     public function verify(array $data): string
     {
         return DB::transaction(function () use ($data) {
-            $user = User::where('email', $data['email'])->firstOrFail();
+            $user = User::where('email', $data['email'])->first();
 
             $twoFactor = TwoFactor::where('user_id', $user->id)
                 ->lockForUpdate()
@@ -32,15 +33,15 @@ class TwoFactorService
                 ->first();
 
             if (!$twoFactor) {
-                throw new InvalidTwoFactorCodeException();
+                throw new TokenNotFoundException();
             }
 
             if ($twoFactor->expires_at < now()) {
-                throw new InvalidTwoFactorCodeException();
+                throw new ExpiredTokenException();
             }
 
             if (!hash_equals($twoFactor->code, $data['code'])) {
-                throw new InvalidTwoFactorCodeException();
+                throw new InvalidTokenException();
             }
 
             $token = $user->createToken('access', [$user->access_level])->plainTextToken;
@@ -51,26 +52,13 @@ class TwoFactorService
         });
     }
 
-    public function ensureNoActiveCode(int $userId): void
+    public function checkTwoFactorState(int $userId): void
     {
-        $twoFactor = TwoFactor::where('user_id', $userId)->first();
-
-        if ($twoFactor?->expires_at > now()) {
-
-            $secondsRemaining = now()->diffInSeconds($twoFactor->expires_at);
-            $time = gmdate('i:s', $secondsRemaining);
-
-            throw new VerificationAlreadySentException(
-                "Verification code already sent. Please wait {$time} seconds."
-            );
-        }
-
-        if ($twoFactor) {
-            $twoFactor->delete();
-        }
+        $this->tokenThrottleService->ensureNoActiveToken(TwoFactor::class, $userId);
     }
 
-    public function resend(array $data)
+
+    public function resend(array $data): void
     {
         DB::transaction(function () use ($data) {
 
@@ -80,23 +68,8 @@ class TwoFactorService
                 throw new EmailNotVerifiedException();
             }
 
-            $record = TwoFactor::where('user_id', '=', $user->id)->first();
-
-            if (!$record) {
-                throw new FlowException();
-            }
-
-            if ($record->expires_at > now()) {
-
-                $secondsRemaining = now()->diffInSeconds($record->expires_at);
-
-                $time = gmdate('i:s', $secondsRemaining);
-                throw new VerificationAlreadySentException(
-                    "Verification token already sent. Please wait {$time} seconds before requesting a new one."
-                );
-            }
-
-            $record->delete();
+            app(TokenThrottleService::class)
+                ->ensureNoActiveToken(TwoFactor::class, $user->id);
 
             $token = $this->createTwoFactorVerification->execute($user);
 

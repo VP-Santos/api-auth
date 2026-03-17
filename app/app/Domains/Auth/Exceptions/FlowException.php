@@ -2,24 +2,16 @@
 
 namespace App\Domains\Auth\Exceptions;
 
-use Exception;
+use App\Exceptions\AbstractApiException;
 
-class FlowException extends Exception
+class FlowException extends AbstractApiException
 {
-    protected $httpCode;
+    protected int $httpCode = 400;
+    protected string $errorCode = 'FLOW_INVALID';
 
-    public function __construct(string $message = "Cannot resend token. Please start the login flow first.", int $httpCode = 400)
-    {
+    public function __construct(
+        string $message = 'Cannot resend token. Please start the login flow first.'
+    ) {
         parent::__construct($message);
-        $this->httpCode = $httpCode;
-    }
-
-    public function render()
-    {
-        return response()->json([
-            'success' => false,
-            'code'    => 'FLOW_INVALID',
-            'message' => $this->getMessage(),
-        ], $this->httpCode);
     }
 }

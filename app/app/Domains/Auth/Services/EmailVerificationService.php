@@ -3,6 +3,7 @@
 namespace App\Domains\Auth\Services;
 
 use App\Domains\Auth\Exceptions\{
+    EmailAlreadyVerifiedException,
     InvalidTokenException,
 };
 
@@ -16,17 +17,17 @@ class EmailVerificationService
         $record = EmailVerification::where('token', $token)->first();
 
         if (!$record) {
-            throw new InvalidTokenException('Token is invalid or has already been used.');
+            throw new InvalidTokenException();
         }
 
         if ($record->expires_at < now()) {
-            throw new InvalidTokenException('Token has expired.');
+            throw new InvalidTokenException();
         }
 
-        $user = User::findOrFail($record->user_id);
+        $user = User::find($record->user_id);
 
         if ($user->email_verified_at) {
-            throw new InvalidTokenException('Email has already been verified.', 409);
+            throw new EmailAlreadyVerifiedException();
         }
         
         $user->update([

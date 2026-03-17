@@ -19,7 +19,7 @@ class CreateTwoFactorVerification
         TwoFactor::create([
             'user_id' => $user->id,
             'code' => $code,
-            'expires_at' => now()->addMinutes(2),
+            'expires_at' => now()->addMinutes(1),
         ]);
 
         return $code;

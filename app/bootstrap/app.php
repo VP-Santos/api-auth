@@ -42,6 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success'    => false,
                 'code'      => 'database_error',
                 'message'   => 'A technical problem occurred...',
+                $e->getMessage()
             ], 500);
         });
         
