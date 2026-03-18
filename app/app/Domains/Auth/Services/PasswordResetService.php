@@ -10,6 +10,7 @@ use App\Domains\Auth\Models\PasswordReset;
 use App\Domains\Auth\Exceptions\{
     EmailNotVerifiedException,
     ExpiredTokenException,
+    FlowException,
     InvalidTokenException,
     SamePasswordException,
 };
@@ -23,9 +24,9 @@ class PasswordResetService
 {
     public function __construct(
         private CreatePasswordReset $createPasswordReset,
-        private TokenThrottleService $tokenThrottleService
+        private TokenService $tokenService
     ) {}
-    public function reset(array $data): void
+    public function verify(array $data): void
     {
         DB::transaction(function () use ($data) {
 
@@ -55,8 +56,8 @@ class PasswordResetService
 
     public function checkTokenState(int $userId): void
     {
-        
-        $this->tokenThrottleService->ensureNoActiveToken(PasswordReset::class, $userId);
+
+        $this->tokenService->ensureNoActiveToken(PasswordReset::class, $userId);
     }
     public function resend(array $data): void
     {
@@ -68,6 +69,12 @@ class PasswordResetService
                 throw new EmailNotVerifiedException();
             }
 
+            $tokenActive = $this->getActiveToken($user->id);
+
+            if ($tokenActive) {
+                throw new FlowException();
+            }
+
             $this->checkTokenState($user->id);
 
             $token = $this->createPasswordReset->execute($user);
@@ -76,5 +83,10 @@ class PasswordResetService
                 ForgotPassword::dispatch($user, $token);
             });
         });
+    }
+
+    public function getActiveToken(int $userId)
+    {
+        return $this->tokenService->getActiveToken(PasswordReset::class, $userId);
     }
 }

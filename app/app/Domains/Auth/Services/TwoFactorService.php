@@ -5,6 +5,7 @@ namespace App\Domains\Auth\Services;
 use App\Domains\Auth\Exceptions\{
     EmailNotVerifiedException,
     ExpiredTokenException,
+    FlowException,
     InvalidTokenException,
     TokenNotFoundException,
 };
@@ -19,7 +20,7 @@ class TwoFactorService
 {
     public function __construct(
         private CreateTwoFactorVerification $createTwoFactorVerification,
-        private TokenThrottleService $tokenThrottleService
+        private TokenService $tokenService
 
     ) {}
     public function verify(array $data): string
@@ -54,7 +55,7 @@ class TwoFactorService
 
     public function checkTwoFactorState(int $userId): void
     {
-        $this->tokenThrottleService->ensureNoActiveToken(TwoFactor::class, $userId);
+        $this->tokenService->ensureNoActiveToken(TwoFactor::class, $userId);
     }
 
 
@@ -68,14 +69,24 @@ class TwoFactorService
                 throw new EmailNotVerifiedException();
             }
 
-            app(TokenThrottleService::class)
-                ->ensureNoActiveToken(TwoFactor::class, $user->id);
+            $tokenActive = $this->getActiveTwoFactor($user->id);
 
+            if (!$tokenActive) {
+                throw new FlowException();
+            }
+            
+            $this->checkTwoFactorState($user->id);
+            
             $token = $this->createTwoFactorVerification->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {
                 TwoFactorRegistered::dispatch($user, $token);
             });
         });
+    }
+
+    public function getActiveTwoFactor(int $userId)
+    {
+        return $this->tokenService->getActiveToken(TwoFactor::class, $userId);
     }
 }

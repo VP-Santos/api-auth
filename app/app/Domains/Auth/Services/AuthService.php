@@ -14,6 +14,7 @@ use App\Domains\Auth\Events\{
 };
 use App\Domains\Auth\Exceptions\{
     EmailNotVerifiedException,
+    TokenAlreadySentException,
     LoginException,
 };
 use App\Models\User;
@@ -62,7 +63,11 @@ class AuthService
                 throw new EmailNotVerifiedException;
             }
 
-            $this->twoFactorService->checkTwoFactorState($user->id);
+            $tokenActive = $this->twoFactorService->getActiveTwoFactor($user->id);
+
+            if ($tokenActive?->expires_at > now()) {
+                throw new TokenAlreadySentException();
+            }
 
             $code = $this->createTwoFactorVerification->execute($user);
 
@@ -74,15 +79,19 @@ class AuthService
     public function forgetPassword(array $data)
     {
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->lockForUpdate()->first();
 
         if (!$user->email_verified_at) {
             throw new EmailNotVerifiedException;
         }
 
         DB::transaction(function () use ($user) {
-            $this->passwordResetService->checkTokenState($user->id);
-            
+
+            $tokenActive = $this->passwordResetService->getActiveToken($user->id);
+
+            if ($tokenActive?->expires_at > now()) {
+                throw new TokenAlreadySentException();
+            }
             $token = $this->createPasswordReset->execute($user);
 
             DB::afterCommit(function () use ($user, $token) {

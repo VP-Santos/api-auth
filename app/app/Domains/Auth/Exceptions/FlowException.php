@@ -10,8 +10,8 @@ class FlowException extends AbstractApiException
     protected string $errorCode = 'FLOW_INVALID';
 
     public function __construct(
-        string $message = 'Cannot resend token. Please start the login flow first.'
+        string $flow = 'login'
     ) {
-        parent::__construct($message);
+        parent::__construct("Cannot resend token. Please start the {$flow} flow first.");
     }
 }

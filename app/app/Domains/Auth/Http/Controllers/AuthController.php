@@ -96,7 +96,7 @@ class AuthController
     }
     public function resetPassword(FormResetPasswordRequest $request)
     {
-        $this->passwordResetService->reset($request->validated());
+        $this->passwordResetService->verify($request->validated());
 
         return response()->json([
             'success' => true,
