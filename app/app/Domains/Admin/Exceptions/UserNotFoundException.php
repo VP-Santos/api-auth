@@ -2,24 +2,15 @@
 
 namespace App\Domains\Admin\Exceptions;
 
-use Exception;
+use App\Exceptions\AbstractApiException;
 
-class UserNotFoundException extends Exception
+class UserNotFoundException extends AbstractApiException
 {
-    protected $httpCode;
+    protected int $httpCode = 404;
+    protected string $errorCode = 'USER_NOT_FOUND';
 
-    public function __construct(string $message = "Cannot resend token. Please start the login flow first.", int $httpCode = 400)
+    public function __construct(int $id)
     {
-        parent::__construct($message);
-        $this->httpCode = $httpCode;
-    }
-
-    public function render()
-    {
-        return response()->json([
-            'success' => false,
-            'code'    => 'FLOW_INVALID',
-            'message' => $this->getMessage(),
-        ], $this->httpCode);
+        parent::__construct("The user with ID $id was not found.");
     }
 }

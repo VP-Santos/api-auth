@@ -3,23 +3,23 @@
 use App\Domains\Auth\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(AuthController::class)->group(function () {
+Route::prefix('auth')->group(function () {
 
-    Route::post('/register', 'register')->name('register.auth');
-    Route::post('/login', 'login')->name('login.auth');
-    Route::post('/verify-email',  'verifyEmail')->name('verify.auth');
-    Route::post('/verify-twoFactor',  'verifyTwoFactor')->name('verifyTwoFactor.auth');
-    Route::post('/forgot-password',  'forgotPassword')->name('forgotPassword.auth');
-    Route::post('/reset-password',  'resetPassword')->name('resetPassword.auth');
-    Route::post('/resend-token-password',  'resendTokenPassword')->name('resendTokenPassword.auth');
-    Route::post('/resend-two-factor',  'resendTwoFactor')->name('resendTwoFactorEmail.auth');
-});
+    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 
-Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('banned')->group(function () {
 
-    Route::controller(AuthController::class)->group(function () {
-        Route::delete('/logout', 'logout');
+        Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+        Route::post('/email/verify', [AuthController::class, 'verifyEmail'])->name('auth.verifyEmail');
+        Route::post('/two-factor/verify', [AuthController::class, 'verifyTwoFactor'])->name('auth.verifyTwoFactor');
+        Route::post('/password/forgot', [AuthController::class, 'forgotPassword'])->name('auth.forgotPassword');
+        Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('auth.resetPassword');
+        Route::post('/password/resend-token', [AuthController::class, 'resendTokenPassword'])->name('auth.resendTokenPassword');
+        Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactor'])->name('auth.resendTwoFactor');
+
+
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::delete('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+        });
     });
 });
-
-

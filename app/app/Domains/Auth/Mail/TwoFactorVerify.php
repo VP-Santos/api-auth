@@ -19,7 +19,7 @@ class TwoFactorVerify extends Mailable
 
     public function build()
     {
-        return $this->subject('Verifique seu e-mail')
+        return $this->subject('Two-Factor Authentication')
                     ->view('email.twoFactor', ['twoFactor' => $this->twoFactor]);
     }
 }

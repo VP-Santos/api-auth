@@ -3,10 +3,10 @@
 use App\Domains\Users\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(UserController::class)->group(function () {
+Route::prefix('users')->controller(UserController::class)->group(function () {
 
-    Route::get('/me', 'me')->name('show-me');
-    Route::put('/update', 'update')->name('update-user');
-    Route::put('/update-password',  'updatePassword')->name('updatePassword.user');
-    Route::delete('/delete', 'deleteMe')->name('delete-user');
+    Route::get('/me', 'me')->name('users.showMe');
+    Route::patch('/me', 'updateMe')->name('users.updateMe');
+    Route::patch('/me/password', 'updatePassword')->name('users.updatePassword');
+    Route::delete('/me', 'deleteMe')->name('users.deleteMe');
 });

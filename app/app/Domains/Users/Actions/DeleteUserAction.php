@@ -8,6 +8,8 @@ class DeleteUserAction
 {
     public function execute(User $user): bool
     {
-        return $user->delete();
+        $user_name = $user->name;
+        $user->delete();
+        return $user_name;
     }
 }

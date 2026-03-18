@@ -29,7 +29,7 @@ class AdminUserService
         $user = $this->getUser->execute($id);
 
         if (!$user) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException($id);
         }
 
         return $user;
@@ -63,7 +63,7 @@ class AdminUserService
     {
         return $this->getAllUsers->execute();
     }
-    public function getUser($id)
+    public function getUser(int $id)
     {
         return $this->findUserOrFail($id);
     }

@@ -2,8 +2,8 @@
 
 namespace App\Domains\Admin\Http\Controllers;
 
+use App\Domains\Admin\Http\Requests\FormUpdateUserRequest;
 use App\Domains\Admin\Services\AdminUserService;
-use App\Domains\Admin\Requests\{FormUpdateUserRequest};
 use App\Repositories\UserRepository;
 
 class AdminController
@@ -16,53 +16,61 @@ class AdminController
 
         return response()->json([
             'success' => true,
+            'message' => 'Users retrieved successfully.',
             'users' => $all
         ], 200);
     }
 
 
-    public function getUser($id)
+    public function getUser(int $id)
     {
-        $userModel = $this->adminUserServce->getUser($id);
+        $user = $this->adminUserServce->getUser($id);
 
-        if ($userModel) {
-            $response = $userModel;
-            $statusCode = 200;
-        }
-
-        return response()->json($response, $statusCode);
+        return response()->json([
+            'success' => true,
+            'message' => 'User retrieved successfully.',
+            'user' => $user
+        ], 200);
     }
 
-    public function updateUser(FormUpdateUserRequest $request, $id)
+    public function updateUser(FormUpdateUserRequest $request, int $id)
     {
         $data = $request->validated();
 
         $user = $this->adminUserServce->updateUser($id, $data);
 
-        // return response()->json([
-        //     $response
-        // ], $statusCode);
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user->user_name} updated successfully.",
+            'data'      => $user,
+        ], 200);
     }
 
-    public function deleteUser($id)
+    public function deleteUser(int $id)
     {
-        $this->adminUserServce->deleteUser($id);
+        $user_name = $this->adminUserServce->deleteUser($id);
 
-        // return response()->json($response, $statusCode);
-
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user_name} deleted successfully.",
+        ], 200);
     }
-    public function banUser($id)
+    public function banUser(int $id)
     {
-        $this->adminUserServce->banUser($id);
+        $user = $this->adminUserServce->banUser($id);
 
-        // return response()->json($response, $statusCode);
-
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user->user_name} banned successfully.",
+        ], 200);
     }
-    public function promoteUser($id)
+    public function promoteUser(int $id)
     {
-        $this->adminUserServce->promoteUser($id, '');
+        $user = $this->adminUserServce->promoteUser($id, 'adm');
 
-        // return response()->json($response, $statusCode);
-
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user->user_name} promoted to admin successfully.",
+        ], 200);
     }
 }

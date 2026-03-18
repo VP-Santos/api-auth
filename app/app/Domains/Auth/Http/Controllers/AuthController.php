@@ -33,7 +33,7 @@ class AuthController
 
         return response()->json([
             'success'   => true,
-            'message'  => 'Account created. Please verify your email.',
+            'message'  => 'Account created. Please check your email for verification.',
         ], 201);
     }
 
@@ -46,7 +46,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'successful verification',
+            'message' => 'Email verification completed.',
             'token' => $tokenCreated
         ]);
     }
@@ -57,7 +57,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'Code sent, please check your email.',
+            'message' => 'Verification code sent to your email.',
         ]);
     }
 
@@ -67,7 +67,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'successful login',
+            'message' => 'Login successful.',
             'token' => $response,
         ]);
     }
@@ -80,7 +80,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'user logged out'
+            'message' => 'Logged out successfully.'
         ]);
     }
 
@@ -91,7 +91,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'verify your email'
+            'message' => 'Password reset email sent. Please check your inbox.'
         ]);
     }
     public function resetPassword(FormResetPasswordRequest $request)
@@ -100,7 +100,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'password reset successfully.'
+            'message' => 'Password has been reset successfully.'
         ]);
     }
     public function resendTokenPassword(FormResendAuthenticationCodeRequest $request)
@@ -111,7 +111,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'Authentication token has been sent to your email.'
+            'message' => 'Password reset token sent to your email.'
         ]);
     }
     public function resendTwoFactor(FormResendAuthenticationCodeRequest $request)
@@ -122,7 +122,7 @@ class AuthController
 
         return response()->json([
             'success' => true,
-            'message' => 'Two-factor authentication code has been sent to your email.'
+            'message' => 'Two-factor authentication code sent to your email.'
         ]);
     }
 }

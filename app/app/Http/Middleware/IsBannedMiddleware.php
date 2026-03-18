@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Exceptions\BannedUserException; 
 use Symfony\Component\HttpFoundation\Response;
 
-class AdmMiddleware
+class IsBannedMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,11 +17,11 @@ class AdmMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        
-        $response = ($user['access_level'] !== 'adm')
-            ? response()->json(['error' => 'unauthorized', 'message' => 'Unauthorized access'], 403)
-            : $next($request);
 
-        return $response;
+        if ($user && $user->is_banned) {
+            throw new BannedUserException();
+        }
+
+        return $next($request);
     }
 }

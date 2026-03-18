@@ -23,20 +23,21 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'credenciais' =>  $response
-        ]);
+            'message' => 'User retrieved successfully.',
+            'data' => $response
+        ], 200);
     }
 
     public function updateMe(FormUpdateUser $request)
     {
-        $this->updateUserAction->execute($request->user(), $request->validated());
+        $user = $request->user();
+        $updatedUser = $this->updateUserAction->execute($user, $request->validated());
 
-        return response()->json(
-            [
-                'success' => true,
-                'message' => 'Data updated successfully.'
-            ],
-        );
+        return response()->json([
+            'success' => true,
+            'message' => 'User data updated successfully.',
+            'data' => $updatedUser
+        ], 200);
     }
 
     public function updatePassword(FormUpdatePasswordRequest $request)
@@ -48,7 +49,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Password updated successfully.'
-        ]);
+        ], 200);
     }
 
     public function deleteMe(Request $request)
@@ -58,7 +59,8 @@ class UserController extends Controller
         $this->deleteUserAction->execute($user);
 
         return response()->json([
-            'message' => 'User deleted'
-        ]);
+            'success' => true,
+            'message' => 'Your account deleted successfully.'
+        ], 200);
     }
 }

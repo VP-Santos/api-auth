@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Middleware\AdmMiddleware;
+use App\Domains\Admin\Middleware\AdminMiddleware;
+use App\Http\Middleware\IsBannedMiddleware;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -18,33 +20,46 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'adm' => AdmMiddleware::class,
+            'admin' => AdminMiddleware::class,
+            'banned' => IsBannedMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->shouldRenderJsonWhen(function ($request, $e) {
-            return true;
+        $exceptions->shouldRenderJsonWhen(fn($request, $e) => $request->is('api/*'));
+
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'METHOD_NOT_ALLOWED',
+                'message' => 'HTTP method not allowed for this route.',
+            ], 405);
         });
 
-        $exceptions->render(function (RouteNotFoundException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'unauthenticated.'
-                ], 401);
-            }
-        });
+        // $exceptions->render(function (RouteNotFoundException $e, Request $request) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'error_code' => 'ROUTE_NOT_FOUND',
+        //         'message' => 'Route not found.',
+        //     ], 404);
+        // });
 
-        $exceptions->render(function (QueryException $e, $request) {
-            Log::error('Erro de Banco de Dados: ' . $e->getMessage());
+        $exceptions->render(function (QueryException $e, Request $request) {
 
             return response()->json([
-                'success'    => false,
-                'code'      => 'database_error',
-                'message'   => 'A technical problem occurred...',
-                $e->getMessage()
+                'success' => false,
+                'error_code' => 'DATABASE_ERROR',
+                'message' => 'A technical problem occurred.',
             ], 500);
         });
-        
+
+        // fallback genérico
+        $exceptions->render(function (Throwable $e, Request $request) {
+
+            return response()->json([
+                'success' => false,
+                'error_code' => 'UNEXPECTED_ERROR',
+                'message' => 'An unexpected error occurred.',
+            ], 500);
+        });
     })
     ->create();
