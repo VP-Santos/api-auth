@@ -20,65 +20,191 @@ git clone https://github.com/seu-usuario/seu-repositorio.git
 | :--- | :--- | :--- | :--- |
 | `GET` | `/status` | Verifica se a conexão com a API está ativa | Nenhuma |
 
-### 🟢 Status e Verificação
+#### Body:
+```json
+{
+	"status": "connected"
+}
+```
+
+### 🔐 Autenticação (/auth)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/register` | Cadastro de novos usuários no sistema | Nenhuma |
+
+#### Body:
+```json
+{
+    "name": "João Silva",
+    "user_name": "joaosilva_dev",
+    "email": "joao.silva@exemplo.com",
+    "password": "SenhaSegura@123",
+    "access_level": "user"
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/login`	| Realiza a autenticação e login do usuário | banned |
+
+#### Body:
+```json
+{
+	"email" : "joao.silva@exemplo.com",
+	"password" : "SenhaSegura@123"
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/email/verify` | Validação do endereço de e-mail | banned |
+
+#### Body:
+```json
+{
+	"token" : ""
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/two-factor/verify` | Validação do token de dois fatores (2FA) | banned |
-| Método | Endpoint | Descrição | Proteção |
-| :--- | :--- | :--- | :--- |
-| `POST` |	`/auth/password/forgot` | Solicitação de recuperação de senha | banned |
+
+#### Body:
+```json
+{
+	"email": "joao.silva@exemplo.com",
+	"code" : "303081"
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/password/reset` | Redefinição final da senha com o token | banned |
+
+#### Body:
+```json
+{
+	"token" : "2bdc0abc8f18c4525dac51d1c484fd6a515abb861e225a2b739cc274fab217c7",
+	"password" : "SenhaSegura@123",
+	"password_confirmation": "SenhaSegura@123"
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/password/resend-token` | Reenvia o token para troca de senha | banned |
-| Método | Endpoint | Descrição | Proteção |
-| :--- | :--- | :--- | :--- |
 | `POST` |	`/auth/two-factor/resend` | Reenvia o código de autenticação 2FA | banned |
+| `POST` |	`/auth/password/forgot` | Solicitação de recuperação de senha | banned |
+
+#### Body:
+```json
+{
+	"email" : "joao.silva@exemplo.com"
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/auth/logout` | Revoga o token e encerra a sessão ativa | auth:sanctum |
 
-### 🟢 Status e Verificação
+
+## Rotas autenticadas
+
+#### header
+|Key | Value |
+| :--- | :--- |
+| Authorization | Bearer 2|ywi2VweVRSRpmT1NrJiJanjpWqy4eqfik4FOKLMhc5d4c5be|
+| Accept | application/json |
+
+### 👤 Perfil do Usuário (/users)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/users/me` | Retorna os dados do perfil autenticado | auth:sanctum, banned |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/users/me` | Atualiza as informações do perfil do usuário |auth:sanctum, banned |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `PATCH` | `/users/me/password` | Realiza a alteração da própria senha |auth:sanctum, banned |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/users/me` | Permite que o usuário exclua a própria conta | auth:sanctum, banned |
 
-### 🟢 
+#### Body:
+```json
+ 
+```
+
+### 🛡️ Administração (/admin)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` |	`/admin/users` | Lista todos os usuários cadastrados (Admin) | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` |	`/admin/users/{id}` | Busca detalhes de um usuário específico por ID | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}` | Atualiza dados de qualquer usuário via Admin | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/admin/users/{id}` | Remove um usuário do sistema permanentemente | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/ban` | Aplica ou remove restrição (ban) de um usuário | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/promote` | Promove um usuário comum ao nível de Admin | admin, auth:sanctum |
+
+#### Body:
+```json
+
+```

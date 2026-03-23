@@ -7,7 +7,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -27,13 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn($request, $e) => $request->is('api/*'));
 
-        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
-            return response()->json([
-                'success' => false,
-                'error_code' => 'METHOD_NOT_ALLOWED',
-                'message' => 'HTTP method not allowed for this route.',
-            ], 405);
-        });
+        // $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'error_code' => 'METHOD_NOT_ALLOWED',
+        //         'message' => 'HTTP method not allowed for this route.',
+        //     ], 405);
+        // });
 
         $exceptions->render(function (RouteNotFoundException $e, Request $request) {
             return response()->json([
@@ -52,14 +51,5 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 500);
         });
 
-        // fallback genérico
-        $exceptions->render(function (Throwable $e, Request $request) {
-
-            return response()->json([
-                'success' => false,
-                'error_code' => 'UNEXPECTED_ERROR',
-                'message' => 'An unexpected error occurred.',
-            ], 500);
-        });
     })
     ->create();

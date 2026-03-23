@@ -29,11 +29,12 @@ class AuthController
 
     public function register(FormRegisterUsers $request)
     {
-        $this->authService->registerUser($request->validated());
+        $token = $this->authService->registerUser($request->validated());
 
         return response()->json([
             'success'   => true,
-            'message'  => 'Account created. Please check your email for verification.',
+            'message'   => 'Account created. Please check your email for verification.',    
+            'token'     => $token,
         ], 201);
     }
 
@@ -45,9 +46,9 @@ class AuthController
         $tokenCreated = $this->emailVerificationService->verify($token);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Email verification completed.',
-            'token' => $tokenCreated
+            'success'   => true,
+            'message'   => 'Email verification completed.',
+            'token'     => $tokenCreated
         ]);
     }
 

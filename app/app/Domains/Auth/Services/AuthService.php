@@ -46,7 +46,7 @@ class AuthService
                 EmailVerificationRequested::dispatch($user, $token);
             });
 
-            return $user;
+            return $token;
         });
     }
     public function login(array $data)
