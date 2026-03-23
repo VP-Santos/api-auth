@@ -34,22 +34,22 @@ return Application::configure(basePath: dirname(__DIR__))
         //     ], 405);
         // });
 
-        $exceptions->render(function (RouteNotFoundException $e, Request $request) {
-            return response()->json([
-                'success' => false,
-                'error_code' => 'ROUTE_NOT_FOUND',
-                'message' => 'Route not found.',
-            ], 404);
-        });
+        // $exceptions->render(function (RouteNotFoundException $e, Request $request) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'error_code' => 'ROUTE_NOT_FOUND',
+        //         'message' => 'Route not found.',
+        //     ], 404);
+        // });
 
-        $exceptions->render(function (QueryException $e, Request $request) {
+        // $exceptions->render(function (QueryException $e, Request $request) {
 
-            return response()->json([
-                'success' => false,
-                'error_code' => 'DATABASE_ERROR',
-                'message' => 'A technical problem occurred.',
-            ], 500);
-        });
+        //     return response()->json([
+        //         'success' => false,
+        //         'error_code' => 'DATABASE_ERROR',
+        //         'message' => 'A technical problem occurred.',
+        //     ], 500);
+        // });
 
     })
     ->create();

@@ -6,42 +6,61 @@ O projeto também demonstra a implementação de autenticação de usuários, co
 
 Mais do que um projeto introdutório, este trabalho evidencia minha capacidade de projetar e desenvolver soluções backend robustas, com foco em clareza, padronização e qualidade de código.
 
-# 🚀 Como executar o projeto
+# 🚀 API Auth – Guia de Execução e Consumo
 
-Clone o repositório:
+## 📥 Clonando o repositório
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/VP-Santos/api-auth.git
+cd api-auth
 ```
 
+## ▶️ Executando a aplicação
+```bash
+docker compose up -d
+```
 
-# Usando Api via postman ou insominia
+## 🌐 Consumo da API
 
-## url
+Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
+
+### 🔗 URL base
 ```bash
     http://localhost:8080/api
 ```
 
-## headers usados
+### 📌 Headers utilizados
 |Key | Value | quando usar |
 | :--- | :--- | :--- |
 | Accept | Application/json | em todas as rotas |
-| Authorization | Bearer 2|ywi2VweVRSRpmT1NrJiJanjpWqy4eqfik4FOKLMhc5d4c5be| Rotas autenticada |
+| Authorization | Bearer {token sanctum} | Rotas autenticada |
 
-# Padrão de resposta
+## 📦 Padrão de Resposta
 
-## sucesso 
+### ✅ Sucesso
 ```json
 {
 	"success": true,
-	"message": "Account created. Please check your email for verification.",
+	"message": "...",
 }
 ```
 
-## erro
+### ❌ Erro
+
+##### 🔹 String
 ```json
 {
 	"success": false,
-	"message": 
+	"message": "message"
+}
+```
+
+##### 🔹 Array
+```json
+{
+	"success": false,
+	"message": {
+        "campo" : "message"
+	}
 }
 ```
 
