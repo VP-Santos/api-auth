@@ -13,6 +13,38 @@ Clone o repositório:
 git clone https://github.com/seu-usuario/seu-repositorio.git
 ```
 
+
+# Usando Api via postman ou insominia
+
+## url
+```bash
+    http://localhost:8080/api
+```
+
+## headers usados
+|Key | Value | quando usar |
+| :--- | :--- | :--- |
+| Accept | Application/json | em todas as rotas |
+| Authorization | Bearer 2|ywi2VweVRSRpmT1NrJiJanjpWqy4eqfik4FOKLMhc5d4c5be| Rotas autenticada |
+
+# Padrão de resposta
+
+## sucesso 
+```json
+{
+	"success": true,
+	"message": "Account created. Please check your email for verification.",
+}
+```
+
+## erro
+```json
+{
+	"success": false,
+	"message": 
+}
+```
+
 ## 🛣️ Documentação das Rotas
 
 ### 🟢 Status e Verificação
@@ -40,6 +72,15 @@ git clone https://github.com/seu-usuario/seu-repositorio.git
     "email": "joao.silva@exemplo.com",
     "password": "SenhaSegura@123",
     "access_level": "user"
+}
+```
+
+#### response
+```json
+{
+	"success": true,
+	"message": "Account created. Please check your email for verification.",
+	"token": "7d641f4fcd783dee7e30e696c6e69896769a27208dc6062ef3ef6948c713c0e2"
 }
 ```
 
@@ -108,14 +149,6 @@ git clone https://github.com/seu-usuario/seu-repositorio.git
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/auth/logout` | Revoga o token e encerra a sessão ativa | auth:sanctum |
 
-
-## Rotas autenticadas
-
-#### header
-|Key | Value |
-| :--- | :--- |
-| Authorization | Bearer 2|ywi2VweVRSRpmT1NrJiJanjpWqy4eqfik4FOKLMhc5d4c5be|
-| Accept | application/json |
 
 ### 👤 Perfil do Usuário (/users)
 | Método | Endpoint | Descrição | Proteção |
