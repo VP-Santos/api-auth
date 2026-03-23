@@ -203,7 +203,11 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 
 #### Response:
 ```json
-
+{
+	"success": true,
+	"message": "...",
+    "data" : {}
+}
 ```
 
 | Método | Endpoint | Descrição | Proteção |
@@ -212,9 +216,11 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 
 #### Body:
 ```json
-
+{
+	"password" : "SenhaSegura@123",
+	"password_confirmation": "SenhaSegura@123"
+}
 ```
-
 
 #### Response:
 ```json
@@ -224,20 +230,34 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/users/me` | Permite que o usuário exclua a própria conta | auth:sanctum, banned |
-
-
+s
 ### 🛡️ Administração (/admin)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` |	`/admin/users` | Lista todos os usuários cadastrados (Admin) | admin, auth:sanctum |
 
+#### Response:
+```json
+{
+    "success" : true,
+    "message" : "Users retrieved successfully.",
+    "users" : {
+    }
+}
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` |	`/admin/users/{id}` | Busca detalhes de um usuário específico por ID | admin, auth:sanctum |
 
-#### Body:
+#### Response:
 ```json
-
+{
+    "success" : true,
+    "message" : "Users retrieved successfully.",
+    "user" : {
+    }
+}
 ```
 
 | Método | Endpoint | Descrição | Proteção |
@@ -246,32 +266,29 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 
 #### Body:
 ```json
+{
+    "name": "João Silva",
+    "user_name": "joaosilva_dev",
+    "email": "joao.silva@exemplo.com",
+    "password": "SenhaSegura@123"
+}
+```
+
+#### Response:
+```json
 
 ```
 
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/admin/users/{id}` | Remove um usuário do sistema permanentemente | admin, auth:sanctum |
-
-#### Body:
-```json
-
-```
-
-| Método | Endpoint | Descrição | Proteção |
-| :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/ban` | Aplica ou remove restrição (ban) de um usuário | admin, auth:sanctum |
-
-#### Response:
-```json
-
-```
-
-| Método | Endpoint | Descrição | Proteção |
-| :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/promote` | Promove um usuário comum ao nível de Admin | admin, auth:sanctum |
 
 #### Response:
 ```json
-
+{
+	"success": true,
+	"message": "...",
+}
 ```
