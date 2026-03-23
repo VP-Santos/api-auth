@@ -122,7 +122,7 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 #### Body:
 ```json
 {
-	"token" : ""
+	"token" : "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
 }
 ```
 
@@ -174,9 +174,17 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 | :--- | :--- | :--- | :--- |
 | `GET` | `/users/me` | Retorna os dados do perfil autenticado | auth:sanctum, banned |
 
-#### Body:
+#### response:
 ```json
-
+{
+	"success": true,
+	"message": "User retrieved successfully.",
+	"data": {
+		"id": 1,
+		"name": "joaosilva_dev",
+		"email": "joao.silva@exemplo.com"
+	}
+}
 ```
 
 | Método | Endpoint | Descrição | Proteção |
@@ -184,6 +192,16 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 | `PATCH` |	`/users/me` | Atualiza as informações do perfil do usuário |auth:sanctum, banned |
 
 #### Body:
+```json
+{
+    "name": "João Silva",
+    "user_name": "joaosilva_dev",
+    "email": "joao.silva@exemplo.com",
+    "password": "SenhaSegura@123"
+}
+```
+
+#### Response:
 ```json
 
 ```
@@ -197,24 +215,21 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 
 ```
 
+
+#### Response:
+```json
+
+```
+
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/users/me` | Permite que o usuário exclua a própria conta | auth:sanctum, banned |
 
-#### Body:
-```json
- 
-```
 
 ### 🛡️ Administração (/admin)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `GET` |	`/admin/users` | Lista todos os usuários cadastrados (Admin) | admin, auth:sanctum |
-
-#### Body:
-```json
-
-```
 
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
@@ -247,7 +262,7 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/ban` | Aplica ou remove restrição (ban) de um usuário | admin, auth:sanctum |
 
-#### Body:
+#### Response:
 ```json
 
 ```
@@ -256,7 +271,7 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 | :--- | :--- | :--- | :--- |
 | `PATCH` |	`/admin/users/{id}/promote` | Promove um usuário comum ao nível de Admin | admin, auth:sanctum |
 
-#### Body:
+#### Response:
 ```json
 
 ```

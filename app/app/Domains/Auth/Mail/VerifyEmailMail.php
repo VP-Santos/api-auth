@@ -22,9 +22,15 @@ class VerifyEmailMail extends Mailable
         // $url = config('domains.verifyEmail') . '?token=' . $this->token;
         $url = config('domains.verifyEmail') . '?token=' . $this->token;
         return $this->subject('CONFIRM EMAIL')
-                    ->view('email.VerifyEmail')
-                    ->with([
-                        'linkToken' => $url
-                    ]);
+            ->html('
+                <html>
+                    <body>
+                        <p>Olá,</p>
+                        <p>Por favor, confirme seu e-mail clicando no link abaixo:</p>
+                        <p><a href="' . $url . '">Confirmar E-mail</a></p>
+                        <p>Obrigado!</p>
+                    </body>
+                </html>
+            ');
     }
 }

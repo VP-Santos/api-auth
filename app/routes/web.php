@@ -8,13 +8,13 @@ Route::fallback(function () {
 });
 
 Route::get('/verify-email', function () {
-    return view('web.verifyEmail');
+    return request()->query('token', '');
 });
+
 Route::controller(WebController::class)->group(function(){
     Route::get('/', 'home')->name('homepage');
-    Route::get('/register', 'register')->name('register.web');
-    Route::post('/form-register', 'formRegister')->name('formRegister.web');
-    Route::get('/login', 'login')->name('login.web');
-    Route::get('/forgot-password', 'forgotPassword')->name('forgotPassword.web');
-    Route::get('/reset-password', 'resetPassword')->name('resetPassword.web');
+    Route::get('/register', 'register')->name('register');
+    Route::post('/form-register', 'formRegister')->name('formRegister');
+    Route::get('/forgot-password', 'forgotPassword')->name('forgotPassword');
+    Route::get('/reset-password', 'resetPassword')->name('resetPassword');
 });
