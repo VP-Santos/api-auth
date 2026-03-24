@@ -25,6 +25,8 @@ cd api-auth
 ## ▶️ Executando a aplicação
 ```bash
 docker compose up -d
+docker exec -it api_php bash
+php artisan migrate
 ```
 
 ## ❌ HTTP Status Codes
