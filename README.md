@@ -1,10 +1,18 @@
-Este projeto marca minha primeira API desenvolvida com Laravel, consolidando na prática o conhecimento adquirido ao longo de um ano de experiência profissional em desenvolvimento de software.
+Este projeto marca minha primeira API desenvolvida com Laravel, consolidando, na prática, o conhecimento adquirido ao longo de um ano de experiência profissional em desenvolvimento de software.
 
 A aplicação foi construída seguindo o padrão arquitetural MVC, com endpoints estruturados de acordo com os princípios REST, garantindo organização, escalabilidade e manutenibilidade do código.
 
 O projeto também demonstra a implementação de autenticação de usuários, controle de acesso e uso eficiente do ecossistema Laravel, aplicando boas práticas amplamente utilizadas no desenvolvimento de APIs modernas.
 
 Mais do que um projeto introdutório, este trabalho evidencia minha capacidade de projetar e desenvolver soluções backend robustas, com foco em clareza, padronização e qualidade de código.
+
+## 🛠️ Tecnologias utilizadas
+
+- Laravel
+- PHP
+- MySQL
+- Docker
+- Laravel Sanctum
 
 # 🚀 API Auth – Guia de Execução e Consumo
 
@@ -19,6 +27,20 @@ cd api-auth
 docker compose up -d
 ```
 
+## ❌ HTTP Status Codes
+
+| Code | Meaning |
+|------|--------|
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 422 | Validation Error |
+
+### 🔒 Protections
+- auth:sanctum → Requires authenticated user
+- admin → Requires admin role
+- banned → Blocks banned users
+
 ## 🌐 Consumo da API
 
 Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
@@ -31,7 +53,7 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 ### 📌 Headers utilizados
 |Key | Value | quando usar |
 | :--- | :--- | :--- |
-| Accept | Application/json | em todas as rotas |
+| Accept | application/json | em todas as rotas |
 | Authorization | Bearer {token sanctum} | Rotas autenticada |
 
 ## 📦 Padrão de Resposta
@@ -222,15 +244,10 @@ Você pode testar a API utilizando ferramentas como Postman ou Insomnia.
 }
 ```
 
-#### Response:
-```json
-
-```
-
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
 | `DELETE` | `/users/me` | Permite que o usuário exclua a própria conta | auth:sanctum, banned |
-s
+
 ### 🛡️ Administração (/admin)
 | Método | Endpoint | Descrição | Proteção |
 | :--- | :--- | :--- | :--- |
@@ -276,7 +293,12 @@ s
 
 #### Response:
 ```json
-
+{
+    "success": true,
+	"message": "User {$user->user_name} updated successfully.",
+	"data": {
+	}
+}
 ```
 
 | Método | Endpoint | Descrição | Proteção |
