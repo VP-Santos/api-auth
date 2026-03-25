@@ -35,7 +35,7 @@ git clone https://github.com/VP-Santos/api-auth.git
 cd api-auth
 ```
 
-#### Atenção!
+### Atenção!
 Caso sua maquina tenha mysql, redis rodando em docker ou na propria maquina deve alterar o .env antes de subir o projeto.
 
 se possui outro serviço para SMTP, também deve ser alterado no .env.
@@ -102,6 +102,8 @@ volumes:
 
 ## Subindo os serviços
 
+Em seu terminal rode o comando abaixo:
+
 ```bash
 docker compose up -d
 ```
@@ -113,7 +115,7 @@ Ao executar este comando, os container que vão estar rodando são:
 - api_mysql
 - api_mailhog
 
-#### Atenção!
+### Atenção!
 
 Caso já possua outros containers seja para Banco de dados, Redis e/ou serviço SMTP e seguiu o passo removendo os que vem no projeto, deve-se apontar esses containers para a mesma rede docker que a aplicação utiliza. 
 
@@ -137,4 +139,18 @@ Para visualizar se o container esta usando a rede docker da api, rode:
 
 ```bash
 docker inspect -f '{{json .NetworkSettings.Networks}}' meu_container
+```
+
+# Acessando o serviço
+
+Para visualizar o serviço pelo navegador, postman ou insominia o endereço do projeto é:
+
+```bash
+http://localhost:8080
+```
+
+E o mailhog, se for usado o mesmo do projeto
+
+```bash
+ http://localhost:8025/
 ```
