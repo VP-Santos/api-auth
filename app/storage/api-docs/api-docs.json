@@ -1,0 +1,56 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API AUTH",
+        "description": "API de autenticação de usuários",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/api/status": {
+            "get": {
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Teste de API",
+                "operationId": "c15296e5fe3364f3cd1aceb1d737c5e6",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StatusResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "connected"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Status",
+            "description": "Status"
+        }
+    ]
+}
