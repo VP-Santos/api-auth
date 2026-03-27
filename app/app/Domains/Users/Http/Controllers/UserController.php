@@ -2,7 +2,7 @@
 
 namespace App\Domains\Users\Http\Controllers;
 
-use App\Domains\Auth\Requests\FormUpdateUser;
+use App\Domains\Users\Http\Requests\FormUpdateUser;
 use App\Domains\Users\Actions\{DeleteUserAction, ShowUserAction, UpdateUserAction};
 use App\Domains\Users\Http\Requests\FormUpdatePasswordRequest;
 use App\Http\Controllers\Controller;

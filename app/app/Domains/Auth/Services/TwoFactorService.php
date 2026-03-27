@@ -59,9 +59,9 @@ class TwoFactorService
     }
 
 
-    public function resend(array $data): void
+    public function resend(array $data)
     {
-        DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->first();
 
@@ -74,14 +74,16 @@ class TwoFactorService
             if (!$tokenActive) {
                 throw new FlowException();
             }
-            
-            $this->checkTwoFactorState($user->id);
-            
-            $token = $this->createTwoFactorVerification->execute($user);
 
-            DB::afterCommit(function () use ($user, $token) {
-                TwoFactorRegistered::dispatch($user, $token);
+            $this->checkTwoFactorState($user->id);
+
+            $code = $this->createTwoFactorVerification->execute($user);
+
+            DB::afterCommit(function () use ($user, $code) {
+                TwoFactorRegistered::dispatch($user, $code);
             });
+
+            return $code;
         });
     }
 

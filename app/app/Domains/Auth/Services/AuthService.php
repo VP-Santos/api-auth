@@ -51,7 +51,7 @@ class AuthService
     }
     public function login(array $data)
     {
-        DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->lockForUpdate()->first();
 
@@ -74,6 +74,7 @@ class AuthService
             DB::afterCommit(function () use ($user, $code) {
                 TwoFactorRegistered::dispatch($user, $code);
             });
+            return $code;
         });
     }
     public function forgetPassword(array $data)
@@ -85,7 +86,7 @@ class AuthService
             throw new EmailNotVerifiedException;
         }
 
-        DB::transaction(function () use ($user) {
+        return DB::transaction(function () use ($user) {
 
             $tokenActive = $this->passwordResetService->getActiveToken($user->id);
 
@@ -97,6 +98,8 @@ class AuthService
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });
+
+            return $token;
         });
     }
 }

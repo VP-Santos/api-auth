@@ -13,7 +13,7 @@ Route::prefix('auth')->group(function () {
         Route::post('/email/verify', [AuthController::class, 'verifyEmail'])->name('verifyEmail');
         Route::post('/two-factor/verify', [AuthController::class, 'verifyTwoFactor'])->name('verifyTwoFactor');
         Route::post('/password/forgot', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
-        Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('resetPassword');
+        Route::patch('/password/reset', [AuthController::class, 'resetPassword'])->name('resetPassword');
         Route::post('/password/resend-token', [AuthController::class, 'resendTokenPassword'])->name('resendTokenPassword');
         Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactor'])->name('resendTwoFactor');
 

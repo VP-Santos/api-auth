@@ -59,9 +59,9 @@ class PasswordResetService
 
         $this->tokenService->ensureNoActiveToken(PasswordReset::class, $userId);
     }
-    public function resend(array $data): void
+    public function resend(array $data)
     {
-        DB::transaction(function () use ($data) {
+       return DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->first();
 
@@ -82,6 +82,7 @@ class PasswordResetService
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });
+            return $token;
         });
     }
 

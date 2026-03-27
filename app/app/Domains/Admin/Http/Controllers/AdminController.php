@@ -4,7 +4,6 @@ namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Admin\Http\Requests\FormUpdateUserRequest;
 use App\Domains\Admin\Services\AdminUserService;
-use App\Repositories\UserRepository;
 
 class AdminController
 {
