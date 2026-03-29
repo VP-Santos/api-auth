@@ -4,7 +4,6 @@ namespace App\Domains\Users\OpenApi;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "User", description: "Endpoints to manage the authenticated user's profile and account.")]
 class UserEndpoints
 {
     #[OA\Get(
@@ -12,7 +11,7 @@ class UserEndpoints
         summary: "Get authenticated user profile",
         description: "Retrieve the current authenticated user's profile data. Requires user authentication.",
         tags: ["User"],
-        security: [["sanctumAuth" => []]],
+        security: [],
         responses: [
             new OA\Response(
                 response: 200,
@@ -40,7 +39,7 @@ class UserEndpoints
         summary: "Update authenticated user profile",
         description: "Update the current authenticated user's profile information such as name, email, or username. Requires user authentication.",
         tags: ["User"],
-        security: [["sanctumAuth" => []]],
+        security: [],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -72,7 +71,7 @@ class UserEndpoints
         summary: "Update authenticated user password",
         description: "Update the current authenticated user's password. Requires current password and new password.",
         tags: ["User"],
-        security: [["sanctumAuth" => []]],
+        security: [],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -103,7 +102,7 @@ class UserEndpoints
         summary: "Delete authenticated user account",
         description: "Delete the currently authenticated user's account permanently. Requires user authentication.",
         tags: ["User"],
-        security: [["sanctumAuth" => []]],
+        security: [],
         responses: [
             new OA\Response(
                 response: 200,

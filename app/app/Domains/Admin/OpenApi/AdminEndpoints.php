@@ -4,14 +4,14 @@ namespace App\Domains\Admin\OpenApi;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Admin", description: "Endpoints for user management, accessible only by admin users.")]
 class AdminEndpoints
 {
     #[OA\Get(
         path: "/api/admin/users",
         summary: "Get all users",
-        description: "Retrieve a list of all users in the system. Requires admin privileges.",
+        description: "Listar todos os usuários existentes no sistema.",
         tags: ["Admin"],
+        security: [],
         responses: [
             new OA\Response(
                 response: 200,
@@ -40,14 +40,15 @@ class AdminEndpoints
     #[OA\Get(
         path: "/api/admin/users/{id}",
         summary: "Get single user",
-        description: "Retrieve details of a single user by ID. Admin access required.",
+        description: "Localizar e mostrar os dados do usuário pelo ID informado.",
         tags: ["Admin"],
+        security: [],
         parameters: [
             new OA\Parameter(
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID of the user",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
@@ -76,14 +77,15 @@ class AdminEndpoints
     #[OA\Patch(
         path: "/api/admin/users/{id}",
         summary: "Update user",
-        description: "Update user details such as name, email, or access level. Requires admin privileges.",
+        description: "Atualizar dados do usuário pelo id",
         tags: ["Admin"],
+        security: [],
         parameters: [
             new OA\Parameter(
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID of the user to update",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
@@ -94,7 +96,6 @@ class AdminEndpoints
                     new OA\Property(property: "name", type: "string", example: "John Denver"),
                     new OA\Property(property: "user_name", type: "string", example: "John"),
                     new OA\Property(property: "email", type: "string", format: "email", example: "john@example.com"),
-                    new OA\Property(property: "access_level", type: "string", example: "adm"),
                 ]
             )
         ),
@@ -117,14 +118,15 @@ class AdminEndpoints
     #[OA\Delete(
         path: "/api/admin/users/{id}",
         summary: "Delete user",
-        description: "Deletes a user by ID. Requires admin privileges.",
+        description: "Deletar o usuário pelo ID",
         tags: ["Admin"],
+        security: [],
         parameters: [
             new OA\Parameter(
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID of the user to delete",
+                description: "ID do usuario",
                 schema: new OA\Schema(type: "integer")
             )
         ],
@@ -146,14 +148,15 @@ class AdminEndpoints
     #[OA\Patch(
         path: "/api/admin/users/{id}/ban",
         summary: "Ban user",
-        description: "Bans a user from accessing the system. Admin access required.",
+        description: "Banir usuarios para bloquear acesso ao sistema",
         tags: ["Admin"],
+        security: [],
         parameters: [
             new OA\Parameter(
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID of the user to ban",
+                description: "ID do usuario",
                 schema: new OA\Schema(type: "integer")
             )
         ],
@@ -175,14 +178,15 @@ class AdminEndpoints
     #[OA\Patch(
         path: "/api/admin/users/{id}/promote",
         summary: "Promote user to admin",
-        description: "Promotes a user to admin role. Requires admin privileges.",
+        description: "Rota para promover usuario para admin",
         tags: ["Admin"],
+        security: [],
         parameters: [
             new OA\Parameter(
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID of the user to promote",
+                description: "ID do usuario",
                 schema: new OA\Schema(type: "integer")
             )
         ],
@@ -200,4 +204,36 @@ class AdminEndpoints
         ]
     )]
     public function promoteUser() {}
+
+    
+    #[OA\Patch(
+        path: "/api/admin/users/{id}/demote",
+        summary: "Demote Admin",
+        description: "Rota para remover previlégio de Admin",
+        tags: ["Admin"],
+        security: [],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID do usuario",
+                schema: new OA\Schema(type: "integer")
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "User promoted successfully.",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "success", type: "boolean", example: true),
+                        new OA\Property(property: "message", type: "string", example: "User John promoted to admin successfully.")
+                    ]
+                )
+            )
+        ]
+    )]
+
+    public function demoteUser(){}
 }

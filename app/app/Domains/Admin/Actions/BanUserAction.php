@@ -2,14 +2,20 @@
 
 namespace App\Domains\Admin\Actions;
 
-use App\Models\User;
+use App\Domains\Admin\Repositories\AdminRepository;
 
 class BanUserAction
 {
-    public function execute(User $user): User
+    public function __construct(
+        protected AdminRepository $repository
+    ) {}
+
+    public function execute(int $id)
     {
-        $user->is_banned = true;
-        $user->save();
+        $data = [
+            'is_banned' => true
+        ];
+        $user = $this->repository->update($id, $data);
 
         return $user;
     }

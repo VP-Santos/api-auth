@@ -8,6 +8,11 @@ use App\Domains\Admin\Services\AdminUserService;
 class AdminController
 {
     public function __construct(public AdminUserService $adminUserServce) {}
+
+    /**
+     * Summary of getAllUsers
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllUsers()
     {
 
@@ -20,7 +25,11 @@ class AdminController
         ], 200);
     }
 
-
+    /**
+     * Summary of getUser
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUser(int $id)
     {
         $user = $this->adminUserServce->getUser($id);
@@ -32,6 +41,12 @@ class AdminController
         ], 200);
     }
 
+    /**
+     * Summary of updateUser
+     * @param \App\Domains\Admin\Http\Requests\FormUpdateUserRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateUser(FormUpdateUserRequest $request, int $id)
     {
         $data = $request->validated();
@@ -45,6 +60,11 @@ class AdminController
         ], 200);
     }
 
+    /**
+     * Summary of deleteUser
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteUser(int $id)
     {
         $user_name = $this->adminUserServce->deleteUser($id);
@@ -54,6 +74,12 @@ class AdminController
             'message'   => "User {$user_name} deleted successfully.",
         ], 200);
     }
+
+    /**
+     * Summary of banUser
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function banUser(int $id)
     {
         $user = $this->adminUserServce->banUser($id);
@@ -63,6 +89,12 @@ class AdminController
             'message'   => "User {$user->user_name} banned successfully.",
         ], 200);
     }
+
+    /**
+     * Summary of promoteUser
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function promoteUser(int $id)
     {
         $user = $this->adminUserServce->promoteUser($id, 'adm');
@@ -70,6 +102,21 @@ class AdminController
         return response()->json([
             'success'   => true,
             'message'   => "User {$user->user_name} promoted to admin successfully.",
+        ], 200);
+    }
+
+    /**
+     * Summary of demoteUser
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function demoteUser(int $id)
+    {
+        $user = $this->adminUserServce->demoteUser($id, 'adm');
+
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user->user_name} demoted to user successfully.",
         ], 200);
     }
 }

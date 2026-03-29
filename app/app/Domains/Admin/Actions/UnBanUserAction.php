@@ -4,20 +4,18 @@ namespace App\Domains\Admin\Actions;
 
 use App\Domains\Admin\Repositories\AdminRepository;
 
-class PromoteUserAction
+class UnBanUserAction
 {
-
-    const ROLE_ADMIN = 'admin';
-
-
     public function __construct(
         protected AdminRepository $repository
     ) {}
 
     public function execute(int $id)
     {
-        $data = ['access_level' => self::ROLE_ADMIN];
-
+        $data = [
+            'is_banned' => false
+        ];
+        
         $user = $this->repository->update($id, $data);
 
         return $user;

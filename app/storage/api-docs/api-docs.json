@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API AUTH",
+        "title": "API AUTH DOCUMENTATION",
         "description": "API de autenticação de usuários",
         "version": "1.0.0"
     },
@@ -18,7 +18,7 @@
                     "Admin"
                 ],
                 "summary": "Get all users",
-                "description": "Retrieve a list of all users in the system. Requires admin privileges.",
+                "description": "Listar todos os usuários existentes no sistema.",
                 "operationId": "d7ec229d797fcdef58c4863a37216ae4",
                 "responses": {
                     "200": {
@@ -69,7 +69,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/api/admin/users/{id}": {
@@ -78,13 +79,13 @@
                     "Admin"
                 ],
                 "summary": "Get single user",
-                "description": "Retrieve details of a single user by ID. Admin access required.",
+                "description": "Localizar e mostrar os dados do usuário pelo ID informado.",
                 "operationId": "06da24a4294ab0b26c09ad09c5107d86",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the user",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -137,20 +138,21 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             },
             "delete": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Delete user",
-                "description": "Deletes a user by ID. Requires admin privileges.",
+                "description": "Deletar o usuário pelo ID",
                 "operationId": "2e00efe8eb8594602c40259061925550",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the user to delete",
+                        "description": "ID do usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -178,20 +180,21 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             },
             "patch": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Update user",
-                "description": "Update user details such as name, email, or access level. Requires admin privileges.",
+                "description": "Atualizar dados do usuário pelo id",
                 "operationId": "10e6cc6e14a6c4f82d2dfec112651dd9",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the user to update",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -216,10 +219,6 @@
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
-                                    },
-                                    "access_level": {
-                                        "type": "string",
-                                        "example": "adm"
                                     }
                                 },
                                 "type": "object"
@@ -251,7 +250,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/api/admin/users/{id}/ban": {
@@ -260,13 +260,13 @@
                     "Admin"
                 ],
                 "summary": "Ban user",
-                "description": "Bans a user from accessing the system. Admin access required.",
+                "description": "Banir usuarios para bloquear acesso ao sistema",
                 "operationId": "7de3f88cbca6b4f9c06805496be48c83",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the user to ban",
+                        "description": "ID do usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -294,7 +294,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/api/admin/users/{id}/promote": {
@@ -303,13 +304,13 @@
                     "Admin"
                 ],
                 "summary": "Promote user to admin",
-                "description": "Promotes a user to admin role. Requires admin privileges.",
+                "description": "Rota para promover usuario para admin",
                 "operationId": "42f3f44c975659ab51c0ac83c8c2c103",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the user to promote",
+                        "description": "ID do usuario",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -337,7 +338,52 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
+            }
+        },
+        "/api/admin/users/{id}/demote": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Demote Admin",
+                "description": "Rota para remover previlégio de Admin",
+                "operationId": "705e76b36f261aa46df724c5d7752e79",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User promoted successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User John promoted to admin successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
             }
         },
         "/api/auth/login": {
@@ -592,8 +638,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Delete current access token",
-                "description": "Logs out the current user by deleting the personal access token. \n                  Include the token in the 'Authorization' header: 'Bearer {token}'.",
+                "summary": "deletar o token de accesso atual",
+                "description": "Rota autenticada para deletar o token de acesso. \n                 'Authorization' header: 'Bearer {token}'.",
                 "operationId": "1127c34c3113d4b610186d0f3f549db6",
                 "responses": {
                     "200": {
@@ -617,11 +663,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                "security": []
             }
         },
         "/api/auth/password/forgot": {
@@ -1009,11 +1051,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
+                "security": []
             },
             "delete": {
                 "tags": [
@@ -1044,11 +1082,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
+                "security": []
             },
             "patch": {
                 "tags": [
@@ -1107,11 +1141,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
+                "security": []
             }
         },
         "/api/user/password": {
@@ -1171,11 +1201,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
+                "security": []
             }
         },
         "/api/status": {
@@ -1211,22 +1237,32 @@
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "sanctumAuth": {
+                "type": "http",
+                "description": "Use your Laravel Sanctum token here",
+                "bearerFormat": "API Token",
+                "scheme": "bearer"
+            }
+        }
+    },
     "tags": [
-        {
-            "name": "Admin",
-            "description": "Endpoints for user management, accessible only by admin users."
-        },
-        {
-            "name": "User",
-            "description": "Endpoints to manage the authenticated user's profile and account."
-        },
         {
             "name": "Status",
             "description": "Endpoints to check API health and status"
         },
         {
             "name": "Auth",
-            "description": "Auth"
+            "description": "Endpoints for authentication: login, register, password reset, etc."
+        },
+        {
+            "name": "Admin",
+            "description": "Endpoints for admin user management"
+        },
+        {
+            "name": "User",
+            "description": "User"
         }
     ]
 }

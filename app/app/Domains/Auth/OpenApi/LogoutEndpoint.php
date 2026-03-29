@@ -9,11 +9,11 @@ class LogoutEndpoint
 
     #[OA\Delete(
         path: "/api/auth/logout",
-        summary: "Delete current access token",
-        description: "Logs out the current user by deleting the personal access token. 
-                  Include the token in the 'Authorization' header: 'Bearer {token}'.",
+        summary: "deletar o token de accesso atual",
+        description: "Rota autenticada para deletar o token de acesso. 
+                 'Authorization' header: 'Bearer {token}'.",
         tags: ["Auth"],
-        security: [["bearerAuth" => []]], // mantém autenticado
+        security: [],
         responses: [
             new OA\Response(
                 response: 200,

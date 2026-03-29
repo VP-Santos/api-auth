@@ -10,5 +10,7 @@ Route::middleware('admin')->controller(AdminController::class)
         Route::patch('/users/{id}', 'updateUser');
         Route::delete('/users/{id}', 'deleteUser');
         Route::patch('/users/{id}/ban',   'banUser');
+        Route::patch('/users/{id}/unban',   'unBanUser');
         Route::patch('/users/{id}/promote', 'promoteUser');
+        Route::patch('/users/{id}/demote', 'demoteUser');
     });

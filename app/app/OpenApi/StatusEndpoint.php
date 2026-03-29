@@ -4,10 +4,6 @@ namespace App\OpenApi;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(
-    name: "Status",
-    description: "Endpoints to check API health and status"
-)]
 class StatusEndpoint
 {
     #[OA\Get(

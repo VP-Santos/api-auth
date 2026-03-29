@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('user_name')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('access_level')->default('basic');
+            $table->enum('access_level',['admin','basic'])->default('basic');
             $table->boolean('is_banned')->default(false);
             $table->boolean('two_factor_enabled')->default(false);
             $table->text('two_factor_secret')->nullable();
