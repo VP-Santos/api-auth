@@ -11,16 +11,19 @@ use App\Domains\Admin\Actions\{
 class PrometeUserService
 {
     public function __construct(
+        protected PreventSelfActionService $selfAction,
         protected PromoteUserAction $promoteUser,
         protected DemoteUserAction $demoteUserAction,
     ) {}
 
-    public function promoteUser(int $id)
+    public function promote(int $id)
     {
+        $this->selfAction->check(request()->user(), $id);
         return $this->promoteUser->execute($id);
     }
-    public function demoteUser(int $id)
+    public function demote(int $id)
     {
+        $this->selfAction->check(request()->user(), $id);
         return $this->promoteUser->execute($id);
     }
 }

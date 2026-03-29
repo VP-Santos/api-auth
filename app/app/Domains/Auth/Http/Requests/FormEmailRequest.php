@@ -4,7 +4,7 @@ namespace App\Domains\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormResendAuthenticationCodeRequest extends FormRequest
+class FormEmailRequest extends FormRequest
 {
     public function authorize(): bool
     {

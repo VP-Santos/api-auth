@@ -4,9 +4,9 @@ namespace App\Domains\Users\Actions;
 
 use App\Models\User;
 
-class DeleteUserAction
+class DeleteMeAction
 {
-    public function execute(User $user): bool
+    public function execute(User $user): string
     {
         $user_name = $user->name;
         $user->delete();

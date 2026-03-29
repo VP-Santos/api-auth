@@ -4,20 +4,15 @@ namespace App\Domains\Admin\Actions;
 
 use App\Repositories\UserRepository;
 
-class BanUserAction
+class DeleteUserAction
 {
     public function __construct(
-        protected UserRepository $repository
+        protected UserRepository $repository,
     ) {}
-
     public function execute(int $id)
     {
-        $data = [
-            'is_banned' => true
-        ];
-
-        $user = $this->repository->update($id, $data);
-
+        $user = $this->repository->delete($id);
+        
         return $user;
     }
 }

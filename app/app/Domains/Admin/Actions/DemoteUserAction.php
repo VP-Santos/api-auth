@@ -2,15 +2,14 @@
 
 namespace App\Domains\Admin\Actions;
 
-use App\Domains\Admin\Repositories\AdminRepository;
-use App\Models\User;
+use App\Repositories\UserRepository;
 
 class DemoteUserAction
 {
     const ROLE_BASIC = 'basic';
 
     public function __construct(
-        protected AdminRepository $repository
+        protected UserRepository $repository
     ) {}
 
     public function execute(int $id)

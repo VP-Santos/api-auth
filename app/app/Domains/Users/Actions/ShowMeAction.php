@@ -4,7 +4,7 @@ namespace App\Domains\Users\Actions;
 
 use App\Models\User;
 
-class ShowUserAction
+class ShowMeAction
 {
     public function execute(User $user): array 
     {

@@ -2,7 +2,7 @@
 
 namespace App\Domains\Admin\Actions;
 
-use App\Domains\Admin\Repositories\AdminRepository;
+use App\Repositories\UserRepository;
 
 class PromoteUserAction
 {
@@ -11,7 +11,7 @@ class PromoteUserAction
 
 
     public function __construct(
-        protected AdminRepository $repository
+        protected UserRepository $repository
     ) {}
 
     public function execute(int $id)

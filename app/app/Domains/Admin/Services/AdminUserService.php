@@ -2,19 +2,23 @@
 
 namespace App\Domains\Admin\Services;
 
-use App\Domains\Admin\Actions\GetUserAction;
-use App\Domains\Admin\Actions\BanUserAction;
-use App\Domains\Admin\Actions\DemoteUserAction;
-use App\Domains\Admin\Actions\GetAllUsersAction;
-use App\Domains\Admin\Actions\PromoteUserAction;
-use App\Domains\Admin\Actions\UnBanUserAction;
-use App\Domains\Admin\Exceptions\UserNotFoundException;
-use App\Domains\Users\Actions\DeleteUserAction;
-use App\Domains\Users\Actions\UpdateUserAction;
+use App\Domains\Admin\Actions\{
+    BanUserAction,
+    DeleteUserAction,
+    DemoteUserAction,
+    GetAllUsersAction,
+    GetUserAction,
+    PromoteUserAction,
+    UnBanUserAction,
+    UpdateUserAction
+};
+
+use App\Repositories\UserRepository;
 
 class AdminUserService
 {
     public function __construct(
+        protected UserRepository $repository,
         protected GetUserAction $getUser,
         protected GetAllUsersAction $getAllUsers,
         protected UpdateUserAction $updateUser,
@@ -23,32 +27,23 @@ class AdminUserService
         protected UnBanUserAction $unBanUserAction,
         protected PromoteUserAction $promoteUser,
         protected DemoteUserAction $demoteUserAction,
+        protected PreventSelfActionService $selfAction,
     ) {}
 
-    /**
-     * Método central para pegar o usuário ou lançar exception
-     */
-    protected function findUserOrFail(int $id)
-    {
-        $user = $this->getUser->execute($id);
 
-        if (!$user) {
-            throw new UserNotFoundException($id);
-        }
-
-        return $user;
-    }
-    
+    /** */
     public function updateUser(int $id, array $data)
     {
-        $user = $this->findUserOrFail($id);
-        return $this->updateUser->execute($user, $data);
+        $this->selfAction->check(request()->user(), $id);
+
+        return $this->updateUser->execute($id, $data);
     }
 
     public function deleteUser(int $id)
     {
-        $user = $this->findUserOrFail($id);
-        return $this->deleteUser->execute($user);
+        $this->selfAction->check(request()->user(), $id);
+
+        return $this->deleteUser->execute($id);
     }
 
     public function getAllUsers()
@@ -57,6 +52,6 @@ class AdminUserService
     }
     public function getUser(int $id)
     {
-        return $this->findUserOrFail($id);
+        return $this->repository->find($id);
     }
 }

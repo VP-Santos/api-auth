@@ -3,7 +3,11 @@
 namespace App\Domains\Users\Http\Controllers;
 
 use App\Domains\Users\Http\Requests\FormUpdateUser;
-use App\Domains\Users\Actions\{DeleteUserAction, ShowUserAction, UpdateUserAction};
+use App\Domains\Users\Actions\{
+    DeleteMeAction,
+    ShowMeAction,
+    UpdateMeAction
+};
 use App\Domains\Users\Http\Requests\FormUpdatePasswordRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,15 +15,15 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct(
-        public ShowUserAction $showUserAction,
-        public UpdateUserAction $updateUserAction,
-        public DeleteUserAction $deleteUserAction,
+        public ShowMeAction $showMeAction,
+        public UpdateMeAction $updateMeAction,
+        public DeleteMeAction $deleteMeAction,
     ) {}
     public function me(Request $request)
     {
         $user = $request->user();
 
-        $response = $this->showUserAction->execute($user);
+        $response = $this->showMeAction->execute($user);
 
         return response()->json([
             'success' => true,
@@ -31,7 +35,7 @@ class UserController extends Controller
     public function updateMe(FormUpdateUser $request)
     {
         $user = $request->user();
-        $updatedUser = $this->updateUserAction->execute($user, $request->validated());
+        $updatedUser = $this->updateMeAction->execute($user, $request->validated());
 
         return response()->json([
             'success' => true,
@@ -44,7 +48,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $this->updateUserAction->execute($user, $request->validated());
+        $this->updateMeAction->execute($user, $request->validated());
 
         return response()->json([
             'success' => true,
@@ -56,7 +60,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $this->deleteUserAction->execute($user);
+        $this->deleteMeAction->execute($user);
 
         return response()->json([
             'success' => true,

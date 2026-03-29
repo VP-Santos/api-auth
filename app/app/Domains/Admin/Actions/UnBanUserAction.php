@@ -2,12 +2,12 @@
 
 namespace App\Domains\Admin\Actions;
 
-use App\Domains\Admin\Repositories\AdminRepository;
+use App\Repositories\UserRepository;
 
 class UnBanUserAction
 {
     public function __construct(
-        protected AdminRepository $repository
+        protected UserRepository $repository
     ) {}
 
     public function execute(int $id)
@@ -15,7 +15,7 @@ class UnBanUserAction
         $data = [
             'is_banned' => false
         ];
-        
+
         $user = $this->repository->update($id, $data);
 
         return $user;

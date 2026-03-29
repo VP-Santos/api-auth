@@ -5,7 +5,7 @@ namespace App\Domains\Users\Actions;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UpdateUserAction
+class UpdateMeAction
 {
     public function execute(User $user, array $data): User
     {   

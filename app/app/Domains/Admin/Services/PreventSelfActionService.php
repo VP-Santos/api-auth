@@ -15,10 +15,10 @@ class PreventSelfActionService
      * @param \App\Models\User $user
      * @return void
      */
-    public function check(Request $request, User $user) {
-
-        if($request->user() && $request->user()->id == $user->id){
-           throw new CannotPerformActionOnYourselfException;
+    public function check(User  $user, int $id)
+    {
+        if ($user->id == $id) {
+            throw new CannotPerformActionOnYourselfException;
         }
-    }    
+    }
 }

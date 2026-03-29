@@ -22,11 +22,11 @@ class FormRegisterUsers extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                      => 'required|regex:/^[A-Za-z]+$/',
+            'name'                      => 'required|regex:/^[\pL]+(?:\s[\pL]+)*$/u',
             'user_name'                 => 'required|string|unique:users,user_name',
             'email'                     => 'required|email|unique:users,email',
             'password'                  => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-            'access_level'              => 'required|string',
+            'access_level'              => 'required|in:admin,basic',
         ];
     }
 
@@ -37,9 +37,9 @@ class FormRegisterUsers extends FormRequest
             'unique'                    => 'The registered :attribute already exists.',
             'email'                     => 'The :attribute field must be a valid email address.',
             'user_name.string'          => 'The :attribute field must be a string.',
-            'access_level.string'       => 'The :attribute field must be a string.',
+            'access_level.in'           => 'The access level must be either admin or basic.',
             'password.regex'            => 'The :attribute must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.',
-            'name.regex'                => 'The :attribute field must contain only letters.',
+            'name.regex'                => 'The name may only contain letters and spaces.',
         ];
     }
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)

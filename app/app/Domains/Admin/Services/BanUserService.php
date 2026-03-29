@@ -10,17 +10,21 @@ use App\Domains\Admin\Actions\{
 class BanUserService
 {
     public function __construct(
-
+        protected PreventSelfActionService $selfAction,
         protected BanUserAction $banUser,
         protected UnBanUserAction $unBanUserAction,
     ) {}
 
-    public function banUser(int $id)
+    public function ban(int $id)
     {
+        $this->selfAction->check(request()->user(), $id);
+
         return $this->banUser->execute($id);
     }
-    public function unBanUser(int $id)
+    public function unBan(int $id)
     {
+        $this->selfAction->check(request()->user(), $id);
+        
         return $this->unBanUserAction->execute($id);
     }
 }

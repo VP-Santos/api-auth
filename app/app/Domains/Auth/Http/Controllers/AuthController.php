@@ -3,10 +3,9 @@
 namespace App\Domains\Auth\Http\Controllers;
 
 use App\Domains\Auth\Http\Requests\{
-    FormForgotPasswordRequest,
+    FormEmailRequest,
     FormLoginRequest,
     FormRegisterUsers,
-    FormResendAuthenticationCodeRequest,
     FormResetPasswordRequest,
     FormVerifyTokenEmailRequest,
     FormVerifyTwoFactorRequest,
@@ -50,6 +49,19 @@ class AuthController
             'access_token'      => $tokenCreated
         ]);
     }
+    public function resendVerifyEmail(FormEmailRequest $request)
+    {
+        $request->validated();
+        $token = $request['token'];
+
+        $tokenCreated = $this->emailVerificationService->verify($token);
+
+        return response()->json([
+            'success'           => true,
+            'message'           => 'Email verification completed.',
+            'access_token'      => $tokenCreated
+        ]);
+    }
 
     public function login(FormLoginRequest $request)
     {
@@ -73,7 +85,7 @@ class AuthController
         ]);
     }
 
-    public function resendTwoFactor(FormResendAuthenticationCodeRequest $request)
+    public function resendTwoFactor(FormEmailRequest $request)
     {
         $data = $request->validated();
 
@@ -86,7 +98,7 @@ class AuthController
         ]);
     }
 
-    public function forgotPassword(FormForgotPasswordRequest $request)
+    public function forgotPassword(FormEmailRequest $request)
     {
 
         $token = $this->authService->forgetPassword($request->validated());
@@ -108,7 +120,7 @@ class AuthController
         ]);
     }
 
-    public function resendTokenPassword(FormResendAuthenticationCodeRequest $request)
+    public function resendTokenPassword(FormEmailRequest $request)
     {
         $data = $request->validated();
 

@@ -18,7 +18,7 @@ class AdminMiddleware
     {
         $user = $request->user();
         
-        $response = ($user['access_level'] !== 'adm')
+        $response = ($user['access_level'] !== 'admin')
             ? response()->json(['error' => 'unauthorized', 'message' => 'Unauthorized access'], 403)
             : $next($request);
 

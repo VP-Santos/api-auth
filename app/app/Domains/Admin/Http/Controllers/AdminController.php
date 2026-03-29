@@ -4,10 +4,16 @@ namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Admin\Http\Requests\FormUpdateUserRequest;
 use App\Domains\Admin\Services\AdminUserService;
+use App\Domains\Admin\Services\BanUserService;
+use App\Domains\Admin\Services\PrometeUserService;
 
 class AdminController
 {
-    public function __construct(public AdminUserService $adminUserServce) {}
+    public function __construct(
+        public AdminUserService $adminUserServce,
+        public BanUserService $banUserService,
+        public PrometeUserService $prometeUserService 
+    ) {}
 
     /**
      * Summary of getAllUsers
@@ -75,14 +81,18 @@ class AdminController
         ], 200);
     }
 
-    /**
-     * Summary of banUser
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function banUser(int $id)
     {
-        $user = $this->adminUserServce->banUser($id);
+        $user = $this->banUserService->ban($id);
+
+        return response()->json([
+            'success'   => true,
+            'message'   => "User {$user->user_name} banned successfully.",
+        ], 200);
+    }
+    public function unBanUser(int $id)
+    {
+        $user = $this->banUserService->unBan($id);
 
         return response()->json([
             'success'   => true,
@@ -90,14 +100,9 @@ class AdminController
         ], 200);
     }
 
-    /**
-     * Summary of promoteUser
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function promoteUser(int $id)
     {
-        $user = $this->adminUserServce->promoteUser($id, 'adm');
+        $user = $this->prometeUserService->promote($id);
 
         return response()->json([
             'success'   => true,
@@ -105,18 +110,14 @@ class AdminController
         ], 200);
     }
 
-    /**
-     * Summary of demoteUser
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function demoteUser(int $id)
     {
-        $user = $this->adminUserServce->demoteUser($id, 'adm');
+        $id = $this->prometeUserService->demote($id);
 
         return response()->json([
             'success'   => true,
-            'message'   => "User {$user->user_name} demoted to user successfully.",
+            'message'   => "User {$id} demoted to user successfully.",
         ], 200);
     }
 }
