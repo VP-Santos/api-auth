@@ -10,8 +10,10 @@ class UserEndpoints
         path: "/api/user/me",
         summary: "Get authenticated user profile",
         description: "Retrieve the current authenticated user's profile data. Requires user authentication.",
-        tags: ["User"],
-        security: [],
+        tags: ["Users"],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -38,8 +40,10 @@ class UserEndpoints
         path: "/api/user/me",
         summary: "Update authenticated user profile",
         description: "Update the current authenticated user's profile information such as name, email, or username. Requires user authentication.",
-        tags: ["User"],
-        security: [],
+        tags: ["Users"],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -67,11 +71,13 @@ class UserEndpoints
     public function updateMe() {}
 
     #[OA\Patch(
-        path: "/api/user/password",
+        path: "/api/user/me/password",
         summary: "Update authenticated user password",
         description: "Update the current authenticated user's password. Requires current password and new password.",
-        tags: ["User"],
-        security: [],
+        tags: ["Users"],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -101,8 +107,10 @@ class UserEndpoints
         path: "/api/user/me",
         summary: "Delete authenticated user account",
         description: "Delete the currently authenticated user's account permanently. Requires user authentication.",
-        tags: ["User"],
-        security: [],
+        tags: ["Users"],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         responses: [
             new OA\Response(
                 response: 200,

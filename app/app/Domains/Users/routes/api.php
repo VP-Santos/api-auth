@@ -3,7 +3,7 @@
 use App\Domains\Users\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('users')->controller(UserController::class)->group(function () {
+Route::prefix('user')->controller(UserController::class)->group(function () {
 
     Route::get('/me', 'me')->name('users.showMe');
     Route::patch('/me', 'updateMe')->name('users.updateMe');

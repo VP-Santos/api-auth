@@ -8,5 +8,5 @@ Route::fallback(function () {
 });
 
 Route::get('/', function () {
-    return redirect('/api/documentation');
+    return redirect('/api/doc');
 });

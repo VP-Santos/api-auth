@@ -45,7 +45,7 @@ class RegisterEndpoint
                     new OA\Property(
                         property: "access_level",
                         type: "string",
-                        example: "adm",
+                        example: "admin",
                         description: "User's role or access level (e.g., admin, user)"
                     ),
                 ]

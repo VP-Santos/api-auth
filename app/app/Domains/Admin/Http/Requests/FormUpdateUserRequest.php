@@ -30,9 +30,6 @@ class FormUpdateUserRequest extends FormRequest
             'access_level.string' => 'The :attribute must be a string.',
             'password.regex'      => 'The :attribute must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters.',
             'name.regex'          => 'The :attribute must contain only letters.',
-            'cpf_cnpj.min'        => 'must contain at least 11 digits.',
-            'cpf_cnpj.max'        => 'must contain a maximum of 14 digits.',
-            'cpf_cnpj.regex'      => 'must contain only numbers.',
         ];
     }
 }

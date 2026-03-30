@@ -13,12 +13,15 @@ class FormUpdatePasswordRequest extends FormRequest
 
     public function rules(): array
     {
+        $passwordRegex = '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/';
+
         return [
+            'current_password' => 'required|current_password',
             'password' => [
                 'required',
                 'confirmed',
-                'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/'
-
+                'different:current_password',
+                "regex:$passwordRegex"
             ],
         ];
     }
@@ -26,10 +29,11 @@ class FormUpdatePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required'     => 'The password field is required.',
-            'password.confirmed'    => 'Password confirmation does not match.',
-            'password.regex'        => 'Password must contain at least 8 characters, including letters, numbers and special characters.',
-
+            'current_password.required' => 'Current password is required.',
+            'current_password.current_password' => 'Current password is incorrect.',
+            'password.required' => 'New password is required.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'password.regex' => 'Password must contain at least 8 characters, including letters, numbers and special characters.',
         ];
     }
 

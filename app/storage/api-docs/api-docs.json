@@ -70,7 +70,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/users/{id}": {
@@ -139,7 +143,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -181,7 +189,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -251,7 +263,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/users/{id}/ban": {
@@ -295,7 +311,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/users/{id}/promote": {
@@ -339,7 +359,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/admin/users/{id}/demote": {
@@ -383,7 +407,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/auth/login": {
@@ -663,7 +691,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/auth/password/forgot": {
@@ -895,7 +927,7 @@
                                     "access_level": {
                                         "description": "User's role or access level (e.g., admin, user)",
                                         "type": "string",
-                                        "example": "adm"
+                                        "example": "admin"
                                     }
                                 },
                                 "type": "object"
@@ -999,7 +1031,7 @@
         "/api/user/me": {
             "get": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
                 "summary": "Get authenticated user profile",
                 "description": "Retrieve the current authenticated user's profile data. Requires user authentication.",
@@ -1051,11 +1083,15 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
                 "summary": "Delete authenticated user account",
                 "description": "Delete the currently authenticated user's account permanently. Requires user authentication.",
@@ -1082,11 +1118,15 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
                 "summary": "Update authenticated user profile",
                 "description": "Update the current authenticated user's profile information such as name, email, or username. Requires user authentication.",
@@ -1141,17 +1181,21 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
-        "/api/user/password": {
+        "/api/user/me/password": {
             "patch": {
                 "tags": [
-                    "User"
+                    "Users"
                 ],
                 "summary": "Update authenticated user password",
                 "description": "Update the current authenticated user's password. Requires current password and new password.",
-                "operationId": "6606dc93a5e89456a0c3372af5dd32fd",
+                "operationId": "82baee586534cc269d06a5dd69922d05",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1201,7 +1245,11 @@
                         }
                     }
                 },
-                "security": []
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
             }
         },
         "/api/status": {
@@ -1257,12 +1305,12 @@
             "description": "Endpoints for authentication: login, register, password reset, etc."
         },
         {
-            "name": "Admin",
-            "description": "Endpoints for admin user management"
+            "name": "Users",
+            "description": "Endpoints to manage logged-in user profile and settings"
         },
         {
-            "name": "User",
-            "description": "User"
+            "name": "Admin",
+            "description": "Endpoints for admin user management"
         }
     ]
 }

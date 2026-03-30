@@ -13,7 +13,9 @@ class LogoutEndpoint
         description: "Rota autenticada para deletar o token de acesso. 
                  'Authorization' header: 'Bearer {token}'.",
         tags: ["Auth"],
-        security: [],
+            security: [
+        ["sanctumAuth" => []]
+    ],
         responses: [
             new OA\Response(
                 response: 200,

@@ -39,9 +39,6 @@ class FormUpdateUser extends FormRequest
             'access_level.string'       => 'The :attribute field must be a string.',
             'password.regex'            => 'The :attribute must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.',
             'name.regex'                => 'The :attribute field must contain only letters.',
-            'cpf_cnpj.min'              => 'Must contain at least 11 digits.',
-            'cpf_cnpj.max'              => 'Must contain a maximum of 14 digits.',
-            'cpf_cnpj.regex'            => 'Must contain only numbers.',
         ];
     }
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)

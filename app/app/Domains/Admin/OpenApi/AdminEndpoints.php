@@ -11,7 +11,9 @@ class AdminEndpoints
         summary: "Get all users",
         description: "Listar todos os usuários existentes no sistema.",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -42,7 +44,9 @@ class AdminEndpoints
         summary: "Get single user",
         description: "Localizar e mostrar os dados do usuário pelo ID informado.",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -79,7 +83,9 @@ class AdminEndpoints
         summary: "Update user",
         description: "Atualizar dados do usuário pelo id",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -120,7 +126,9 @@ class AdminEndpoints
         summary: "Delete user",
         description: "Deletar o usuário pelo ID",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -150,7 +158,9 @@ class AdminEndpoints
         summary: "Ban user",
         description: "Banir usuarios para bloquear acesso ao sistema",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -180,7 +190,9 @@ class AdminEndpoints
         summary: "Promote user to admin",
         description: "Rota para promover usuario para admin",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -205,13 +217,15 @@ class AdminEndpoints
     )]
     public function promoteUser() {}
 
-    
+
     #[OA\Patch(
         path: "/api/admin/users/{id}/demote",
         summary: "Demote Admin",
         description: "Rota para remover previlégio de Admin",
         tags: ["Admin"],
-        security: [],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -235,5 +249,5 @@ class AdminEndpoints
         ]
     )]
 
-    public function demoteUser(){}
+    public function demoteUser() {}
 }
