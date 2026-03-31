@@ -13,7 +13,7 @@ use App\Models\User;
 
 class EmailVerificationService
 {
-    public function __construct(private TokenService $tokenService) {}
+    public function __construct() {}
     public function verify(string $token): string
     {
         $record = EmailVerification::where('token', $token)->first();
@@ -23,10 +23,6 @@ class EmailVerificationService
         }
 
         $user = User::find($record->user_id);
-
-        if ($record->expires_at < now()) {
-            throw new ExpiredTokenException();
-        }
 
         $user->update([
             'email_verified_at' => now(),

@@ -72,7 +72,7 @@ class PasswordResetService
             $tokenActive = $this->getActiveToken($user->id);
 
             if ($tokenActive) {
-                throw new FlowException();
+                throw new FlowException('Forgot Password');
             }
 
             $this->checkTokenState($user->id);

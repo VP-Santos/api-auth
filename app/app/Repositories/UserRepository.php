@@ -24,7 +24,10 @@ class UserRepository implements RepositoryInterface
     public function find(int $id): ?User
     {
         $user = $this->model->find($id);
-
+        
+        if(!$user){
+            throw new UserNotFoundException($id);
+        }
         return $user;
     }
 

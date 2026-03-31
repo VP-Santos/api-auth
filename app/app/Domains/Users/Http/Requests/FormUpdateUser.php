@@ -22,11 +22,9 @@ class FormUpdateUser extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                      => 'nullable|regex:/^[A-Za-z]+$/',
+            'name'                      => 'nullable|regex:/^[\pL]+(?:\s[\pL]+)*$/u',
             'user_name'                 => 'nullable|string|unique:users,user_name',
             'email'                     => 'nullable|email|unique:users,email',
-            'password'                  => 'nullable|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-            'cpf_cnpj'                  => 'nullable|string|min:11|max:14|regex:/(\d+)/',
         ];
     }
 
@@ -36,9 +34,7 @@ class FormUpdateUser extends FormRequest
             'unique'                    => 'The registered :attribute already exists.',
             'email'                     => 'The :attribute field must be a valid email address.',
             'user_name.string'          => 'The :attribute field must be a string.',
-            'access_level.string'       => 'The :attribute field must be a string.',
-            'password.regex'            => 'The :attribute must be at least 8 characters long, including an uppercase letter, a lowercase letter, a number, and a special character.',
-            'name.regex'                => 'The :attribute field must contain only letters.',
+            'name.regex'                => 'The name may only contain letters and spaces.',
         ];
     }
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)

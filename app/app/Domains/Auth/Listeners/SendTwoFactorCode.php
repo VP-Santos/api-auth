@@ -15,6 +15,8 @@ class SendTwoFactorCode implements ShouldQueue
     /**
      * Create the event listener.
      */
+    public $queue = 'two-factor';
+    
     public function __construct()
     {
         //

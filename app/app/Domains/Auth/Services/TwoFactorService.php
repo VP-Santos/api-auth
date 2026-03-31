@@ -44,6 +44,8 @@ class TwoFactorService
             if (!hash_equals($twoFactor->code, $data['code'])) {
                 throw new InvalidTokenException();
             }
+            
+            $user->tokens()->delete();
 
             $token = $user->createToken('access', [$user->access_level])->plainTextToken;
 

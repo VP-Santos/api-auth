@@ -12,7 +12,7 @@ use App\Domains\Admin\Actions\{
     UnBanUserAction,
     UpdateUserAction
 };
-
+use App\Exceptions\BodyNotFoundException;
 use App\Repositories\UserRepository;
 
 class AdminUserService
@@ -33,7 +33,12 @@ class AdminUserService
 
     /** */
     public function updateUser(int $id, array $data)
-    {
+    {   
+
+        if(empty($data)){
+            throw new BodyNotFoundException();
+        }
+        
         $this->selfAction->check(request()->user(), $id);
 
         return $this->updateUser->execute($id, $data);

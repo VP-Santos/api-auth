@@ -14,6 +14,9 @@ class SendForgotPassword implements ShouldQueue
     /**
      * Create the event listener.
      */
+
+    public $queue = 'forgot-password';
+    
     public function __construct()
     {
         //

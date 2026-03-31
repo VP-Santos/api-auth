@@ -27,9 +27,6 @@ class FormResetPasswordRequest extends FormRequest
     {
         return [
             'token.required'     => 'Reset token is required.',
-            'email.required'     => 'The email field is required.',
-            'email.email'        => 'The email must be a valid email address.',
-            'email.exists'       => 'No account found with this email address.',
             'password.required'  => 'The password field is required.',
             'password.confirmed' => 'Password confirmation does not match.',
             'password.regex'     => 'Password must contain at least 8 characters, including letters, numbers and special characters.',

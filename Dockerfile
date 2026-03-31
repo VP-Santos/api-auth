@@ -4,11 +4,7 @@ RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get update \
     && apt-get install -y --no-install-recommends --fix-missing \
-    git \
-    unzip \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
+    git unzip libzip-dev libpng-dev libjpeg-dev supervisor \
     && docker-php-ext-install pdo_mysql mysqli gd zip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -24,9 +20,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
 RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["php-fpm"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

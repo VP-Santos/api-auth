@@ -15,10 +15,7 @@ class AdminController
         public PrometeUserService $prometeUserService 
     ) {}
 
-    /**
-     * Summary of getAllUsers
-     * @return \Illuminate\Http\JsonResponse
-     */
+    
     public function getAllUsers()
     {
 
@@ -31,11 +28,7 @@ class AdminController
         ], 200);
     }
 
-    /**
-     * Summary of getUser
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function getUser(int $id)
     {
         $user = $this->adminUserServce->getUser($id);
@@ -47,12 +40,7 @@ class AdminController
         ], 200);
     }
 
-    /**
-     * Summary of updateUser
-     * @param \App\Domains\Admin\Http\Requests\FormUpdateUserRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function updateUser(FormUpdateUserRequest $request, int $id)
     {
         $data = $request->validated();

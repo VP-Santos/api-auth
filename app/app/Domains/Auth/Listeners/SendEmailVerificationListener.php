@@ -14,6 +14,9 @@ class SendEmailVerificationListener implements ShouldQueue
     /**
      * Create the event listener.
      */
+    
+    public $queue = 'email-verification';
+
     public function __construct()
     {
         //
