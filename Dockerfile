@@ -20,11 +20,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-
 RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["php-fpm"]
