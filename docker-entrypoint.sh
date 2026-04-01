@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e  
 
 APP_DIR="/var/www/html"
@@ -26,6 +26,8 @@ echo "Ajustando permissões..."
 [ -d "$APP_DIR/storage" ] && chmod -R 777 $APP_DIR/storage
 [ -d "$APP_DIR/bootstrap/cache" ] && chmod -R 777 $APP_DIR/bootstrap/cache
 
+echo "Rodando migrations..."
+php artisan migrate --force
 
 echo "Iniciando PHP-FPM..."
 exec "$@"

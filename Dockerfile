@@ -15,8 +15,8 @@ RUN pecl install redis \
 
 WORKDIR /var/www/html
 
-RUN curl -sS https://getcomposer.org/installer | php -- \ 
-    --install-dir=/usr/bin --filename=composer 
+RUN curl -sS https://getcomposer.org/installer | php -- \
+--install-dir=/usr/bin --filename=composer 
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
