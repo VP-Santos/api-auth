@@ -8,10 +8,8 @@ RUN apt-get clean \
     && docker-php-ext-install pdo_mysql mysqli gd zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar PhpRedis
 RUN pecl install redis \
     && docker-php-ext-enable redis
-
 
 WORKDIR /var/www/html
 
@@ -21,9 +19,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
-    && chmod +x /usr/local/bin/docker-entrypoint.sh
+&& chmod +x /usr/local/bin/docker-entrypoint.sh
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
-CMD ["php-fpm"]

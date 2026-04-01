@@ -8,6 +8,7 @@ services:
       - ./app/:/var/www/html
     expose:
       - "9000" 
+    command: ["php-fpm"]
 
   nginx:
     container_name: api_nginx
@@ -51,15 +52,17 @@ services:
       - "1025:1025"  
       - "8025:8025"
 
-  # worker-supervisor:
-  #   build: .
-  #   container_name: api_worker
-  #   volumes:
-  #     - ./app:/var/www/html
-  #   depends_on:
-  #     - php
-  #     - redis
-  #   command: /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+  worker-supervisor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_worker
+    volumes:
+      - ./app/:/var/www/html
+    depends_on:
+      - php
+      - redis
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 volumes:
   mysql_data:
