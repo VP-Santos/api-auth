@@ -96,7 +96,6 @@
                                 We received a request to reset your password.
                                 Click the button below to create a new one.
                             </p>
-                            <input type="text" value="{{ $link }}">
                             <a href="{{ $link }}" class="button">
                                 Reset Password
                             </a>

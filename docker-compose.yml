@@ -53,9 +53,7 @@ services:
       - "8025:8025"
 
   worker-supervisor:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: api_worker
     volumes:
       - ./app/:/var/www/html
@@ -63,7 +61,7 @@ services:
       - php
       - redis
     command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
+        
 volumes:
   mysql_data:
   redis_data:

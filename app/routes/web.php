@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Web\WebController;
 use Illuminate\Support\Facades\Route;
 
 Route::fallback(function () {
@@ -10,3 +9,13 @@ Route::fallback(function () {
 Route::get('/', function () {
     return redirect('/api/doc');
 });
+Route::get('/', function () {
+    return redirect('/api/doc');
+});
+Route::get('/verify/email', function () {
+    return request()->query('token');
+});
+Route::get('/reset/password', function () {
+    return request()->query('token');
+});
+

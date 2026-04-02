@@ -16,11 +16,11 @@ class ForgotPassword extends Mailable
     {
         $this->forgotToken = $forgotToken;
     }
-
     public function build()
     {
-        $link = url(config('domains.reset') . '?token=' . $this->forgotToken);
+        $link = url('/reset/password?token=' . $this->forgotToken);
+
         return $this->subject('PASSWORD RESET VERIFICATION')
-                    ->view('email.forgotPassword', ['link' => $link]);
+            ->view('email.forgotPassword', ['link' => $link]);
     }
 }
