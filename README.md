@@ -1,17 +1,19 @@
 
 # Introdução
 
-Este é o meu primeiro projeto usando o framework laravel, montado de forma a ser consumido como uma API, neste projeto busco mostrar na pratica todo o conhecimento que adquiri com o meu primeiro trabalho em desenvolvimento. Contudo, este projeto também é para um conhecimento de como funciona o ecossistema de uma API de autenticação.
+Este é o meu primeiro projeto usando o framework Laravel, montado de forma a ser consumido como uma API. Neste projeto, busco mostrar na prática todo o conhecimento que adquiri com o meu primeiro trabalho em desenvolvimento. Contudo, este projeto também tem o objetivo de servir como aprendizado sobre o ecossistema de uma API de autenticação.
 
-A estrutura que a aplicação foi construida, visei separar as responsabilidades por dominios, sendo assim o projeto possui três dominios:
+A estrutura da aplicação foi construída visando separar as responsabilidades por domínios. Sendo assim, o projeto possui três domínios:
 
 - Auth
 - Admin
 - Users
 
-Montado de forma que me assegure uma boa escalabilidade e manutenção no codigo. As rotas do projeto foram estruturadas de acordo com os principios REST
+Foi montado de forma a assegurar boa escalabilidade e manutenção no código. As rotas do projeto foram estruturadas de acordo com os princípios REST.
 
-O foco desta API foi para melhorar e aperfeiçoar meu conhecimento dentro do mundo de desenvolvimento com PHP, Laravel e outras tecnologias como o Docker e Banco de Dados. Visando melhorar, deixando mais robusto e afiado o meu conhecimento seguindo boas praticas de programação e entender como funciona um serviço de Autenticação com envio de email (ex: confirmação, recuperação de senha, etc.). Com rotas para criação de usuarios e até mesmo rotas designadas para Adms.
+O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Laravel e outras tecnologias, como Docker e bancos de dados, tornando meu aprendizado mais robusto. Além disso, visa compreender como funciona um serviço de autenticação com envio de e-mail (ex.: confirmação, recuperação de senha, etc.), com rotas para criação de usuários e rotas designadas para administradores.
+
+Tecnologias utilizadas
 
 # Tecnologias utilizadas
 
@@ -21,10 +23,11 @@ O foco desta API foi para melhorar e aperfeiçoar meu conhecimento dentro do mun
 - Docker
 - Laravel Sanctum
 - Mailhog
+- Supervisor
 
 # Preparando o ambiente
 
-Para preparar o ambiente e assim testar este projeto, siga os passos abaixo:
+Para preparar o ambiente e testar este projeto, siga os passos abaixo:
 
 ## Clonando o repositório
 
@@ -35,10 +38,13 @@ git clone https://github.com/VP-Santos/api-auth.git
 cd api-auth
 ```
 
-### Atenção!
-Caso sua maquina tenha mysql, redis rodando em docker ou na propria maquina deve alterar o .env antes de subir o projeto.
+### Observação!
 
-se possui outro serviço para SMTP, também deve ser alterado no .env.
+Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando localmente ou via Docker, siga o passo a passo abaixo.
+
+#### arquivo .env-example
+
+Edite o arquivo .env-example para ajustar as configurações de conexão:
 
 ```env
 DB_CONNECTION=mysql
@@ -59,97 +65,69 @@ MAIL_PORT=1025
 MAIL_USERNAME=
 MAIL_PASSWORD=
 MAIL_FROM_ADDRESS="api_auth@egmail.com"
-MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-No arquivo docker-compose.yml deve ser removido o seguinte bloco:
+Em seguida, altere a extensão do arquivo docker-compose.override.yml para:
 
-```yaml
-  mysql:
-    container_name: api_mysql
-    image: mysql:8.0
-    environment:
-      TZ: America/Sao_Paulo
-      MYSQL_DATABASE: app_db
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: rootpass
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-  redis:
-    container_name: api_redis
-    image: redis:7.0
-    environment:
-      REDIS_PASSWORD: "a12345678"
-    command: ["redis-server","--requirepass", "a12345678", "--appendonly", "yes"]
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
-  mailhog:
-    container_name: api_mailhog
-    image: mailhog/mailhog:latest
-    ports:
-      - "1025:1025"  
-      - "8025:8025"
-volumes:
-  mysql_data:
-  redis_data:
+```bash
+docker-compose.override.txt
 ```
 
 ## Subindo os serviços
 
-Em seu terminal rode o comando abaixo:
+Execute o comando abaixo para iniciar os containers:
 
 ```bash
 docker compose up -d
 ```
 
-Ao executar este comando, os container que vão estar rodando são:
+Para visualizar os containers que estão rodando use o seguinte comando:
+
+```bash
+docker ps
+```
+
+Os seguintes serviços vão estar ativos:
+
+Containers essenciais:
 - api_nginx
-- api_redis
 - api_php
+- api_worker
+
+Caso tenha usado a configuração do docker-compose.override.yml do projeto será visualizado também os seguintes serviços. Containers extras (opcionais):
 - api_mysql
 - api_mailhog
+- api_redis
 
-### Atenção!
+#### Importante!
 
-Caso já possua outros containers seja para Banco de dados, Redis e/ou serviço SMTP e seguiu o passo removendo os que vem no projeto, deve-se apontar esses containers para a mesma rede docker que a aplicação utiliza. 
-
-Em seu terminal rode o comando:
+Se você alterou o .env-example e a extensão do docker-compose.override, os serviços extras (Redis, Mailhog, MySQL) que estiverem rodando em Docker devem ser conectados à rede da API:
 
 ```bash
-docker network ls
+api-auth-network
 ```
 
-Vai aparecer uma lista de redes das aplicações existentes no docker onde a rede da API é:
-
-- api-auth_default
-
-Em seguida rode o comando alerando o nome para cada container seja ele Redis, Banco de dados e/ou STMP
+Conecte cada container à rede usando:
 
 ```bash
-docker network connect api-auth_default nome_do_container
+docker network connect api-auth-network {nome_do_container}
 ```
 
-Para visualizar se o container esta usando a rede docker da api, rode:
+Verifique se o container está usando a rede corretamente:
 
 ```bash
-docker inspect -f '{{json .NetworkSettings.Networks}}' meu_container
+docker inspect -f '{{json .NetworkSettings.Networks}}' {meu_container}
 ```
 
 # Acessando o serviço
 
-Para visualizar o serviço pelo navegador, postman ou insominia o endereço do projeto é:
+- Documentação da API:
 
 ```bash
 http://localhost:8080
 ```
 
-E o mailhog, se for usado o mesmo do projeto
+- Mailhog (se utilizado):
 
 ```bash
  http://localhost:8025/
