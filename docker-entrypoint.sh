@@ -19,6 +19,11 @@ done
 
 echo "MySQL pronto!"
 
+if [ ! -d "vendor" ]; then
+    composer install --no-interaction --optimize-autoloader || echo "Erro no composer"
+fi
+
+
 # .env
 if [ ! -f ".env" ] && [ -f ".env.example" ]; then
     echo "Criando .env..."
