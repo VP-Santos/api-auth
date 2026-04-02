@@ -29,6 +29,8 @@ services:
     container_name: api_worker
     volumes:
       - ./app/:/var/www/html
+    depends_on:
+      - php
     command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 networks:
