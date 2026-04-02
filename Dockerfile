@@ -27,5 +27,3 @@ RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
 
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

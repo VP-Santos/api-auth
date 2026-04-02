@@ -8,7 +8,10 @@ services:
       - ./app/:/var/www/html
     expose:
       - "9000" 
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
     command: ["php-fpm"]
+    environment:
+      AUTO_SETUP: "true"
 
   nginx:
     container_name: api_nginx
