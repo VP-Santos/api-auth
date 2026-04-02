@@ -18,8 +18,6 @@ COPY ./app/ /var/www/html
 RUN curl -sS https://getcomposer.org/installer | php -- \
 --install-dir=/usr/bin --filename=composer 
 
-RUN composer install --no-interaction --optimize-autoloader
-
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
