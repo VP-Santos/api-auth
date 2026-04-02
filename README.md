@@ -104,13 +104,19 @@ Caso tenha usado a configuração do docker-compose.override.yml do projeto ser�
 Se você alterou o .env-example e a extensão do docker-compose.override, os serviços extras (Redis, Mailhog, MySQL) que estiverem rodando em Docker devem ser conectados à rede da API:
 
 ```bash
-api-auth-network
+api-auth_default
+```
+
+para visualizar a rede docker da API rode o comando e visualize a rede:
+
+```bash
+docker network ls
 ```
 
 Conecte cada container à rede usando:
 
 ```bash
-docker network connect api-auth-network {nome_do_container}
+docker network connect api-auth_default {nome_do_container}
 ```
 
 Verifique se o container está usando a rede corretamente:
