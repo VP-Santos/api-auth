@@ -12,7 +12,11 @@ services:
     command: ["php-fpm"]
     environment:
       AUTO_SETUP: "true"
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/ || exit 1"]
+      interval: 2s
+      retries: 10
+      
   nginx:
     container_name: api_nginx
     image: nginx:latest
