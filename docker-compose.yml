@@ -4,12 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: api_php
-    expose:
-      - "9000" 
-    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
-    command: ["php-fpm"]
-    environment:
-      AUTO_SETUP: "true"
     healthcheck:
       test: ["CMD", "php", "-v"]
       interval: 5s
@@ -24,10 +18,3 @@ services:
       - "8080:80"
     depends_on:
       - php
-
-  worker-supervisor:
-    build: .
-    container_name: api_worker
-    depends_on:
-      - php
-    command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
