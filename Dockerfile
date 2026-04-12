@@ -26,6 +26,8 @@ WORKDIR /var/www/html
 
 COPY ./app/ .
 
+RUN chown -R appuser:groupuser /var/www/html
+
 USER appuser 
 
 RUN composer install \
@@ -35,9 +37,6 @@ RUN composer install \
     --optimize-autoloader
 
 USER root
-
-RUN chown -R appuser:groupuser /var/www/html
-
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
