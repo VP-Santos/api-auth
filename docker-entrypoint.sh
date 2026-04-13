@@ -13,6 +13,8 @@ if [ -f /usr/local/etc/php-fpm.d/www.conf ]; then
     sed -i 's/group = www-data/group = groupuser/g' /usr/local/etc/php-fpm.d/www.conf
 fi
 
+
+
 # 2. Criar .env
 if [ ! -f ".env" ]; then
     echo "📄 Criando .env..."

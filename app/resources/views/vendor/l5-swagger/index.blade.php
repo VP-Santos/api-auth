@@ -23,6 +23,7 @@
     body {
       margin:0;
       background: #fafafa;
+      line-height: 1.6
     }
     </style>
     @if(config('l5-swagger.defaults.ui.display.dark_mode'))

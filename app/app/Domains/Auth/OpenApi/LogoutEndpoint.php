@@ -6,24 +6,31 @@ use OpenApi\Attributes as OA;
 
 class LogoutEndpoint
 {
-
     #[OA\Delete(
         path: "/api/auth/logout",
-        summary: "deletar o token de accesso atual",
-        description: "Rota autenticada para deletar o token de acesso. 
-                 'Authorization' header: 'Bearer {token}'.",
+        summary: "Encerrar sessão do usuário",
+        description: "Remove o token de acesso atual do usuário autenticado.\n\nHeader necessário:\nAuthorization: Bearer {token}",
         tags: ["Auth"],
-            security: [
-        ["sanctumAuth" => []]
-    ],
+        security: [
+            ["sanctumAuth" => []]
+        ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Logged out successfully.",
+                description: "Logout realizado com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "Logged out successfully."),
+                        new OA\Property(
+                            property: "success",
+                            type: "boolean",
+                            example: true,
+                        ),
+                        new OA\Property(
+                            property: "message",
+                            type: "string",
+                            example: "Logged out successfully.",
+                            description: "Mensagem de retorno da operação"
+                        ),
                     ]
                 )
             )

@@ -7,9 +7,9 @@ use OpenApi\Attributes as OA;
 class AdminEndpoints
 {
     #[OA\Get(
-        path: "/api/admin/users",
-        summary: "Get all users",
-        description: "Listar todos os usuários existentes no sistema.",
+        path: "/api/admin/usuarios",
+        summary: "Listar todos os usuários",
+        description: "Retorna todos os usuários cadastrados no sistema.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -17,18 +17,18 @@ class AdminEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "List of users retrieved successfully.",
+                description: "Lista de usuários retornada com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "Users retrieved successfully."),
+                        new OA\Property(property: "message", type: "string", example: "Usuários listados com sucesso."),
                         new OA\Property(property: "users", type: "array", items: new OA\Items(
                             type: "object",
                             properties: [
                                 new OA\Property(property: "id", type: "integer", example: 1),
                                 new OA\Property(property: "user_name", type: "string", example: "John"),
                                 new OA\Property(property: "email", type: "string", example: "john@example.com"),
-                                new OA\Property(property: "access_level", type: "string", example: "user"),
+                                new OA\Property(property: "access_level", type: "string", example: "usuario"),
                                 new OA\Property(property: "is_banned", type: "boolean", example: false),
                             ]
                         ))
@@ -40,9 +40,9 @@ class AdminEndpoints
     public function getAllUsers() {}
 
     #[OA\Get(
-        path: "/api/admin/users/{id}",
-        summary: "Get single user",
-        description: "Localizar e mostrar os dados do usuário pelo ID informado.",
+        path: "/api/admin/usuarios/{id}",
+        summary: "Buscar usuário por ID",
+        description: "Retorna os dados de um usuário específico com base no ID informado.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -59,16 +59,16 @@ class AdminEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User retrieved successfully.",
+                description: "Dados do usuário retornados com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User retrieved successfully."),
+                        new OA\Property(property: "message", type: "string", example: "Usuário encontrado com sucesso."),
                         new OA\Property(property: "user", type: "object", properties: [
                             new OA\Property(property: "id", type: "integer", example: 1),
                             new OA\Property(property: "user_name", type: "string", example: "John"),
                             new OA\Property(property: "email", type: "string", example: "john@example.com"),
-                            new OA\Property(property: "access_level", type: "string", example: "user"),
+                            new OA\Property(property: "access_level", type: "string", example: "usuario"),
                             new OA\Property(property: "is_banned", type: "boolean", example: false),
                         ])
                     ]
@@ -79,9 +79,9 @@ class AdminEndpoints
     public function getUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/users/{id}",
-        summary: "Update user",
-        description: "Atualizar dados do usuário pelo id",
+        path: "/api/admin/usuarios/{id}",
+        summary: "Atualizar usuário",
+        description: "Atualiza os dados de um usuário com base no ID informado.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -108,11 +108,11 @@ class AdminEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User updated successfully.",
+                description: "Usuário atualizado com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User John updated successfully."),
+                        new OA\Property(property: "message", type: "string", example: "Usuário atualizado com sucesso."),
                         new OA\Property(property: "data", type: "object")
                     ]
                 )
@@ -122,9 +122,9 @@ class AdminEndpoints
     public function updateUser() {}
 
     #[OA\Delete(
-        path: "/api/admin/users/{id}",
-        summary: "Delete user",
-        description: "Deletar o usuário pelo ID",
+        path: "/api/admin/usuarios/{id}",
+        summary: "Excluir usuário",
+        description: "Remove um usuário do sistema com base no ID informado.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -134,18 +134,18 @@ class AdminEndpoints
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID do usuario",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User deleted successfully.",
+                description: "Usuário excluído com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User John deleted successfully.")
+                        new OA\Property(property: "message", type: "string", example: "Usuário excluído com sucesso.")
                     ]
                 )
             )
@@ -154,9 +154,9 @@ class AdminEndpoints
     public function deleteUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/users/{id}/ban",
-        summary: "Ban user",
-        description: "Banir usuarios para bloquear acesso ao sistema",
+        path: "/api/admin/usuarios/{id}/banir",
+        summary: "Banir usuário",
+        description: "Bloqueia o acesso de um usuário ao sistema.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -166,18 +166,18 @@ class AdminEndpoints
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID do usuario",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User banned successfully.",
+                description: "Usuário banido com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User John banned successfully.")
+                        new OA\Property(property: "message", type: "string", example: "Usuário banido com sucesso.")
                     ]
                 )
             )
@@ -186,9 +186,9 @@ class AdminEndpoints
     public function banUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/users/{id}/promote",
-        summary: "Promote user to admin",
-        description: "Rota para promover usuario para admin",
+        path: "/api/admin/usuarios/{id}/promover",
+        summary: "Promover usuário",
+        description: "Concede privilégios de administrador a um usuário.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -198,18 +198,18 @@ class AdminEndpoints
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID do usuario",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User promoted successfully.",
+                description: "Usuário promovido com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User John promoted to admin successfully.")
+                        new OA\Property(property: "message", type: "string", example: "Usuário promovido para administrador com sucesso.")
                     ]
                 )
             )
@@ -217,11 +217,10 @@ class AdminEndpoints
     )]
     public function promoteUser() {}
 
-
     #[OA\Patch(
-        path: "/api/admin/users/{id}/demote",
-        summary: "Demote Admin",
-        description: "Rota para remover previlégio de Admin",
+        path: "/api/admin/usuarios/{id}/rebaixar",
+        summary: "Remover privilégios de administrador",
+        description: "Remove os privilégios de administrador de um usuário.",
         tags: ["Admin"],
         security: [
             ["sanctumAuth" => []]
@@ -231,23 +230,22 @@ class AdminEndpoints
                 name: "id",
                 in: "path",
                 required: true,
-                description: "ID do usuario",
+                description: "ID do usuário",
                 schema: new OA\Schema(type: "integer")
             )
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User promoted successfully.",
+                description: "Privilégios de administrador removidos com sucesso.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "User John promoted to admin successfully.")
+                        new OA\Property(property: "message", type: "string", example: "Usuário rebaixado com sucesso.")
                     ]
                 )
             )
         ]
     )]
-
     public function demoteUser() {}
 }

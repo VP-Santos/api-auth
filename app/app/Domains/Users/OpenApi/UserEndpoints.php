@@ -8,8 +8,8 @@ class UserEndpoints
 {
     #[OA\Get(
         path: "/api/user/me",
-        summary: "Get authenticated user profile",
-        description: "Retrieve the current authenticated user's profile data. Requires user authentication.",
+        summary: "Obtenha os dados de perfil do usuário autenticado",
+        description: "Recupera os dados do perfil do usuário autenticado atual.",
         tags: ["Users"],
         security: [
             ["sanctumAuth" => []]
@@ -17,7 +17,7 @@ class UserEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User profile retrieved successfully.",
+                description: "Perfil do usuário recuperado.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
@@ -38,8 +38,8 @@ class UserEndpoints
 
     #[OA\Patch(
         path: "/api/user/me",
-        summary: "Update authenticated user profile",
-        description: "Update the current authenticated user's profile information such as name, email, or username. Requires user authentication.",
+        summary: "Atualizar perfil de usuário autenticado",
+        description: "Atualize as informações do perfil do usuário autenticado, como nome, e-mail ou nome de usuário (name, user_name, email).",
         tags: ["Users"],
         security: [
             ["sanctumAuth" => []]
@@ -57,7 +57,7 @@ class UserEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User profile updated successfully.",
+                description: "Perfil do usuário atualizado.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
@@ -72,8 +72,8 @@ class UserEndpoints
 
     #[OA\Patch(
         path: "/api/user/me/password",
-        summary: "Update authenticated user password",
-        description: "Update the current authenticated user's password. Requires current password and new password.",
+        summary: "Atualizar senha do usuário autenticado",
+        description: "Atualize a senha do usuário autenticado. Requer a senha atual e a nova senha.",
         tags: ["Users"],
         security: [
             ["sanctumAuth" => []]
@@ -91,7 +91,7 @@ class UserEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Password updated successfully.",
+                description: "Senha atualizada",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
@@ -105,8 +105,8 @@ class UserEndpoints
 
     #[OA\Delete(
         path: "/api/user/me",
-        summary: "Delete authenticated user account",
-        description: "Delete the currently authenticated user's account permanently. Requires user authentication.",
+        summary: "Excluir conta de usuário autenticado",
+        description: "Exclui permanentemente a conta do usuário autenticado.",
         tags: ["Users"],
         security: [
             ["sanctumAuth" => []]
@@ -114,7 +114,7 @@ class UserEndpoints
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User account deleted successfully.",
+                description: "conta do usuario apagada.",
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),

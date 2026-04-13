@@ -12,17 +12,17 @@
         }
     ],
     "paths": {
-        "/api/admin/users": {
+        "/api/admin/usuarios": {
             "get": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Get all users",
-                "description": "Listar todos os usuários existentes no sistema.",
-                "operationId": "d7ec229d797fcdef58c4863a37216ae4",
+                "summary": "Listar todos os usuários",
+                "description": "Retorna todos os usuários cadastrados no sistema.",
+                "operationId": "1a880cc366e9d1c24eea404f7c47c8d9",
                 "responses": {
                     "200": {
-                        "description": "List of users retrieved successfully.",
+                        "description": "Lista de usuários retornada com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -33,7 +33,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Users retrieved successfully."
+                                            "example": "Usuários listados com sucesso."
                                         },
                                         "users": {
                                             "type": "array",
@@ -53,7 +53,7 @@
                                                     },
                                                     "access_level": {
                                                         "type": "string",
-                                                        "example": "user"
+                                                        "example": "usuario"
                                                     },
                                                     "is_banned": {
                                                         "type": "boolean",
@@ -77,14 +77,14 @@
                 ]
             }
         },
-        "/api/admin/users/{id}": {
+        "/api/admin/usuarios/{id}": {
             "get": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Get single user",
-                "description": "Localizar e mostrar os dados do usuário pelo ID informado.",
-                "operationId": "06da24a4294ab0b26c09ad09c5107d86",
+                "summary": "Buscar usuário por ID",
+                "description": "Retorna os dados de um usuário específico com base no ID informado.",
+                "operationId": "01a36d1f3c91acb74f4fa9b710e14808",
                 "parameters": [
                     {
                         "name": "id",
@@ -98,7 +98,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User retrieved successfully.",
+                        "description": "Dados do usuário retornados com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -109,7 +109,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User retrieved successfully."
+                                            "example": "Usuário encontrado com sucesso."
                                         },
                                         "user": {
                                             "properties": {
@@ -127,7 +127,7 @@
                                                 },
                                                 "access_level": {
                                                     "type": "string",
-                                                    "example": "user"
+                                                    "example": "usuario"
                                                 },
                                                 "is_banned": {
                                                     "type": "boolean",
@@ -153,14 +153,14 @@
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Delete user",
-                "description": "Deletar o usuário pelo ID",
-                "operationId": "2e00efe8eb8594602c40259061925550",
+                "summary": "Excluir usuário",
+                "description": "Remove um usuário do sistema com base no ID informado.",
+                "operationId": "98685aa266817a062f8ac22639e51d86",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do usuario",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -169,7 +169,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted successfully.",
+                        "description": "Usuário excluído com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -180,7 +180,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User John deleted successfully."
+                                            "example": "Usuário excluído com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -199,9 +199,9 @@
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Update user",
-                "description": "Atualizar dados do usuário pelo id",
-                "operationId": "10e6cc6e14a6c4f82d2dfec112651dd9",
+                "summary": "Atualizar usuário",
+                "description": "Atualiza os dados de um usuário com base no ID informado.",
+                "operationId": "77fb5956d775c0ccd1344c9502c7e0ca",
                 "parameters": [
                     {
                         "name": "id",
@@ -240,7 +240,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "User updated successfully.",
+                        "description": "Usuário atualizado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -251,7 +251,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User John updated successfully."
+                                            "example": "Usuário atualizado com sucesso."
                                         },
                                         "data": {
                                             "type": "object"
@@ -270,19 +270,19 @@
                 ]
             }
         },
-        "/api/admin/users/{id}/ban": {
+        "/api/admin/usuarios/{id}/banir": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Ban user",
-                "description": "Banir usuarios para bloquear acesso ao sistema",
-                "operationId": "7de3f88cbca6b4f9c06805496be48c83",
+                "summary": "Banir usuário",
+                "description": "Bloqueia o acesso de um usuário ao sistema.",
+                "operationId": "47f7ae593178a285b2ec8b9b25c357f4",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do usuario",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -291,7 +291,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User banned successfully.",
+                        "description": "Usuário banido com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -302,7 +302,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User John banned successfully."
+                                            "example": "Usuário banido com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -318,19 +318,19 @@
                 ]
             }
         },
-        "/api/admin/users/{id}/promote": {
+        "/api/admin/usuarios/{id}/promover": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Promote user to admin",
-                "description": "Rota para promover usuario para admin",
-                "operationId": "42f3f44c975659ab51c0ac83c8c2c103",
+                "summary": "Promover usuário",
+                "description": "Concede privilégios de administrador a um usuário.",
+                "operationId": "c19374b991af6f8ecfc1b346ecb7f957",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do usuario",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -339,7 +339,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User promoted successfully.",
+                        "description": "Usuário promovido com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -350,7 +350,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User John promoted to admin successfully."
+                                            "example": "Usuário promovido para administrador com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -366,19 +366,19 @@
                 ]
             }
         },
-        "/api/admin/users/{id}/demote": {
+        "/api/admin/usuarios/{id}/rebaixar": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Demote Admin",
-                "description": "Rota para remover previlégio de Admin",
-                "operationId": "705e76b36f261aa46df724c5d7752e79",
+                "summary": "Remover privilégios de administrador",
+                "description": "Remove os privilégios de administrador de um usuário.",
+                "operationId": "2927e1509f36303db45f639ab9d3774f",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do usuario",
+                        "description": "ID do usuário",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -387,7 +387,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User promoted successfully.",
+                        "description": "Privilégios de administrador removidos com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -398,7 +398,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User John promoted to admin successfully."
+                                            "example": "Usuário rebaixado com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -419,8 +419,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "User login",
-                "description": "Send user credentials (email and password). If valid, a temporary 2FA code will be sent to the user's email. Use `/two-factor/verify` to complete login.",
+                "summary": "Login do usuário",
+                "description": "Envia as credenciais do usuário (e-mail e senha). Se forem válidas, um código temporário de \n        autenticação em dois fatores (2FA) será enviado para o e-mail. Utilize o endpoint `/two-factor/verify` e coloque o codigo (2FA)\n         no body para concluir o login.",
                 "operationId": "e40b0495c4eff0333326595ac0f8484b",
                 "requestBody": {
                     "required": true,
@@ -433,13 +433,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "User's registered email address",
+                                        "description": "Endereço de e-mail cadastrado do usuário",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
                                     },
                                     "password": {
-                                        "description": "User's password",
+                                        "description": "Senha do usuário",
                                         "type": "string",
                                         "format": "password",
                                         "example": "Secret@123"
@@ -452,7 +452,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "A two-factor authentication code has been sent to the user's email.",
+                        "description": "Código de verificação enviado para o e-mail.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -466,7 +466,7 @@
                                             "example": "Verification code sent to your email."
                                         },
                                         "code": {
-                                            "description": "Temporary two-factor authentication code (6 digits), valid for a few minutes",
+                                            "description": "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos",
                                             "type": "string",
                                             "example": "671573"
                                         }
@@ -477,7 +477,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Credenciais inválidas",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -488,7 +488,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Invalid email or password"
+                                            "example": "Incorrect email or password."
                                         }
                                     },
                                     "type": "object"
@@ -504,8 +504,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Resend 2FA code",
-                "description": "Generate and send a new two-factor authentication code to the user's email. The previous code will expire once a new one is issued.",
+                "summary": "Reenviar código 2FA",
+                "description": "Verifica se o codigo foi enviado, se passou do tempo de expiração, gera um código novo  de autenticação em dois fatores (2FA) \n        e reenvia para o e-mail do usuário e invalidando o anterior. Utilize o novo codigo no `/two-factor/verify`.",
                 "operationId": "9a3e7153ade7e3f0bcb39a6616e9e1c4",
                 "requestBody": {
                     "required": true,
@@ -517,7 +517,7 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "User's registered email address",
+                                        "description": "Endereço de e-mail cadastrado do usuário",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
@@ -530,7 +530,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "A new 2FA code has been sent.",
+                        "description": "Novo código 2FA enviado.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -544,7 +544,7 @@
                                             "example": "Two-factor authentication code sent to your email."
                                         },
                                         "code": {
-                                            "description": "Temporary two-factor authentication code (6 digits), valid for a few minutes",
+                                            "description": "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos",
                                             "type": "string",
                                             "example": "303081"
                                         }
@@ -554,8 +554,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Email not found",
+                    "422": {
+                        "description": "E-mail não encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -566,7 +566,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User with this email not found"
+                                            "example": "No account found with this email address."
                                         }
                                     },
                                     "type": "object"
@@ -582,8 +582,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Verify 2FA code",
-                "description": "Verify the two-factor authentication code sent via email. On success, returns a Sanctum `access_token` for authenticating protected endpoints.",
+                "summary": "Verificar código 2FA",
+                "description": "Valida o código de autenticação em dois fatores (2FA) enviado por e-mail. Em caso de sucesso, retorna um `access_token` do Sanctum para acesso a rotas protegidas.",
                 "operationId": "9823f70c0045a04807127ae469f49464",
                 "requestBody": {
                     "required": true,
@@ -596,13 +596,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "User's registered email address",
+                                        "description": "Endereço de e-mail cadastrado do usuário",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
                                     },
                                     "code": {
-                                        "description": "Two-factor authentication code received via email, valid for a few minutes",
+                                        "description": "Código de autenticação em dois fatores recebido por e-mail (válido por alguns minutos)",
                                         "type": "string",
                                         "example": "303081"
                                     }
@@ -614,7 +614,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login successful, returns Sanctum access token.",
+                        "description": "Login realizado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -625,10 +625,10 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Login successful."
+                                            "example": "Login realizado com sucesso."
                                         },
                                         "access_token": {
-                                            "description": "Sanctum personal access token for authenticated requests. Use in 'Authorization: Bearer {token}' header",
+                                            "description": "Token de acesso do Sanctum para autenticação. Utilize no header: Authorization: Bearer {token}",
                                             "type": "string",
                                             "example": "1|aBc123Def456..."
                                         }
@@ -639,7 +639,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid or expired 2FA code",
+                        "description": "Código 2FA inválido ou expirado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -648,9 +648,37 @@
                                             "type": "boolean",
                                             "example": false
                                         },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "TOKEN_INVALID"
+                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "Invalid or expired 2FA code"
+                                            "example": "Invalid or expired token."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Código 2FA não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "TOKEN_NOT_FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token not found."
                                         }
                                     },
                                     "type": "object"
@@ -666,23 +694,25 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "deletar o token de accesso atual",
-                "description": "Rota autenticada para deletar o token de acesso. \n                 'Authorization' header: 'Bearer {token}'.",
+                "summary": "Encerrar sessão do usuário",
+                "description": "Remove o token de acesso atual do usuário autenticado.\n\nHeader necessário:\nAuthorization: Bearer {token}",
                 "operationId": "1127c34c3113d4b610186d0f3f549db6",
                 "responses": {
                     "200": {
-                        "description": "Logged out successfully.",
+                        "description": "Logout realizado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
+                                            "description": "Indica se a operação foi bem-sucedida",
                                             "type": "boolean",
                                             "example": true
                                         },
                                         "message": {
+                                            "description": "Mensagem de retorno da operação",
                                             "type": "string",
-                                            "example": "Logged out successfully."
+                                            "example": "Logout realizado com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -703,8 +733,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Request password reset email",
-                "description": "Sends a password reset link/token to the user's email. \n                      The user can then use this token to reset their password.",
+                "summary": "Solicitar redefinição de senha",
+                "description": "Envia um token de redefinição de senha para o e-mail do usuário. \nO usuário poderá utilizar esse token para cadastrar uma nova senha. atravéz do endpoint `/api/auth/password/reset`",
                 "operationId": "c317403636f13e8eefea5e1d014ce77d",
                 "requestBody": {
                     "required": true,
@@ -716,7 +746,7 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "The email address of the account to reset the password for",
+                                        "description": "E-mail da conta que terá a senha redefinida",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
@@ -729,7 +759,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password reset email successfully sent.",
+                        "description": "E-mail de redefinição enviado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -743,6 +773,7 @@
                                             "example": "Password reset email sent. Please check your inbox."
                                         },
                                         "token": {
+                                            "description": "Token temporário para redefinição de senha",
                                             "type": "string",
                                             "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
@@ -760,8 +791,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Reset password using token",
-                "description": "Resets the user's password using a valid token sent via email. \n                      Requires the new password and its confirmation.",
+                "summary": "Redefinir senha",
+                "description": "Redefine a senha do usuário utilizando um token válido enviado por e-mail. \nÉ necessário informar a nova senha e sua confirmação.",
                 "operationId": "b2e1fca85ef22c36ef668567e3310c6e",
                 "requestBody": {
                     "required": true,
@@ -775,17 +806,18 @@
                                 ],
                                 "properties": {
                                     "token": {
+                                        "description": "Token de redefinição de senha recebido por e-mail",
                                         "type": "string",
-                                        "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
+                                        "example": "5f44b18f095a512486a88b664a0e018..."
                                     },
                                     "password": {
-                                        "description": "New password",
+                                        "description": "Nova senha",
                                         "type": "string",
                                         "format": "password",
                                         "example": "Secret@123"
                                     },
                                     "password_confirmation": {
-                                        "description": "Confirmation of the new password",
+                                        "description": "Confirmação da nova senha",
                                         "type": "string",
                                         "format": "password",
                                         "example": "Secret@123"
@@ -798,7 +830,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password successfully reset.",
+                        "description": "Senha redefinida.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -810,10 +842,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Password has been reset successfully."
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "303081"
                                         }
                                     },
                                     "type": "object"
@@ -829,8 +857,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Resend password reset token",
-                "description": "Resends the password reset token to the user's email if they did not receive it initially.",
+                "summary": "Reenviar token de redefinição",
+                "description": "gera um novo token de redefinição de senha para o e-mail do usuário \n        caso ele não tenha recebido anteriormente ou expirou. Coletando o novo token utilize-o no endpoint `/api/auth/password/reset`.",
                 "operationId": "3b652bffb29dbc7b8d4306082c4f2db6",
                 "requestBody": {
                     "required": true,
@@ -842,7 +870,7 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "The email address of the account to resend the password reset token",
+                                        "description": "E-mail da conta para reenviar o token de redefinição",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
@@ -855,7 +883,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password reset token successfully resent.",
+                        "description": "Token reenviado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -869,6 +897,7 @@
                                             "example": "Password reset token sent to your email."
                                         },
                                         "token": {
+                                            "description": "Token temporário de redefinição de senha",
                                             "type": "string",
                                             "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
@@ -886,8 +915,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Create a new user account",
-                "description": "Registers a new user with name, username, email, password, and access level. On success, a temporary verification token is sent via email. Use `/email/verify` to confirm the email and complete registration.",
+                "summary": "Registrar novo usuário",
+                "description": "Cria uma nova conta de usuário com nome, nome de usuário, e-mail, senha e nível de acesso. \nApós o cadastro, um token de verificação será enviado para o e-mail informado. Utilize `/email/verify` para confirmar o e-mail e concluir o registro.",
                 "operationId": "7df64504cb378573d18da225f9e563ab",
                 "requestBody": {
                     "required": true,
@@ -903,29 +932,29 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "description": "Full name of the user",
+                                        "description": "Nome completo do usuário",
                                         "type": "string",
                                         "example": "John Denver"
                                     },
                                     "user_name": {
-                                        "description": "Username for login or display purposes",
+                                        "description": "Nome de usuário para login ou exibição",
                                         "type": "string",
                                         "example": "John"
                                     },
                                     "email": {
-                                        "description": "User's email address, used for login and verification",
+                                        "description": "E-mail do usuário, utilizado para login e verificação",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
                                     },
                                     "password": {
-                                        "description": "User's password, should follow security rules",
+                                        "description": "Senha do usuário (deve seguir as regras de segurança definidas)",
                                         "type": "string",
                                         "format": "password",
                                         "example": "Secret@123"
                                     },
                                     "access_level": {
-                                        "description": "User's role or access level (e.g., admin, user)",
+                                        "description": "Nível de acesso do usuário (ex: admin, usuario)",
                                         "type": "string",
                                         "example": "admin"
                                     }
@@ -937,7 +966,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Account created successfully. A verification token has been sent to the user's email.",
+                        "description": "Conta criada com sucesso. Um token de verificação foi enviado para o e-mail.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -951,7 +980,7 @@
                                             "example": "Account created. Please check your email for verification."
                                         },
                                         "token": {
-                                            "description": "Temporary email verification token. Use in `/email/verify` to confirm email. Expires after a short period.",
+                                            "description": "Token temporário de verificação de e-mail. Utilize em `/email/verify`",
                                             "type": "string",
                                             "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
@@ -969,8 +998,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Verify user email",
-                "description": "Confirms the user's email using the temporary verification token received during registration. On success, returns a Sanctum `access_token` for authenticated requests.",
+                "summary": "Verificar e-mail",
+                "description": "Confirma o e-mail do usuário utilizando o token recebido no cadastro. \n        Em caso de sucesso, retorna um `access_token` do Sanctum para acesso às rotas autenticadas.",
                 "operationId": "32a24345c616831caed8350ee2d763bd",
                 "requestBody": {
                     "required": true,
@@ -983,13 +1012,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "User's registered email address",
+                                        "description": "E-mail cadastrado do usuário",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
                                     },
                                     "token": {
-                                        "description": "Temporary verification token sent via email. Must be valid and not expired.",
+                                        "description": "Token de verificação enviado por e-mail (deve ser válido)",
                                         "type": "string",
                                         "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                     }
@@ -1001,7 +1030,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Email verification successful. Returns Sanctum access token.",
+                        "description": "E-mail verificado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1015,7 +1044,7 @@
                                             "example": "Email verification completed."
                                         },
                                         "access_token": {
-                                            "description": "Sanctum personal access token to authenticate future requests. Use in 'Authorization: Bearer {token}' header.",
+                                            "description": "Token de acesso do Sanctum para autenticação. Utilize no header: Authorization: Bearer {token}",
                                             "type": "string",
                                             "example": "1|zDD2mEyVYKVbKbHG7IIBQkDapXK3hpQT0N1rqLWy5a701043"
                                         }
@@ -1033,12 +1062,12 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get authenticated user profile",
-                "description": "Retrieve the current authenticated user's profile data. Requires user authentication.",
+                "summary": "Obtenha os dados de perfil do usuário autenticado",
+                "description": "Recupera os dados do perfil do usuário autenticado atual.",
                 "operationId": "fa7d0b3a725b350f48d590a6f755b550",
                 "responses": {
                     "200": {
-                        "description": "User profile retrieved successfully.",
+                        "description": "Perfil do usuário recuperado.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1093,12 +1122,12 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Delete authenticated user account",
-                "description": "Delete the currently authenticated user's account permanently. Requires user authentication.",
+                "summary": "Excluir conta de usuário autenticado",
+                "description": "Exclui permanentemente a conta do usuário autenticado.",
                 "operationId": "0ecb1ce93c9026c72ec96f5a0f32bd91",
                 "responses": {
                     "200": {
-                        "description": "User account deleted successfully.",
+                        "description": "conta do usuario apagada.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1128,8 +1157,8 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update authenticated user profile",
-                "description": "Update the current authenticated user's profile information such as name, email, or username. Requires user authentication.",
+                "summary": "Atualizar perfil de usuário autenticado",
+                "description": "Atualize as informações do perfil do usuário autenticado, como nome, e-mail ou nome de usuário (name, user_name, email).",
                 "operationId": "469f18984b0b6c81153420d0bfdbb46a",
                 "requestBody": {
                     "required": true,
@@ -1158,7 +1187,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "User profile updated successfully.",
+                        "description": "Perfil do usuário atualizado.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1193,8 +1222,8 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update authenticated user password",
-                "description": "Update the current authenticated user's password. Requires current password and new password.",
+                "summary": "Atualizar senha do usuário autenticado",
+                "description": "Atualize a senha do usuário autenticado. Requer a senha atual e a nova senha.",
                 "operationId": "82baee586534cc269d06a5dd69922d05",
                 "requestBody": {
                     "required": true,
@@ -1225,7 +1254,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password updated successfully.",
+                        "description": "Senha atualizada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1257,12 +1286,12 @@
                 "tags": [
                     "Status"
                 ],
-                "summary": "Check API status",
-                "description": "Returns a simple response to indicate that the API is running.",
+                "summary": "verificando API status",
+                "description": "Retorno simples para verificar se a API esta no ar",
                 "operationId": "68b5ba4e4f5b33299d4cafffa3173b88",
                 "responses": {
                     "200": {
-                        "description": "API is up and running.",
+                        "description": "Api subiu e esta rodando",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1289,7 +1318,7 @@
         "securitySchemes": {
             "sanctumAuth": {
                 "type": "http",
-                "description": "Use your Laravel Sanctum token here",
+                "description": "Use o token sanctum para acessos autenticados",
                 "bearerFormat": "API Token",
                 "scheme": "bearer"
             }
@@ -1298,19 +1327,19 @@
     "tags": [
         {
             "name": "Status",
-            "description": "Endpoints to check API health and status"
+            "description": "Endpoint para visualizar o serviço ativo."
         },
         {
             "name": "Auth",
-            "description": "Endpoints for authentication: login, register, password reset, etc."
+            "description": "Endpoints para autenticação: login, register, password reset, etc."
         },
         {
             "name": "Users",
-            "description": "Endpoints to manage logged-in user profile and settings"
+            "description": "Endpoints para o usuario autenticado (pegar dados, atualizar informações, atualizar senha, deletar conta)."
         },
         {
             "name": "Admin",
-            "description": "Endpoints for admin user management"
+            "description": "Endpoints para admnistradores (listar, pegar usuário pelo Id, atualizar dados de outro usuário, promover, banir, etc)."
         }
     ]
 }

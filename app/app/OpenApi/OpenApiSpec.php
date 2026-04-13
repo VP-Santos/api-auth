@@ -16,19 +16,19 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: "Status",
-    description: "Endpoints to check API health and status"
+    description: "Endpoint para visualizar o serviço ativo."
 )]
 #[OA\Tag(
     name: "Auth",
-    description: "Endpoints for authentication: login, register, password reset, etc."
+    description: "Endpoints para autenticação: login, register, password reset, etc."
 )]
 
 #[OA\Tag(
     name: "Users",
-    description: "Endpoints to manage logged-in user profile and settings"
+    description: "Endpoints para o usuario autenticado (pegar dados, atualizar informações, atualizar senha, deletar conta)."
 )]
 #[OA\Tag(
     name: "Admin",
-    description: "Endpoints for admin user management"
+    description: "Endpoints para admnistradores (listar, pegar usuário pelo Id, atualizar dados de outro usuário, promover, banir, etc)."
 )]
 class OpenApiSpec {}

@@ -13,7 +13,7 @@ abstract class AbstractApiException extends Exception
     {
         return response()->json([
             'success' => false,
-            'code'    => $this->errorCode,
+            'error'    => $this->errorCode,
             'message' => $this->getMessage(),
         ], $this->httpCode);
     }

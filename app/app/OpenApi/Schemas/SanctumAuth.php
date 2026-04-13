@@ -9,6 +9,6 @@ use OpenApi\Attributes as OA;
     type: "http",
     scheme: "bearer",
     bearerFormat: "API Token",
-    description: "Use your Laravel Sanctum token here"
+    description: "Use o token sanctum para acessos autenticados"
 )]
 class SanctumAuth {}
