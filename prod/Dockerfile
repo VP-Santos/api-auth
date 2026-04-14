@@ -26,7 +26,7 @@ WORKDIR /var/www/html
 
 COPY ./app/ .
 
-COPY prod/.env.production ./.env
+COPY prod/.env.production ./
 
 RUN chown -R appuser:groupuser /var/www/html
 

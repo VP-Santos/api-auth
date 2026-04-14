@@ -12,14 +12,20 @@ if [ -f /usr/local/etc/php-fpm.d/www.conf ]; then
     sed -i 's/group = www-data/group = groupuser/g' /usr/local/etc/php-fpm.d/www.conf
 fi
 
+if [ ! -f ".env" ]; then
+    echo "Criando .env..."
+    cp .env.example .env
+    chown appuser:groupuser .env
+fi
+
 echo "Aguardando MySQL..."
 
 until php -r "
-\$host = getenv('DB_HOST') ?: 'mysql';
-\$port = getenv('DB_PORT') ?: '3306';
-\$db   = getenv('DB_DATABASE') ?: 'app_db';
-\$user = getenv('DB_USERNAME') ?: 'app_user';
-\$pass = getenv('DB_PASSWORD') ?: 'secret';
+\$host = getenv('DB_HOST');
+\$port = getenv('DB_PORT');
+\$db   = getenv('DB_DATABASE');
+\$user = getenv('DB_USERNAME');
+\$pass = getenv('DB_PASSWORD');
 
 try {
     new PDO(\"mysql:host=\$host;port=\$port;dbname=\$db\", \$user, \$pass);

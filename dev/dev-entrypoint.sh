@@ -12,8 +12,21 @@ fi
 
 echo "Aguardando MySQL..."
 
-until mysqladmin ping -h"${DB_HOST:-mysql}" -P3306 -u"${DB_USERNAME}" -p"${DB_PASSWORD}" --silent; do
-  sleep 2
+until php -r "
+\$host = getenv('DB_HOST');
+\$port = getenv('DB_PORT');
+\$db   = getenv('DB_DATABASE');
+\$user = getenv('DB_USERNAME');
+\$pass = getenv('DB_PASSWORD');
+
+try {
+    new PDO(\"mysql:host=\$host;port=\$port;dbname=\$db\", \$user, \$pass);
+} catch (Exception \$e) {
+    exit(1);
+}
+" >/dev/null 2>&1; do
+    echo "MySQL ainda não pronto em ${DB_HOST}:${DB_PORT}..."
+    sleep 2
 done
 
 echo "MySQL disponível"
