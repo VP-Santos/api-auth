@@ -46,25 +46,8 @@ Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando localment
 
 Edite o arquivo .env-example para ajustar as configurações de conexão:
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=mysql 
-DB_PORT=3306
-DB_DATABASE=app_db
-DB_USERNAME=app_user
-DB_PASSWORD=secret
+```yml
 
-REDIS_CLIENT=phpredis
-REDIS_HOST=api_redis
-REDIS_PASSWORD=a12345678
-REDIS_PORT=6379
-
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_FROM_ADDRESS="api_auth@egmail.com"
 ```
 
 Em seguida, altere a extensão do arquivo docker-compose.override.yml para:
