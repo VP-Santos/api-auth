@@ -10,6 +10,33 @@ if [ ! -f .env ]; then
   chown appuser:appgroup .env
 fi
 
+echo "🔄 Sincronizando variáveis do Docker Compose para o .env..."
+
+VARS_TO_SYNC=(
+    "DB_HOST" "DB_PORT" "DB_DATABASE" "DB_USERNAME" "DB_PASSWORD"
+    "REDIS_CLIENT" "REDIS_HOST" "REDIS_PASSWORD" "REDIS_PORT"
+    "MAIL_MAILER" "MAIL_HOST" "MAIL_PORT" "MAIL_USERNAME" "MAIL_PASSWORD" "MAIL_FROM_ADDRESS"
+)
+
+for VAR in "${VARS_TO_SYNC[@]}"; do
+    VALUE="${!VAR}"
+    
+    if [ ! -z "$VALUE" ]; then
+        if grep -q "^${VAR}=" .env; then
+            sed -i "s|^${VAR}=.*|${VAR}=${VALUE}|" .env
+        else
+            echo "${VAR}=${VALUE}" >> .env
+        fi
+    fi
+done
+
+echo "✅ Sincronização concluída!"
+
+if [ ! -d "vendor" ]; then
+    echo "Instalando dependências do Composer..."
+    composer install
+fi
+
 echo "Aguardando MySQL..."
 
 until php -r "

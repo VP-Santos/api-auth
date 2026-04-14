@@ -5,7 +5,7 @@ Este é o meu primeiro projeto usando o framework Laravel, montado de forma a se
 
 A estrutura da aplicação foi construída visando separar as responsabilidades por domínios. Sendo assim, o projeto possui três domínios:
 
-- Auth
+- Auth 
 - Admin
 - Users
 
@@ -13,19 +13,16 @@ Foi montado de forma a assegurar boa escalabilidade e manutenção no código. A
 
 O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Laravel e outras tecnologias, como Docker e bancos de dados, tornando meu aprendizado mais robusto. Além disso, visa compreender como funciona um serviço de autenticação com envio de e-mail (ex.: confirmação, recuperação de senha, etc.), com rotas para criação de usuários e rotas designadas para administradores.
 
-Tecnologias utilizadas
+# 1 - Tecnologias utilizadas
 
-# Tecnologias utilizadas
+- framework: Laravel 12 / PHP 8.4
+- Autenticação: Laravel Sanctum
+- Banco de dados: MySQL 8
+- Cache/Queue: Redis
+- Infraestrutura: Docker & docker compose
+- Ferramentas: Mailhog (SMTP Test), Supervisor, Nginx
 
-- Laravel
-- PHP
-- MySQL
-- Docker
-- Laravel Sanctum
-- Mailhog
-- Supervisor
-
-# Preparando o ambiente
+# 2 - Preparando o ambiente
 
 Para preparar o ambiente e testar este projeto, siga os passos abaixo:
 
@@ -39,52 +36,88 @@ cd api-auth
 ```
 
 ### Observação!
+O projeto foi desenhado para ser "Plug and Play". Você tem duas formas de configurar os serviços:
 
-Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando localmente ou via Docker, siga o passo a passo abaixo.
+#### Opção A: Usando os containers do projeto (Padrão)
+Basta rodar o comando de subida. O sistema criará o .env automaticamente com as credenciais padrão dos containers (MySQL, Redis, Mailhog).
 
-#### arquivo .env-example
 
-Edite o arquivo .env-example para ajustar as configurações de conexão:
+#### Opção B: Usando seus próprios serviços (Local/Externo)
+Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando em sua maquina ou externo, siga o passo a passo abaixo.
+
+##### passo 1: arquivo docker-compose.yml
+Edite o arquivo .docker-compose.yml para ajustar as configurações de conexão dos serviços que tenha localmente:
 
 ```yml
+DB_HOST: mysql
+DB_PORT: 3306
+DB_DATABASE: app_db
+DB_USERNAME: app_user
+DB_PASSWORD: secret
 
+REDIS_CLIENT: phpredis
+REDIS_HOST: redis
+REDIS_PASSWORD: a12345678
+REDIS_PORT: 6379
+
+MAIL_MAILER: smtp
+MAIL_HOST: mailhog
+MAIL_PORT: 1025
+MAIL_USERNAME: null
+MAIL_PASSWORD: null
+MAIL_FROM_ADDRESS: "api_auth@example.com"
 ```
 
-Em seguida, altere a extensão do arquivo docker-compose.override.yml para:
+##### passo 2: arquivo docker-compose.override.yml
+
+Altere no arquivo docker-compose.override.yml removendo os serviços que ja tenha configurado.
+Caso tenha configurado a conexão de todos os serviços altere a extensão do arquivo para:
 
 ```bash
 docker-compose.override.txt
 ```
 
-## Subindo os serviços
+Arquivo docker-compose.override.yml:
+```yml
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  redis:
+    container_name: redis
+    image: redis:7.0
+    environment:
+      REDIS_PASSWORD: "a12345678"
+    command: ["redis-server","--requirepass", "a12345678", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
-Execute o comando abaixo para iniciar os containers:
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  
+      - "8025:8025"
 
-```bash
-docker compose up -d
+volumes:
+  mysql_data:
+  redis_data:
 ```
 
-Para visualizar os containers que estão rodando use o seguinte comando:
+##### passo 3: Seus serviços extras (MySql, Redis ou SMTP) estão em containers
 
-```bash
-docker ps
-```
-
-Os seguintes serviços vão estar ativos:
-
-Containers essenciais:
-- api_nginx
-- api_php
-- api_worker
-
-Caso tenha usado a configuração do docker-compose.override.yml do projeto será visualizado também os seguintes serviços. Containers extras (opcionais):
-- api_mysql
-- api_mailhog
-- api_redis
-
-#### Importante!
-
-Se você alterou o .env-example e a extensão do docker-compose.override, os serviços extras (Redis, Mailhog, MySQL) que estiverem rodando em Docker devem ser conectados à rede da API:
+Deve-se fazer com que esses containers utilizem a mesma rede docker que a API auth utiliza. Por padrão o docker cria o seguinte nome da rede:
 
 ```bash
 api-auth_default
@@ -108,7 +141,34 @@ Verifique se o container está usando a rede corretamente:
 docker inspect -f '{{json .NetworkSettings.Networks}}' {meu_container}
 ```
 
-# Acessando o serviço
+# 3 - Subindo os serviços
+
+Execute o comando abaixo para iniciar os containers:
+
+```bash
+docker compose up -d
+```
+
+Para visualizar os containers que estão rodando use o seguinte comando:
+
+```bash
+docker ps
+```
+
+Os seguintes serviços vão estar ativos:
+
+Containers essenciais:
+- api_nginx
+- api_php
+
+Se estiver usado a configuração Padrao do projeto será visualizado também os seguintes serviços. Containers extras (opcionais):
+
+- api_mysql
+- api_mailhog
+- api_redis
+
+
+# 4 - Acessando o serviço
 
 - Documentação da API:
 

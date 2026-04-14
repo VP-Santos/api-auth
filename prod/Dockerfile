@@ -27,7 +27,7 @@ WORKDIR /var/www/html
 COPY ./app/ .
 
 # em prod o .env vem do servidor ou configurado vi CI/CD
-COPY prod/.env.production ./.env
+COPY prod/.env.production ./.env.example
 
 RUN chown -R appuser:groupuser /var/www/html
 
