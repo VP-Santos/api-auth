@@ -26,6 +26,8 @@ WORKDIR /var/www/html
 
 COPY ./app/ .
 
+COPY prod/.env.production ./.env
+
 RUN chown -R appuser:groupuser /var/www/html
 
 USER appuser 
@@ -38,7 +40,7 @@ RUN composer install \
 
 USER root
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY prod/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

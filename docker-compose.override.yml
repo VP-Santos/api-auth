@@ -1,7 +1,7 @@
 
 services:
   mysql:
-    container_name: api_mysql
+    container_name: mysql
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: app_db
@@ -13,7 +13,7 @@ services:
     ports:
       - "3306:3306"
   redis:
-    container_name: api_redis
+    container_name: redis
     image: redis:7.0
     environment:
       REDIS_PASSWORD: "a12345678"
@@ -24,7 +24,7 @@ services:
       - redis_data:/data
 
   mailhog:
-    container_name: api_mailhog
+    container_name: mailhog
     image: mailhog/mailhog:latest
     ports:
       - "1025:1025"  
