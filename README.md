@@ -15,12 +15,14 @@ O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Larav
 
 # 1 - Tecnologias utilizadas
 
-- framework: Laravel 12 / PHP 8.4
+- Linguagem:  PHP 8.4
+- Framework: Laravel 12
 - Autenticação: Laravel Sanctum
 - Banco de dados: MySQL 8
 - Cache/Queue: Redis
 - Infraestrutura: Docker & docker compose
-- Ferramentas: Mailhog (SMTP Test), Supervisor, Nginx
+- Servidor Web: Nginx
+- Ferramentas: Mailhog (SMTP Test) & Supervisor
 
 # 2 - Preparando o ambiente
 
@@ -35,17 +37,19 @@ git clone https://github.com/VP-Santos/api-auth.git
 cd api-auth
 ```
 
-### Observação!
+### Observação Importante!
+O projeto consiste em duas verções, docker para dev e prod, veja abaixo:
+
+## Ambiente de desenvolvimento (dev)
 O projeto foi desenhado para ser "Plug and Play". Você tem duas formas de configurar os serviços:
 
-#### Opção A: Usando os containers do projeto (Padrão)
+### Opção A: Usando os containers do projeto (Padrão)
 Basta rodar o comando de subida. O sistema criará o .env automaticamente com as credenciais padrão dos containers (MySQL, Redis, Mailhog).
 
+### Opção B: Usando seus próprios serviços (Local/Externo)
+Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando em sua maquina ou externo, siga os passos abaixo.
 
-#### Opção B: Usando seus próprios serviços (Local/Externo)
-Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando em sua maquina ou externo, siga o passo a passo abaixo.
-
-##### passo 1: arquivo docker-compose.yml
+#### passo 1: arquivo docker-compose.yml
 Edite o arquivo .docker-compose.yml para ajustar as configurações de conexão dos serviços que tenha localmente:
 
 ```yml
@@ -68,7 +72,7 @@ MAIL_PASSWORD: null
 MAIL_FROM_ADDRESS: "api_auth@example.com"
 ```
 
-##### passo 2: arquivo docker-compose.override.yml
+#### passo 2: arquivo docker-compose.override.yml
 
 Altere no arquivo docker-compose.override.yml removendo os serviços que ja tenha configurado.
 Caso tenha configurado a conexão de todos os serviços altere a extensão do arquivo para:
@@ -115,7 +119,9 @@ volumes:
   redis_data:
 ```
 
-##### passo 3: Seus serviços extras (MySql, Redis ou SMTP) estão em containers
+Assim que configurado o durante o runtime do container onde são injetado suas dependências será criado o .env com as configurações desejadas, de forma automatizada via arquivo entrypoint
+
+#### passo 3: Seus serviços extras (MySql, Redis ou SMTP) estão em containers
 
 Deve-se fazer com que esses containers utilizem a mesma rede docker que a API auth utiliza. Por padrão o docker cria o seguinte nome da rede:
 
@@ -140,6 +146,43 @@ Verifique se o container está usando a rede corretamente:
 ```bash
 docker inspect -f '{{json .NetworkSettings.Networks}}' {meu_container}
 ```
+
+## Ambiente de produção (Prod)
+A configuração do Dockerfile e entrypoint encontram-se na pasta `prod`
+
+Para utilizar o ambiente de produção configurado em seu editor e siga os passos abaixo:
+
+#### passo 1: Alterando extenção do arquivo docker-compose.yml
+É necessário alterar o arquivo docker-compose.yml para:
+
+```bash
+docker-compose.dev.yml
+```
+
+Fazendo isso podemos dar o previlegio de building do docker para outro arquivo.
+
+#### passo 2: Alterando extenção do arquivo docker-compose.prod.yml
+Aqui alterar o arquivo docker-compose.prod.yml para:
+
+```bash
+docker-compose.yml
+```
+
+Podendo rodar o comando para subir o serviço sem problemas.
+
+#### passo 3: Alterando arquivo env.production
+
+Dentro da pasta prod existe o arquivo .env.production
+
+nele alteramos as configurações de serviços externos que precisamos como:
+
+- AWS
+- SMTP
+- DB
+- REDIS
+
+#### passo 4: Removendo o docker-compose.override.yml
+Neste ponto podemos mudar a extenção o arquivo docker-compose.override.yml para txt ou simplesmente remove-lo, pois o arquivo é próprio para desenvolvimento.
 
 # 3 - Subindo os serviços
 
