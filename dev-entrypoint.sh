@@ -58,8 +58,18 @@ done
 
 echo "MySQL disponível"
 
-mkdir -p storage bootstrap/cache
-chown -R appuser:appgroup storage bootstrap/cache
+echo "Ajustando permissões..."
+mkdir -p storage/logs storage/framework/sessions storage/framework/views storage/framework/cache bootstrap/cache
+chown -R appuser:groupuser storage bootstrap/cache database
+chmod -R 775 storage bootstrap/cache
+
+if ! grep -q "^APP_KEY=" .env || grep -q "^APP_KEY=$" .env; then
+    echo "Gerando APP_KEY..."
+    gosu appuser php artisan key:generate --force
+fi
+
+echo "Rodando migrations"
+gosu appuser php artisan migrate --force --no-interaction
 
 echo "Iniciando supervisord..."
 

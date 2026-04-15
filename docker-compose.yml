@@ -2,32 +2,12 @@ services:
   php:
     build:
       context: .
-      dockerfile: dev/Dockerfile
+      dockerfile: Dockerfile
     container_name: api_php
     volumes:
       - ./app:/var/www/html
-    environment:
-      APP_DEBUG: true
-      APP_ENV: local
-
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: app_db
-      DB_USERNAME: app_user
-      DB_PASSWORD: secret
-      
-      REDIS_CLIENT: phpredis
-      REDIS_HOST: redis
-      REDIS_PASSWORD: a12345678
-      REDIS_PORT: 6379
-
-      MAIL_MAILER: smtp
-      MAIL_HOST: mailhog
-      MAIL_PORT: 1025
-      MAIL_USERNAME: null
-      MAIL_PASSWORD: null
-      MAIL_FROM_ADDRESS: "api_auth@example.com"
-
+    env_file:
+      - .env.building
 
   nginx:
     image: nginx:latest

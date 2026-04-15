@@ -37,10 +37,7 @@ git clone https://github.com/VP-Santos/api-auth.git
 cd api-auth
 ```
 
-### Observação Importante!
-O projeto consiste em duas verções, docker para dev e prod, veja abaixo:
-
-## Ambiente de desenvolvimento (dev)
+## Ambiente de desenvolvimento
 O projeto foi desenhado para ser "Plug and Play". Você tem duas formas de configurar os serviços:
 
 ### Opção A: Usando os containers do projeto (Padrão)
@@ -49,10 +46,13 @@ Basta rodar o comando de subida. O sistema criará o .env automaticamente com as
 ### Opção B: Usando seus próprios serviços (Local/Externo)
 Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando em sua maquina ou externo, siga os passos abaixo.
 
-#### passo 1: arquivo docker-compose.yml
-Edite o arquivo .docker-compose.yml para ajustar as configurações de conexão dos serviços que tenha localmente:
+#### passo 1: arquivo .env.building
+Edite o arquivo .env.building para ajustar as configurações de conexão dos serviços que tenha localmente:
 
-```yml
+```env
+APP_DEBUG=true
+APP_ENV: local
+
 DB_HOST: mysql
 DB_PORT: 3306
 DB_DATABASE: app_db
@@ -146,43 +146,6 @@ Verifique se o container está usando a rede corretamente:
 ```bash
 docker inspect -f '{{json .NetworkSettings.Networks}}' {meu_container}
 ```
-
-## Ambiente de produção (Prod)
-A configuração do Dockerfile e entrypoint encontram-se na pasta `prod`
-
-Para utilizar o ambiente de produção configurado em seu editor e siga os passos abaixo:
-
-#### passo 1: Alterando extenção do arquivo docker-compose.yml
-É necessário alterar o arquivo docker-compose.yml para:
-
-```bash
-docker-compose.dev.yml
-```
-
-Fazendo isso podemos dar o previlegio de building do docker para outro arquivo.
-
-#### passo 2: Alterando extenção do arquivo docker-compose.prod.yml
-Aqui alterar o arquivo docker-compose.prod.yml para:
-
-```bash
-docker-compose.yml
-```
-
-Podendo rodar o comando para subir o serviço sem problemas.
-
-#### passo 3: Alterando arquivo env.production
-
-Dentro da pasta prod existe o arquivo .env.production
-
-nele alteramos as configurações de serviços externos que precisamos como:
-
-- AWS
-- SMTP
-- DB
-- REDIS
-
-#### passo 4: Removendo o docker-compose.override.yml
-Neste ponto podemos mudar a extenção o arquivo docker-compose.override.yml para txt ou simplesmente remove-lo, pois o arquivo é próprio para desenvolvimento.
 
 # 3 - Subindo os serviços
 

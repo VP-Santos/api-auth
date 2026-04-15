@@ -17,7 +17,7 @@ RUN groupadd -g ${GID} appgroup \
 
 WORKDIR /var/www/html
 
-COPY dev/dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
+COPY dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
 RUN chmod +x /usr/local/bin/dev-entrypoint.sh
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
