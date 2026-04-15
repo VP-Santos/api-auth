@@ -59,9 +59,9 @@ done
 echo "MySQL disponível"
 
 echo "Ajustando permissões..."
-mkdir -p storage/logs storage/framework/sessions storage/framework/views storage/framework/cache bootstrap/cache
-chown -R appuser:groupuser storage bootstrap/cache database
-chmod -R 775 storage bootstrap/cache
+mkdir -p storage/logs storage/framework/{sessions,views,cache} bootstrap/cache
+
+chmod -R 777 storage bootstrap/cache || exit 1
 
 if ! grep -q "^APP_KEY=" .env || grep -q "^APP_KEY=$" .env; then
     echo "Gerando APP_KEY..."
