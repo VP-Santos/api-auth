@@ -7,7 +7,7 @@ services:
     volumes:
       - ./app:/var/www/html
     env_file:
-      - .env.building
+      - .env.example
 
   nginx:
     image: nginx:latest

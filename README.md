@@ -13,7 +13,7 @@ Foi montado de forma a assegurar boa escalabilidade e manutenção no código. A
 
 O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Laravel e outras tecnologias, como Docker e bancos de dados, tornando meu aprendizado mais robusto. Além disso, visa compreender como funciona um serviço de autenticação com envio de e-mail (ex.: confirmação, recuperação de senha, etc.), com rotas para criação de usuários e rotas designadas para administradores.
 
-# 1 - Tecnologias utilizadas
+# Stack
 
 - Linguagem:  PHP 8.4
 - Framework: Laravel 12
@@ -23,12 +23,13 @@ O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Larav
 - Infraestrutura: Docker & docker compose
 - Servidor Web: Nginx
 - Ferramentas: Mailhog (SMTP Test) & Supervisor
+- Documentação: Swagger/OpenAPI 
 
-# 2 - Preparando o ambiente
+# Preparando o ambiente
 
 Para preparar o ambiente e testar este projeto, siga os passos abaixo:
 
-## Clonando o repositório
+## 1 - Clonando o repositório
 
 ```bash
 
@@ -37,7 +38,7 @@ git clone https://github.com/VP-Santos/api-auth.git
 cd api-auth
 ```
 
-## Ambiente de desenvolvimento
+### Ambiente de desenvolvimento
 O projeto foi desenhado para ser "Plug and Play". Você tem duas formas de configurar os serviços:
 
 ### Opção A: Usando os containers do projeto (Padrão)
@@ -147,7 +148,7 @@ Verifique se o container está usando a rede corretamente:
 docker inspect -f '{{json .NetworkSettings.Networks}}' {meu_container}
 ```
 
-# 3 - Subindo os serviços
+# 2 - Subindo os containers
 
 Execute o comando abaixo para iniciar os containers:
 
@@ -174,14 +175,14 @@ Se estiver usado a configuração Padrao do projeto será visualizado também os
 - api_redis
 
 
-# 4 - Acessando o serviço
+# 3 - Acessando o serviço
 
 - Documentação da API:
 
 ```bash
 http://localhost:8080
 ```
-
+  
 - Mailhog (se utilizado):
 
 ```bash
