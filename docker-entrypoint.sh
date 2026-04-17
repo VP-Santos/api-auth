@@ -7,7 +7,6 @@ echo "Container iniciado como $(whoami)"
 
 if [ ! -f .env ]; then
   cp .env.example .env
-  chown appuser:appgroup .env
 fi
 
 echo "🔄 Sincronizando variáveis do Docker Compose para o .env..."
@@ -61,15 +60,16 @@ echo "MySQL disponível"
 echo "Ajustando permissões..."
 mkdir -p storage/logs storage/framework/{sessions,views,cache} bootstrap/cache
 
-chmod -R 777 storage bootstrap/cache || exit 1
+chgrp -R www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache|| exit 1
 
 if ! grep -q "^APP_KEY=" .env || grep -q "^APP_KEY=$" .env; then
     echo "Gerando APP_KEY..."
-    gosu appuser php artisan key:generate --force
+    php artisan key:generate --force
 fi
 
 echo "Rodando migrations"
-gosu appuser php artisan migrate --force --no-interaction
+php artisan migrate --force --no-interaction
 
 echo "Iniciando supervisord..."
 
