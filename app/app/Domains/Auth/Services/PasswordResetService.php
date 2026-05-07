@@ -61,7 +61,7 @@ class PasswordResetService
     }
     public function resend(array $data)
     {
-       return DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data) {
 
             $user = User::where('email', $data['email'])->first();
 
@@ -82,7 +82,6 @@ class PasswordResetService
             DB::afterCommit(function () use ($user, $token) {
                 ForgotPassword::dispatch($user, $token);
             });
-            return $token;
         });
     }
 

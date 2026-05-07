@@ -13,8 +13,7 @@ use App\Models\User;
 
 class EmailVerificationService
 {
-    public function __construct() {}
-    public function verify(string $token): string
+    public function verify(string $token)
     {
         $record = EmailVerification::where('token', $token)->first();
 
@@ -33,6 +32,5 @@ class EmailVerificationService
 
         $record->delete();
 
-        return $token;
     }
 }

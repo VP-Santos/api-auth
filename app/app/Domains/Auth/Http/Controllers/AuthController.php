@@ -28,12 +28,11 @@ class AuthController
 
     public function register(FormRegisterUsers $request)
     {
-        $token = $this->authService->registerUser($request->validated());
+        $this->authService->registerUser($request->validated());
 
         return response()->json([
             'success'   => true,
             'message'   => 'Account created. Please check your email for verification.',
-            'token'     => $token,
         ], 201);
     }
     public function verifyEmail(FormVerifyTokenEmailRequest $request)
@@ -41,36 +40,21 @@ class AuthController
         $request->validated();
         $token = $request['token'];
 
-        $tokenCreated = $this->emailVerificationService->verify($token);
+        $this->emailVerificationService->verify($token);
 
         return response()->json([
             'success'           => true,
             'message'           => 'Email verification completed.',
-            'access_token'      => $tokenCreated
-        ]);
-    }
-    public function resendVerifyEmail(FormEmailRequest $request)
-    {
-        $request->validated();
-        $token = $request['token'];
-
-        $tokenCreated = $this->emailVerificationService->verify($token);
-
-        return response()->json([
-            'success'           => true,
-            'message'           => 'Email verification completed.',
-            'access_token'      => $tokenCreated
         ]);
     }
 
     public function login(FormLoginRequest $request)
     {
-        $code = $this->authService->login($request->validated());
+        $this->authService->login($request->validated());
 
         return response()->json([
             'success' => true,
             'message' => 'Verification code sent to your email.',
-            'code'    => $code,
         ]);
     }
 
@@ -89,24 +73,22 @@ class AuthController
     {
         $data = $request->validated();
 
-        $code = $this->twoFactorService->resend($data);
+        $this->twoFactorService->resend($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Two-factor authentication code sent to your email.',
-            'code'    => $code,
         ]);
     }
 
     public function forgotPassword(FormEmailRequest $request)
     {
 
-        $token = $this->authService->forgetPassword($request->validated());
+        $this->authService->forgetPassword($request->validated());
 
         return response()->json([
             'success' => true,
             'message' => 'Password reset email sent. Please check your inbox.',
-            'token'   => $token,
         ]);
     }
 
@@ -124,12 +106,11 @@ class AuthController
     {
         $data = $request->validated();
 
-        $token = $this->passwordResetService->resend($data);
+         $this->passwordResetService->resend($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Password reset token sent to your email.',
-            'token'   => $token,
         ]);
     }
 
