@@ -68,12 +68,6 @@ Após o cadastro, um token de verificação será enviado para o e-mail informad
                             type: "string",
                             example: "Account created. Please check your email for verification."
                         ),
-                        new OA\Property(
-                            property: "token",
-                            type: "string",
-                            example: "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e",
-                            description: "Token temporário de verificação de e-mail. Utilize em `/email/verify`"
-                        )
                     ]
                 )
             ),

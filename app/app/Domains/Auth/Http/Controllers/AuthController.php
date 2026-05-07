@@ -10,6 +10,7 @@ use App\Domains\Auth\Http\Requests\{
     FormVerifyTokenEmailRequest,
     FormVerifyTwoFactorRequest,
 };
+
 use App\Domains\Auth\Services\{
     AuthService,
     EmailVerificationService,
@@ -17,8 +18,12 @@ use App\Domains\Auth\Services\{
     TwoFactorService
 };
 
+use App\Traits\ApiResponse;
+
 class AuthController
 {
+    use ApiResponse;
+
     public function __construct(
         private AuthService $authService,
         private EmailVerificationService $emailVerificationService,
@@ -30,99 +35,100 @@ class AuthController
     {
         $this->authService->registerUser($request->validated());
 
-        return response()->json([
-            'success'   => true,
-            'message'   => 'Account created. Please check your email for verification.',
-        ], 201);
+        return $this->success(
+            'Account created. Please check your email for verification.',
+            [],
+            201
+        );
     }
+
     public function verifyEmail(FormVerifyTokenEmailRequest $request)
     {
-        $request->validated();
-        $token = $request['token'];
+        $token = $request->validated()['token'];
 
         $this->emailVerificationService->verify($token);
 
-        return response()->json([
-            'success'           => true,
-            'message'           => 'Email verification completed.',
-        ]);
+        return $this->success(
+            'Email verification completed.'
+        );
     }
 
     public function login(FormLoginRequest $request)
     {
         $this->authService->login($request->validated());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Verification code sent to your email.',
-        ]);
+        return $this->success(
+            'Verification code sent to your email.'
+        );
     }
 
     public function verifyTwoFactor(FormVerifyTwoFactorRequest $request)
     {
-        $access_token = $this->twoFactorService->verify($request->validated());
+        $access_token = $this->twoFactorService->verify(
+            $request->validated()
+        );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Login successful.',
-            'access_token' => $access_token,
-        ]);
+        return $this->success(
+            'Login successful.',
+            [
+                'access_token' => $access_token
+            ]
+        );
     }
 
     public function resendTwoFactor(FormEmailRequest $request)
     {
-        $data = $request->validated();
+        $this->twoFactorService->resend(
+            $request->validated()
+        );
 
-        $this->twoFactorService->resend($data);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Two-factor authentication code sent to your email.',
-        ]);
+        return $this->success(
+            'Two-factor authentication code sent to your email.'
+        );
     }
 
     public function forgotPassword(FormEmailRequest $request)
     {
+        $this->authService->forgetPassword(
+            $request->validated()
+        );
 
-        $this->authService->forgetPassword($request->validated());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password reset email sent. Please check your inbox.',
-        ]);
+        return $this->success(
+            'Password reset email sent. Please check your inbox.'
+        );
     }
 
     public function resetPassword(FormResetPasswordRequest $request)
     {
-        $this->passwordResetService->verify($request->validated());
+        $this->passwordResetService->verify(
+            $request->validated()
+        );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Password has been reset successfully.',
-        ]);
+        return $this->success(
+            'Password has been reset successfully.'
+        );
     }
 
     public function resendTokenPassword(FormEmailRequest $request)
     {
-        $data = $request->validated();
+        $this->passwordResetService->resend(
+            $request->validated()
+        );
 
-         $this->passwordResetService->resend($data);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password reset token sent to your email.',
-        ]);
+        return $this->success(
+            'Password reset token sent to your email.'
+        );
     }
 
     public function logout()
     {
-        $user = request()->user();
+        request()
+            ->user()
+            ->currentAccessToken()
+            ->delete();
 
-        $user->currentAccessToken()->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Logged out successfully.'
-        ]);
+        return $this->success(
+            'Logged out successfully.'
+        );
     }
 }

@@ -39,12 +39,6 @@ O usuário poderá utilizar esse token para cadastrar uma nova senha. atravéz d
                             type: "string",
                             example: "Password reset email sent. Please check your inbox."
                         ),
-                        new OA\Property(
-                            property: "token",
-                            type: "string",
-                            example: "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e",
-                            description: "Token temporário para redefinição de senha"
-                        ),
                     ]
                 )
             )
@@ -137,12 +131,6 @@ O usuário poderá utilizar esse token para cadastrar uma nova senha. atravéz d
                             property: "message",
                             type: "string",
                             example: "Password reset token sent to your email."
-                        ),
-                        new OA\Property(
-                            property: "token",
-                            type: "string",
-                            example: "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e",
-                            description: "Token temporário de redefinição de senha"
                         ),
                     ]
                 )

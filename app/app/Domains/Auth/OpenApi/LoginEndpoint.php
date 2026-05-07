@@ -51,12 +51,6 @@ class LoginEndpoint
                             type: "string",
                             example: "Verification code sent to your email."
                         ),
-                        new OA\Property(
-                            property: "code",
-                            type: "string",
-                            example: "671573",
-                            description: "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos"
-                        )
                     ]
                 )
             ),
@@ -110,12 +104,6 @@ class LoginEndpoint
                             property: "message",
                             type: "string",
                             example: "Two-factor authentication code sent to your email."
-                        ),
-                        new OA\Property(
-                            property: "code",
-                            type: "string",
-                            example: "303081",
-                            description: "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos"
                         ),
                     ]
                 )
