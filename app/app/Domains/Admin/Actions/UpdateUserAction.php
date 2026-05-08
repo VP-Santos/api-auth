@@ -13,7 +13,7 @@ class UpdateUserAction
     ) {}
     public function execute(int $id, array $data): User
     {
-        if ($data['password']) {
+        if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 

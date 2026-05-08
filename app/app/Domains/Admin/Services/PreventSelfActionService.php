@@ -15,6 +15,7 @@ class PreventSelfActionService
      * @param \App\Models\User $user
      * @return void
      */
+    //TODO - MOVER LOGICA PARA A POLICE
     public function check(User  $user, int $id)
     {
         if ($user->id == $id) {

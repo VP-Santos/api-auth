@@ -7,7 +7,7 @@ use OpenApi\Attributes as OA;
 class AdminEndpoints
 {
     #[OA\Get(
-        path: "/api/admin/usuarios",
+        path: "/api/admin/users",
         summary: "Listar todos os usuários",
         description: "Retorna todos os usuários cadastrados no sistema.",
         tags: ["Admin"],
@@ -40,7 +40,7 @@ class AdminEndpoints
     public function getAllUsers() {}
 
     #[OA\Get(
-        path: "/api/admin/usuarios/{id}",
+        path: "/api/admin/users/{id}",
         summary: "Buscar usuário por ID",
         description: "Retorna os dados de um usuário específico com base no ID informado.",
         tags: ["Admin"],
@@ -79,7 +79,7 @@ class AdminEndpoints
     public function getUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/usuarios/{id}",
+        path: "/api/admin/users/{id}",
         summary: "Atualizar usuário",
         description: "Atualiza os dados de um usuário com base no ID informado.",
         tags: ["Admin"],
@@ -122,7 +122,7 @@ class AdminEndpoints
     public function updateUser() {}
 
     #[OA\Delete(
-        path: "/api/admin/usuarios/{id}",
+        path: "/api/admin/users/{id}",
         summary: "Excluir usuário",
         description: "Remove um usuário do sistema com base no ID informado.",
         tags: ["Admin"],
@@ -151,10 +151,12 @@ class AdminEndpoints
             )
         ]
     )]
+
+    //TODO criar um edpoint para unbanUser
     public function deleteUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/usuarios/{id}/banir",
+        path: "/api/admin/users/{id}/ban",
         summary: "Banir usuário",
         description: "Bloqueia o acesso de um usuário ao sistema.",
         tags: ["Admin"],
@@ -186,7 +188,7 @@ class AdminEndpoints
     public function banUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/usuarios/{id}/promover",
+        path: "/api/admin/users/{id}/promote",
         summary: "Promover usuário",
         description: "Concede privilégios de administrador a um usuário.",
         tags: ["Admin"],
@@ -218,7 +220,7 @@ class AdminEndpoints
     public function promoteUser() {}
 
     #[OA\Patch(
-        path: "/api/admin/usuarios/{id}/rebaixar",
+        path: "/api/admin/users/{id}/demote",
         summary: "Remover privilégios de administrador",
         description: "Remove os privilégios de administrador de um usuário.",
         tags: ["Admin"],

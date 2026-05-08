@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('password');
             $table->enum('access_level',['admin','basic'])->default('basic');
             $table->boolean('is_banned')->default(false);
-            $table->boolean('two_factor_enabled')->default(false);
-            $table->text('two_factor_secret')->nullable();
             $table->timestamps();
         });
 

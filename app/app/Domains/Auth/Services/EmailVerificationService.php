@@ -3,8 +3,6 @@
 namespace App\Domains\Auth\Services;
 
 use App\Domains\Auth\Exceptions\{
-    EmailAlreadyVerifiedException,
-    ExpiredTokenException,
     InvalidTokenException,
 };
 

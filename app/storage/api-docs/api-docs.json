@@ -12,14 +12,14 @@
         }
     ],
     "paths": {
-        "/api/admin/usuarios": {
+        "/api/admin/users": {
             "get": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Listar todos os usuários",
                 "description": "Retorna todos os usuários cadastrados no sistema.",
-                "operationId": "1a880cc366e9d1c24eea404f7c47c8d9",
+                "operationId": "d7ec229d797fcdef58c4863a37216ae4",
                 "responses": {
                     "200": {
                         "description": "Lista de usuários retornada com sucesso.",
@@ -77,14 +77,14 @@
                 ]
             }
         },
-        "/api/admin/usuarios/{id}": {
+        "/api/admin/users/{id}": {
             "get": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Buscar usuário por ID",
                 "description": "Retorna os dados de um usuário específico com base no ID informado.",
-                "operationId": "01a36d1f3c91acb74f4fa9b710e14808",
+                "operationId": "06da24a4294ab0b26c09ad09c5107d86",
                 "parameters": [
                     {
                         "name": "id",
@@ -155,7 +155,7 @@
                 ],
                 "summary": "Excluir usuário",
                 "description": "Remove um usuário do sistema com base no ID informado.",
-                "operationId": "98685aa266817a062f8ac22639e51d86",
+                "operationId": "2e00efe8eb8594602c40259061925550",
                 "parameters": [
                     {
                         "name": "id",
@@ -201,7 +201,7 @@
                 ],
                 "summary": "Atualizar usuário",
                 "description": "Atualiza os dados de um usuário com base no ID informado.",
-                "operationId": "77fb5956d775c0ccd1344c9502c7e0ca",
+                "operationId": "10e6cc6e14a6c4f82d2dfec112651dd9",
                 "parameters": [
                     {
                         "name": "id",
@@ -270,14 +270,14 @@
                 ]
             }
         },
-        "/api/admin/usuarios/{id}/banir": {
+        "/api/admin/users/{id}/ban": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Banir usuário",
                 "description": "Bloqueia o acesso de um usuário ao sistema.",
-                "operationId": "47f7ae593178a285b2ec8b9b25c357f4",
+                "operationId": "7de3f88cbca6b4f9c06805496be48c83",
                 "parameters": [
                     {
                         "name": "id",
@@ -318,14 +318,14 @@
                 ]
             }
         },
-        "/api/admin/usuarios/{id}/promover": {
+        "/api/admin/users/{id}/promote": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Promover usuário",
                 "description": "Concede privilégios de administrador a um usuário.",
-                "operationId": "c19374b991af6f8ecfc1b346ecb7f957",
+                "operationId": "42f3f44c975659ab51c0ac83c8c2c103",
                 "parameters": [
                     {
                         "name": "id",
@@ -366,14 +366,14 @@
                 ]
             }
         },
-        "/api/admin/usuarios/{id}/rebaixar": {
+        "/api/admin/users/{id}/demote": {
             "patch": {
                 "tags": [
                     "Admin"
                 ],
                 "summary": "Remover privilégios de administrador",
                 "description": "Remove os privilégios de administrador de um usuário.",
-                "operationId": "2927e1509f36303db45f639ab9d3774f",
+                "operationId": "705e76b36f261aa46df724c5d7752e79",
                 "parameters": [
                     {
                         "name": "id",
@@ -464,11 +464,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Verification code sent to your email."
-                                        },
-                                        "code": {
-                                            "description": "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos",
-                                            "type": "string",
-                                            "example": "671573"
                                         }
                                     },
                                     "type": "object"
@@ -542,11 +537,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Two-factor authentication code sent to your email."
-                                        },
-                                        "code": {
-                                            "description": "Código temporário de autenticação em dois fatores (6 dígitos), válido por alguns minutos",
-                                            "type": "string",
-                                            "example": "303081"
                                         }
                                     },
                                     "type": "object"
@@ -705,14 +695,13 @@
                                 "schema": {
                                     "properties": {
                                         "success": {
-                                            "description": "Indica se a operação foi bem-sucedida",
                                             "type": "boolean",
                                             "example": true
                                         },
                                         "message": {
                                             "description": "Mensagem de retorno da operação",
                                             "type": "string",
-                                            "example": "Logout realizado com sucesso."
+                                            "example": "Logged out successfully."
                                         }
                                     },
                                     "type": "object"
@@ -771,11 +760,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Password reset email sent. Please check your inbox."
-                                        },
-                                        "token": {
-                                            "description": "Token temporário para redefinição de senha",
-                                            "type": "string",
-                                            "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
                                     },
                                     "type": "object"
@@ -895,11 +879,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Password reset token sent to your email."
-                                        },
-                                        "token": {
-                                            "description": "Token temporário de redefinição de senha",
-                                            "type": "string",
-                                            "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
                                     },
                                     "type": "object"
@@ -978,11 +957,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Account created. Please check your email for verification."
-                                        },
-                                        "token": {
-                                            "description": "Token temporário de verificação de e-mail. Utilize em `/email/verify`",
-                                            "type": "string",
-                                            "example": "5f44b18f095a512486a88b664a0e0189a517b61b0867b442884fe32d69d8023e"
                                         }
                                     },
                                     "type": "object"

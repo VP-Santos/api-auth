@@ -26,30 +26,30 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn($request, $e) => $request->is('api/*'));
 
-        // $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'error_code' => 'METHOD_NOT_ALLOWED',
-        //         'message' => 'HTTP method not allowed for this route.',
-        //     ], 405);
-        // });
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'METHOD_NOT_ALLOWED',
+                'message' => 'HTTP method not allowed for this route.',
+            ], 405);
+        });
 
-        // $exceptions->render(function (RouteNotFoundException $e, Request $request) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'error_code' => 'ROUTE_NOT_FOUND',
-        //         'message' => 'Route not found.',
-        //     ], 404);
-        // });
+        $exceptions->render(function (RouteNotFoundException $e, Request $request) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'ROUTE_NOT_FOUND',
+                'message' => 'Route not found.',
+            ], 404);
+        });
 
-        // $exceptions->render(function (QueryException $e, Request $request) {
+        $exceptions->render(function (QueryException $e, Request $request) {
 
-        //     return response()->json([
-        //         'success' => false,
-        //         'error_code' => 'DATABASE_ERROR',
-        //         'message' => 'A technical problem occurred.',
-        //     ], 500);
-        // });
+            return response()->json([
+                'success' => false,
+                'error_code' => 'DATABASE_ERROR',
+                'message' => 'A technical problem occurred.',
+            ], 500);
+        });
 
     })
     ->create();

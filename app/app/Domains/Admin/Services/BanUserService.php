@@ -11,15 +11,17 @@ class BanUserService
 {
     public function __construct(
         protected PreventSelfActionService $selfAction,
-        protected BanUserAction $banUser,
+        protected BanUserAction $banUserAction,
         protected UnBanUserAction $unBanUserAction,
     ) {}
 
+
+    //TODO criar a logica para verificar se já foi realizado a ação
     public function ban(int $id)
     {
         $this->selfAction->check(request()->user(), $id);
 
-        return $this->banUser->execute($id);
+        return $this->banUserAction->execute($id);
     }
     public function unBan(int $id)
     {

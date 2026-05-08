@@ -3,13 +3,8 @@
 namespace App\Domains\Admin\Services;
 
 use App\Domains\Admin\Actions\{
-    BanUserAction,
     DeleteUserAction,
-    DemoteUserAction,
     GetAllUsersAction,
-    GetUserAction,
-    PromoteUserAction,
-    UnBanUserAction,
     UpdateUserAction
 };
 use App\Exceptions\BodyNotFoundException;
@@ -19,19 +14,12 @@ class AdminUserService
 {
     public function __construct(
         protected UserRepository $repository,
-        protected GetUserAction $getUser,
-        protected GetAllUsersAction $getAllUsers,
-        protected UpdateUserAction $updateUser,
-        protected DeleteUserAction $deleteUser,
-        protected BanUserAction $banUser,
-        protected UnBanUserAction $unBanUserAction,
-        protected PromoteUserAction $promoteUser,
-        protected DemoteUserAction $demoteUserAction,
+        protected GetAllUsersAction $getAllUsersAction,
+        protected UpdateUserAction $updateUserAction,
+        protected DeleteUserAction $deleteUserAction,
         protected PreventSelfActionService $selfAction,
     ) {}
 
-
-    /** */
     public function updateUser(int $id, array $data)
     {   
 
@@ -41,19 +29,19 @@ class AdminUserService
         
         $this->selfAction->check(request()->user(), $id);
 
-        return $this->updateUser->execute($id, $data);
+        return $this->updateUserAction->execute($id, $data);
     }
 
     public function deleteUser(int $id)
     {
         $this->selfAction->check(request()->user(), $id);
 
-        return $this->deleteUser->execute($id);
+        return $this->deleteUserAction->execute($id);
     }
 
     public function getAllUsers()
     {
-        return $this->getAllUsers->execute();
+        return $this->getAllUsersAction->execute();
     }
     public function getUser(int $id)
     {

@@ -3,29 +3,32 @@
 namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Admin\Http\Requests\FormUpdateUserRequest;
+use App\Domains\Admin\Http\Resources\AdminResource;
 use App\Domains\Admin\Services\AdminUserService;
 use App\Domains\Admin\Services\BanUserService;
 use App\Domains\Admin\Services\PrometeUserService;
+use App\Traits\ApiResponse;
 
 class AdminController
 {
+
+    use ApiResponse;
     public function __construct(
         public AdminUserService $adminUserServce,
         public BanUserService $banUserService,
-        public PrometeUserService $prometeUserService 
+        public PrometeUserService $prometeUserService
     ) {}
 
-    
+
     public function getAllUsers()
     {
 
         $all = $this->adminUserServce->getAllUsers();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Users retrieved successfully.',
-            'users' => $all
-        ], 200);
+        return $this->success(
+            'Users retrieved successfully.',
+            AdminResource::collection($all)
+        );
     }
 
 
@@ -33,11 +36,10 @@ class AdminController
     {
         $user = $this->adminUserServce->getUser($id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User retrieved successfully.',
-            'user' => $user
-        ], 200);
+        return $this->success(
+            'User retrieved successfully.',
+            new AdminResource($user)
+        );
     }
 
 
@@ -47,65 +49,65 @@ class AdminController
 
         $user = $this->adminUserServce->updateUser($id, $data);
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$user->user_name} updated successfully.",
-            'data'      => $user,
-        ], 200);
+        return $this->success(
+            "User {$user->name} updated successfully.",
+            new AdminResource($user)
+        );
     }
 
-    /**
-     * Summary of deleteUser
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function deleteUser(int $id)
     {
-        $user_name = $this->adminUserServce->deleteUser($id);
+        $user = $this->adminUserServce->deleteUser($id);
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$user_name} deleted successfully.",
-        ], 200);
+        return $this->success(
+            "User {$user->name} deleted successfully.",
+            new AdminResource($user)
+
+        );
     }
 
+
+    //TODO colocar regra para banir uma unica vez e para as demais funções abaixo
     public function banUser(int $id)
     {
         $user = $this->banUserService->ban($id);
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$user->user_name} banned successfully.",
-        ], 200);
+        return $this->success(
+            "User {$user->name} banned successfully.",
+            new AdminResource($user)
+
+        );
     }
     public function unBanUser(int $id)
     {
         $user = $this->banUserService->unBan($id);
+        
+        return $this->success(
+            "User {$user->name} banned successfully.",
+            new AdminResource($user)
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$user->user_name} banned successfully.",
-        ], 200);
+        );
     }
 
     public function promoteUser(int $id)
     {
         $user = $this->prometeUserService->promote($id);
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$user->user_name} promoted to admin successfully.",
-        ], 200);
+        return $this->success(
+            "User {$user->name} promoted to admin successfully.",
+            new AdminResource($user)
+
+        );
     }
 
 
     public function demoteUser(int $id)
     {
-        $id = $this->prometeUserService->demote($id);
+        $user = $this->prometeUserService->demote($id);
 
-        return response()->json([
-            'success'   => true,
-            'message'   => "User {$id} demoted to user successfully.",
-        ], 200);
+        return $this->success(
+            "User {$user->name} demoted to user successfully.",
+            new AdminResource($user)
+        );
     }
 }

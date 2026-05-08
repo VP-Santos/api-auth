@@ -45,6 +45,6 @@ class UserRepository implements RepositoryInterface
 
         $user->delete();
 
-        return $user->id;
+        return $user;
     }
 }
