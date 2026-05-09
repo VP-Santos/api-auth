@@ -2,6 +2,7 @@
 
 namespace App\Domains\Admin\Actions;
 
+use App\Models\User;
 use App\Repositories\UserRepository;
 
 class DeleteUserAction
@@ -9,9 +10,9 @@ class DeleteUserAction
     public function __construct(
         protected UserRepository $repository,
     ) {}
-    public function execute(int $id)
+    public function execute(User $user)
     {
-        $user = $this->repository->delete($id);
+        $user = $this->repository->delete($user);
         
         return $user;
     }

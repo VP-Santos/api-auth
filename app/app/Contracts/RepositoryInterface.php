@@ -2,13 +2,15 @@
 
 namespace App\Contracts;
 
+use App\Models\User;
+
 interface RepositoryInterface
 {
     public function all();
 
     public function findOrFail(int $id);
 
-    public function update(int $id, array $data);
+    public function update(User $user, array $data);
 
-    public function delete(int $id);
+    public function delete(User $user);
 }

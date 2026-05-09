@@ -2,22 +2,20 @@
 
 namespace App\Domains\Admin\Actions;
 
+use App\Domains\Admin\Enums\UserAccessLevel;
+use App\Models\User;
 use App\Repositories\UserRepository;
 
 class DemoteUserAction
 {
-    const ROLE_BASIC = 'basic';
-
     public function __construct(
         protected UserRepository $repository
     ) {}
 
-    public function execute(int $id)
+    public function execute(User $user)
     {
-        $data = ['access_level' => self::ROLE_BASIC];
+        $data = ['access_level' => UserAccessLevel::BASIC->value];
 
-        $user = $this->repository->update($id, $data);
-
-        return $user;
+        return $this->repository->update($user, $data);
     }
 }

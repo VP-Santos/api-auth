@@ -26,8 +26,6 @@ class UserEndpoints
                             new OA\Property(property: "id", type: "integer", example: 1),
                             new OA\Property(property: "user_name", type: "string", example: "John"),
                             new OA\Property(property: "email", type: "string", example: "john@example.com"),
-                            new OA\Property(property: "access_level", type: "string", example: "user"),
-                            new OA\Property(property: "is_banned", type: "boolean", example: false),
                         ])
                     ]
                 )
@@ -62,7 +60,11 @@ class UserEndpoints
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
                         new OA\Property(property: "message", type: "string", example: "User data updated successfully."),
-                        new OA\Property(property: "data", type: "object")
+                        new OA\Property(property: "data", type: "object", properties: [
+                            new OA\Property(property: "id", type: "integer", example: 1),
+                            new OA\Property(property: "user_name", type: "string", example: "John"),
+                            new OA\Property(property: "email", type: "string", example: "john@example.com"),
+                        ])
                     ]
                 )
             )

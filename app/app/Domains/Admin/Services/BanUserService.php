@@ -7,39 +7,44 @@ use App\Domains\Admin\Actions\{
     UnBanUserAction
 };
 use App\Repositories\UserRepository;
-use Exception;
 
-class BanUserService extends BaseService
+class BanUserService extends UserActionService
 {
     public function __construct(
-        protected UserRepository $userRepository,
+        UserRepository $userRepository,
         protected BanUserAction $banUserAction,
         protected UnBanUserAction $unBanUserAction,
-    ) {}
 
+    ) {
+        parent::__construct($userRepository);
+    }
 
-    //TODO criar a logica para verificar se já foi realizado a ação
     public function ban(int $id)
     {
-        $this->targetUserAction($id);
-
         $user = $this->userRepository->findOrFail($id);
 
-        if ($user->is_banned == 1) {
-            throw new \Exception('This action has already been performed on this user.');
-        }
-        return $this->banUserAction->execute($id);
+        $this->ensureUserIsNotBanned($user);
+
+
+        return $this->executeAction(
+            $user,
+            field: 'is_banned',
+            expectedValue: true,
+            action: $this->banUserAction,
+            message: 'User is already banned.'
+        );
     }
+
     public function unBan(int $id)
     {
-        $this->targetUserAction($id);
-
         $user = $this->userRepository->findOrFail($id);
 
-        if ($user->is_banned != 1) {
-            dd('não tem bam');
-        }
-        return $this->unBanUserAction->execute($id);
+        return $this->executeAction(
+            $user,
+            field: 'is_banned',
+            expectedValue: false,
+            action: $this->unBanUserAction,
+            message: 'User is not banned.'
+        );
     }
-
 }

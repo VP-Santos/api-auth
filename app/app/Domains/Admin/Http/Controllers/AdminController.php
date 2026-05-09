@@ -5,19 +5,13 @@ namespace App\Domains\Admin\Http\Controllers;
 use App\Domains\Admin\Http\Requests\FormUpdateUserRequest;
 use App\Domains\Admin\Http\Resources\AdminResource;
 use App\Domains\Admin\Services\AdminUserService;
-use App\Domains\Admin\Services\BanUserService;
-use App\Domains\Admin\Services\PrometeUserService;
-use App\Models\User;
-use App\Traits\ApiResponse;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\Controller;
 
-class AdminController
+
+class AdminController extends Controller
 {
-    use ApiResponse;
     public function __construct(
         public AdminUserService $adminUserServce,
-        public BanUserService $banUserService,
-        public PrometeUserService $prometeUserService
     ) {}
 
 
@@ -67,50 +61,4 @@ class AdminController
         );
     }
 
-
-    //TODO colocar regra para banir uma unica vez e para as demais funções abaixo
-    public function banUser(int $id)
-    {
-
-
-        $user = $this->banUserService->ban($id);
-
-        return $this->success(
-            "User {$user->name} banned successfully.",
-            new AdminResource($user)
-
-        );
-    }
-    public function unBanUser(int $id)
-    {
-        $user = $this->banUserService->unBan($id);
-
-        return $this->success(
-            "User {$user->name} banned successfully.",
-            new AdminResource($user)
-
-        );
-    }
-
-    public function promoteUser(int $id)
-    {
-        $user = $this->prometeUserService->promote($id);
-
-        return $this->success(
-            "User {$user->name} promoted to admin successfully.",
-            new AdminResource($user)
-
-        );
-    }
-
-    public function demoteUser(int $id)
-    {
-
-        $user = $this->prometeUserService->demote($id);
-
-        return $this->success(
-            "User {$user->name} demoted to user successfully.",
-            new AdminResource($user)
-        );
-    }
 }

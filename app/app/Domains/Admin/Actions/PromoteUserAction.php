@@ -2,24 +2,20 @@
 
 namespace App\Domains\Admin\Actions;
 
+use App\Domains\Admin\Enums\UserAccessLevel;
+use App\Models\User;
 use App\Repositories\UserRepository;
 
 class PromoteUserAction
 {
-
-    const ROLE_ADMIN = 'admin';
-
-
     public function __construct(
         protected UserRepository $repository
     ) {}
 
-    public function execute(int $id)
+    public function execute(User $user)
     {
-        $data = ['access_level' => self::ROLE_ADMIN];
+        $data = ['access_level' => UserAccessLevel::ADMIN->value];
 
-        $user = $this->repository->update($id, $data);
-
-        return $user;
+        return $this->repository->update($user, $data);
     }
 }

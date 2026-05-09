@@ -4,7 +4,7 @@ namespace App\Domains\Admin\OpenApi;
 
 use OpenApi\Attributes as OA;
 
-class AdminEndpoints
+class AdminUserEndpoints
 {
     #[OA\Get(
         path: "/api/admin/users",
@@ -152,102 +152,5 @@ class AdminEndpoints
         ]
     )]
 
-    //TODO criar um edpoint para unbanUser
     public function deleteUser() {}
-
-    #[OA\Patch(
-        path: "/api/admin/users/{id}/ban",
-        summary: "Banir usuário",
-        description: "Bloqueia o acesso de um usuário ao sistema.",
-        tags: ["Admin"],
-        security: [
-            ["sanctumAuth" => []]
-        ],
-        parameters: [
-            new OA\Parameter(
-                name: "id",
-                in: "path",
-                required: true,
-                description: "ID do usuário",
-                schema: new OA\Schema(type: "integer")
-            )
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Usuário banido com sucesso.",
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "Usuário banido com sucesso.")
-                    ]
-                )
-            )
-        ]
-    )]
-    public function banUser() {}
-
-    #[OA\Patch(
-        path: "/api/admin/users/{id}/promote",
-        summary: "Promover usuário",
-        description: "Concede privilégios de administrador a um usuário.",
-        tags: ["Admin"],
-        security: [
-            ["sanctumAuth" => []]
-        ],
-        parameters: [
-            new OA\Parameter(
-                name: "id",
-                in: "path",
-                required: true,
-                description: "ID do usuário",
-                schema: new OA\Schema(type: "integer")
-            )
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Usuário promovido com sucesso.",
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "Usuário promovido para administrador com sucesso.")
-                    ]
-                )
-            )
-        ]
-    )]
-    public function promoteUser() {}
-
-    #[OA\Patch(
-        path: "/api/admin/users/{id}/demote",
-        summary: "Remover privilégios de administrador",
-        description: "Remove os privilégios de administrador de um usuário.",
-        tags: ["Admin"],
-        security: [
-            ["sanctumAuth" => []]
-        ],
-        parameters: [
-            new OA\Parameter(
-                name: "id",
-                in: "path",
-                required: true,
-                description: "ID do usuário",
-                schema: new OA\Schema(type: "integer")
-            )
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "Privilégios de administrador removidos com sucesso.",
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: "success", type: "boolean", example: true),
-                        new OA\Property(property: "message", type: "string", example: "Usuário rebaixado com sucesso.")
-                    ]
-                )
-            )
-        ]
-    )]
-    public function demoteUser() {}
 }

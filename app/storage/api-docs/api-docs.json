@@ -12,6 +12,198 @@
         }
     ],
     "paths": {
+        "/api/admin/users/{id}/ban": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Banir usuário",
+                "description": "Bloqueia o acesso de um usuário ao sistema.",
+                "operationId": "0d77cfead6a150abcc38c75d10d82bc2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário banido com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User {id} banned successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users/{id}/unban": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Remover banimento do usuário",
+                "description": "Remover bloquei de ban do usuário solicitado",
+                "operationId": "caa56c0aeeb2593ecfc1090946d69e26",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário banido com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User {id} unbanned successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users/{id}/promote": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Promover usuário",
+                "description": "Concede privilégios de administrador a um usuário.",
+                "operationId": "62cf9123fa799e427153dab0db1b6776",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário promovido com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User {name} promoted to admin successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users/{id}/demote": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Remover privilégios de administrador",
+                "description": "Remove os privilégios de administrador de um usuário.",
+                "operationId": "e3bb677ea1dc98afd6e38a2e4c9ad509",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Privilégios de administrador removidos com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User {name} demoted to user successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/users": {
             "get": {
                 "tags": [
@@ -19,7 +211,7 @@
                 ],
                 "summary": "Listar todos os usuários",
                 "description": "Retorna todos os usuários cadastrados no sistema.",
-                "operationId": "d7ec229d797fcdef58c4863a37216ae4",
+                "operationId": "d8f568d19914bc9dbd418252f8ac2513",
                 "responses": {
                     "200": {
                         "description": "Lista de usuários retornada com sucesso.",
@@ -84,7 +276,7 @@
                 ],
                 "summary": "Buscar usuário por ID",
                 "description": "Retorna os dados de um usuário específico com base no ID informado.",
-                "operationId": "06da24a4294ab0b26c09ad09c5107d86",
+                "operationId": "bd48e4cb3069fdfcd86339bdda79dd3e",
                 "parameters": [
                     {
                         "name": "id",
@@ -155,7 +347,7 @@
                 ],
                 "summary": "Excluir usuário",
                 "description": "Remove um usuário do sistema com base no ID informado.",
-                "operationId": "2e00efe8eb8594602c40259061925550",
+                "operationId": "ddae446986028daeef21fdbfb5442a65",
                 "parameters": [
                     {
                         "name": "id",
@@ -201,7 +393,7 @@
                 ],
                 "summary": "Atualizar usuário",
                 "description": "Atualiza os dados de um usuário com base no ID informado.",
-                "operationId": "10e6cc6e14a6c4f82d2dfec112651dd9",
+                "operationId": "9a641da602ab9ba20a4c525b490fd37d",
                 "parameters": [
                     {
                         "name": "id",
@@ -255,150 +447,6 @@
                                         },
                                         "data": {
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/users/{id}/ban": {
-            "patch": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Banir usuário",
-                "description": "Bloqueia o acesso de um usuário ao sistema.",
-                "operationId": "7de3f88cbca6b4f9c06805496be48c83",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do usuário",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Usuário banido com sucesso.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Usuário banido com sucesso."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/users/{id}/promote": {
-            "patch": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Promover usuário",
-                "description": "Concede privilégios de administrador a um usuário.",
-                "operationId": "42f3f44c975659ab51c0ac83c8c2c103",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do usuário",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Usuário promovido com sucesso.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Usuário promovido para administrador com sucesso."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctumAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/users/{id}/demote": {
-            "patch": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Remover privilégios de administrador",
-                "description": "Remove os privilégios de administrador de um usuário.",
-                "operationId": "705e76b36f261aa46df724c5d7752e79",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do usuário",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Privilégios de administrador removidos com sucesso.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Usuário rebaixado com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -1067,14 +1115,6 @@
                                                 "email": {
                                                     "type": "string",
                                                     "example": "john@example.com"
-                                                },
-                                                "access_level": {
-                                                    "type": "string",
-                                                    "example": "user"
-                                                },
-                                                "is_banned": {
-                                                    "type": "boolean",
-                                                    "example": false
                                                 }
                                             },
                                             "type": "object"
@@ -1175,6 +1215,20 @@
                                             "example": "User data updated successfully."
                                         },
                                         "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_name": {
+                                                    "type": "string",
+                                                    "example": "John"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },

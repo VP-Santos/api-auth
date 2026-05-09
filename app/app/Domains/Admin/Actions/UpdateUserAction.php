@@ -11,13 +11,13 @@ class UpdateUserAction
     public function __construct(
         protected UserRepository $repository,
     ) {}
-    public function execute(int $id, array $data): User
+    public function execute(User $user, array $data): User
     {
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 
-        $user = $this->repository->update($id, $data);
+        $user = $this->repository->update($user, $data);
         
         return $user;
     }

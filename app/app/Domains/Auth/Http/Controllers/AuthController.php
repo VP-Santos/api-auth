@@ -53,7 +53,6 @@ class AuthController
         );
     }
 
-    //TODO - verificar se foi enviado e bloquar a rota
     public function login(FormLoginRequest $request)
     {
         $this->authService->login($request->validated());

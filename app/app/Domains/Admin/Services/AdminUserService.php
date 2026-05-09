@@ -8,31 +8,36 @@ use App\Domains\Admin\Actions\{
     UpdateUserAction
 };
 use App\Exceptions\BodyNotFoundException;
+use App\Repositories\UserRepository;
 
 class AdminUserService extends BaseService
 {
     public function __construct(
+        UserRepository $userRepository,
         protected GetAllUsersAction $getAllUsersAction,
         protected UpdateUserAction $updateUserAction,
         protected DeleteUserAction $deleteUserAction,
-    ) {}
-
+    ) {
+        parent::__construct($userRepository);
+    }
     public function updateUser(int $id, array $data)
     {
-        $this->targetUserAction($id);
+        $user = $this->authorizeUserActionById($id);
+
+        $this->ensureUserIsNotBanned($user);
 
         if (empty($data)) {
             throw new BodyNotFoundException();
         }
 
-        return $this->updateUserAction->execute($id, $data);
+        return $this->updateUserAction->execute($user, $data);
     }
 
     public function deleteUser(int $id)
     {
-        $this->targetUserAction($id);
+        $user = $this->authorizeUserActionById($id);
 
-        return $this->deleteUserAction->execute($id);
+        return $this->deleteUserAction->execute($user);
     }
 
     public function getAllUsers()
