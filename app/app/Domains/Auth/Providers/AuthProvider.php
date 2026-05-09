@@ -14,7 +14,7 @@ use App\Domains\Auth\Listeners\{
     SendTwoFactorCode
 };
 
-class EventServiceProvider extends ServiceProvider
+class AuthProvider extends ServiceProvider
 {
     protected $listen = [
         EmailVerificationRequested::class => [

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -25,6 +26,14 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn($request, $e) => $request->is('api/*'));
+
+        $exceptions->render(function (AccessDeniedHttpException  $e, Request $request) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'FORBIDDEN',
+                'message' => 'You are not allowed to perform this action.',
+            ], 403);
+        });
 
         $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
             return response()->json([
@@ -50,6 +59,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message' => 'A technical problem occurred.',
             ], 500);
         });
+        $exceptions->render(function (Throwable $e, Request $request) {
 
+            return response()->json([
+                'success' => false,
+                'error_code' => 'exception',
+                'message' => $e->getMessage(),
+            ], 409);
+        });
     })
     ->create();

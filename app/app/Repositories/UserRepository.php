@@ -21,9 +21,9 @@ class UserRepository implements RepositoryInterface
         return $this->model->all();
     }
 
-    public function find(int $id): ?User
+    public function findOrFail(int $id): ?User
     {
-        $user = $this->model->find($id);
+        $user = $this->model->findOrFail($id);
         
         if(!$user){
             throw new UserNotFoundException($id);
@@ -33,7 +33,7 @@ class UserRepository implements RepositoryInterface
 
     public function update(int $id, array $data): User
     {
-        $user = $this->find($id);
+        $user = $this->findOrFail($id);
         $user->update($data);
 
         return $user->refresh();
@@ -41,7 +41,7 @@ class UserRepository implements RepositoryInterface
 
     public function delete(int $id): User
     {
-        $user = $this->find($id);
+        $user = $this->findOrFail($id);
 
         $user->delete();
 

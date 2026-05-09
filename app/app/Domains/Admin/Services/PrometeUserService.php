@@ -7,23 +7,27 @@ use App\Domains\Admin\Actions\{
     DemoteUserAction,
     PromoteUserAction
 };
+use App\Repositories\UserRepository;
 
-class PrometeUserService
+class PrometeUserService extends BanUserService
 {
+
     public function __construct(
-        protected PreventSelfActionService $selfAction,
+        protected UserRepository $userRepository,
         protected PromoteUserAction $promoteUserAction,
         protected DemoteUserAction $demoteUserAction,
     ) {}
 
     public function promote(int $id)
     {
-        $this->selfAction->check(request()->user(), $id);
+        $this->targetUserAction($id);
+
         return $this->promoteUserAction->execute($id);
     }
     public function demote(int $id)
     {
-        $this->selfAction->check(request()->user(), $id);
+        $this->targetUserAction($id);
+
         return $this->demoteUserAction->execute($id);
     }
 }

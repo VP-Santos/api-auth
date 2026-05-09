@@ -5,17 +5,16 @@ namespace App\Domains\Users\Http\Controllers;
 use App\Domains\Users\Http\Requests\FormUpdateUser;
 use App\Domains\Users\Actions\{
     DeleteMeAction,
-    ShowMeAction,
     UpdateMeAction
 };
 use App\Domains\Users\Http\Requests\FormUpdatePasswordRequest;
+use App\Domains\Users\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function __construct(
-        public ShowMeAction $showMeAction,
         public UpdateMeAction $updateMeAction,
         public DeleteMeAction $deleteMeAction,
     ) {}
@@ -23,37 +22,37 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $response = $this->showMeAction->execute($user);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User retrieved successfully.',
-            'data' => $response
-        ], 200);
+        return $this->success(
+            'User retrieved successfully',
+            new UserResource($user)
+        );
     }
 
     public function updateMe(FormUpdateUser $request)
     {
         $user = $request->user();
-        $updatedUser = $this->updateMeAction->execute($user, $request->validated());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User data updated successfully.',
-            'data' => $updatedUser
-        ], 200);
+        $updatedUser = $this->updateMeAction->execute(
+            $user,
+            $request->validated()
+        );
+
+        return $this->success(
+            'User data updated successfully.',
+            new UserResource($updatedUser)
+        );
     }
 
     public function updatePassword(FormUpdatePasswordRequest $request)
     {
         $user = $request->user();
 
-        $this->updateMeAction->execute($user, $request->validated());
+        $this->updateMeAction->execute(
+            $user,
+            $request->validated()
+        );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Password updated successfully.'
-        ], 200);
+        return $this->success('Password updated successfully.');
     }
 
     public function deleteMe(Request $request)
@@ -62,9 +61,6 @@ class UserController extends Controller
 
         $this->deleteMeAction->execute($user);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Your account deleted successfully.'
-        ], 200);
+        return $this->success('Your account deleted successfully.');
     }
 }

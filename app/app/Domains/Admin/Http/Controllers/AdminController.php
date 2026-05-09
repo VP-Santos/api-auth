@@ -7,11 +7,12 @@ use App\Domains\Admin\Http\Resources\AdminResource;
 use App\Domains\Admin\Services\AdminUserService;
 use App\Domains\Admin\Services\BanUserService;
 use App\Domains\Admin\Services\PrometeUserService;
+use App\Models\User;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Gate;
 
 class AdminController
 {
-
     use ApiResponse;
     public function __construct(
         public AdminUserService $adminUserServce,
@@ -70,6 +71,8 @@ class AdminController
     //TODO colocar regra para banir uma unica vez e para as demais funções abaixo
     public function banUser(int $id)
     {
+
+
         $user = $this->banUserService->ban($id);
 
         return $this->success(
@@ -81,7 +84,7 @@ class AdminController
     public function unBanUser(int $id)
     {
         $user = $this->banUserService->unBan($id);
-        
+
         return $this->success(
             "User {$user->name} banned successfully.",
             new AdminResource($user)
@@ -100,9 +103,9 @@ class AdminController
         );
     }
 
-
     public function demoteUser(int $id)
     {
+
         $user = $this->prometeUserService->demote($id);
 
         return $this->success(
