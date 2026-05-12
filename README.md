@@ -1,19 +1,69 @@
 
-# Introdução
+# API Auth
 
-Este é o meu primeiro projeto usando o framework Laravel, montado de forma a ser consumido como uma API. Neste projeto, busco mostrar na prática todo o conhecimento que adquiri com o meu primeiro trabalho em desenvolvimento. Contudo, este projeto também tem o objetivo de servir como aprendizado sobre o ecossistema de uma API de autenticação.
+API REST desenvolvida em Laravel 12 com arquitetura modular baseada em domínios, autenticação via Sanctum, filas com Redis e ambiente totalmente containerizado com Docker.
 
-A estrutura da aplicação foi construída visando separar as responsabilidades por domínios. Sendo assim, o projeto possui três domínios:
+# Sobre o projeto
 
-- Auth 
-- Admin
+Este projeto foi desenvolvido com o objetivo de demonstrar boas práticas no desenvolvimento de APIs utilizando PHP e Laravel, com foco em:
+
+- escalabilidade
+- manutenibilidade
+- desacoplamento
+- organização por domínio
+- responsabilidade única
+
+A aplicação segue uma arquitetura modular baseada em domínios de negócio, permitindo maior isolamento entre regras de negócio e facilitando a evolução futura do sistema.
+
+Os domínios atualmente implementados são:
+
+- Auth
 - Users
+- Admin
 
-Foi montado de forma a assegurar boa escalabilidade e manutenção no código. As rotas do projeto foram estruturadas de acordo com os princípios REST.
+estrutura do diretorio
 
-O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Laravel e outras tecnologias, como Docker e bancos de dados, tornando meu aprendizado mais robusto. Além disso, visa compreender como funciona um serviço de autenticação com envio de e-mail (ex.: confirmação, recuperação de senha, etc.), com rotas para criação de usuários e rotas designadas para administradores.
+```bash
+app/
+└── Domains/
+    ├── Auth/
+    ├── Users/
+    └── Admin/
+```
 
-# Stack
+Cada domínio possui sua própria organização interna de responsabilidades, contendo controllers, services, actions, requests, policies e exceptions isoladas por contexto de negócio.
+
+A API segue os padrões RESTful, utilizando convenções HTTP, respostas padronizadas e separação clara de responsabilidades.
+
+# Arquitetura da aplicação
+
+O projeto foi estruturado visando baixo acoplamento e alta coesão entre os módulos da aplicação.
+
+## Principais conceitos aplicados
+
+- Arquitetura modular por domínio
+- Separação de responsabilidades
+- Clean Code
+- Tratamento centralizado de exceções
+- Padronização de respostas da API
+
+## Estrutura da aplicação
+
+A aplicação é organizada em camadas para facilitar manutenção e evolução do código:
+
+- Services
+- Actions
+- Repositories
+- Policies
+- Middleware
+- Form Requests
+- Events
+- Listeners
+- Jobs
+- API Resources
+- Custom Exceptions
+
+# Tecnologias utilizadas
 
 - Linguagem:  PHP 8.4
 - Framework: Laravel 12
@@ -24,6 +74,17 @@ O foco desta API é aprimorar meu conhecimento no desenvolvimento com PHP, Larav
 - Servidor Web: Nginx
 - Ferramentas: Mailhog (SMTP Test) & Supervisor
 - Documentação: Swagger/OpenAPI 
+
+# Decisões arquiteturais
+
+Algumas decisões foram tomadas visando desacoplamento e facilidade de manutenção:
+
+- Uso de Services para centralização de regras de negócio
+- Actions para responsabilidades específicas
+- Repositories para abstração da camada de persistência
+- Policies para autorização desacoplada dos controllers
+- API Resources para padronização das respostas
+- Events e Jobs para processamento assíncrono
 
 # Preparando o ambiente
 
@@ -39,13 +100,13 @@ cd api-auth
 ```
 
 ### Ambiente de desenvolvimento
-O projeto foi desenhado para ser "Plug and Play". Você tem duas formas de configurar os serviços:
+O ambiente foi projetado para funcionar de forma "Plug and Play", reduzindo configurações manuais durante o setup inicial.
 
 ### Opção A: Usando os containers do projeto (Padrão)
 Basta rodar o comando de subida. O sistema criará o .env automaticamente com as credenciais padrão dos containers (MySQL, Redis, Mailhog).
 
 ### Opção B: Usando seus próprios serviços (Local/Externo)
-Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando em sua maquina ou externo, siga os passos abaixo.
+Se sua máquina já possui MySQL, Redis ou algum serviço SMTP rodando localmente ou em serviços externos, siga os passos abaixo.
 
 #### passo 1: arquivo .env.building
 Edite o arquivo .env.building para ajustar as configurações de conexão dos serviços que tenha localmente:
@@ -120,7 +181,7 @@ volumes:
   redis_data:
 ```
 
-Assim que configurado o durante o runtime do container onde são injetado suas dependências será criado o .env com as configurações desejadas, de forma automatizada via arquivo entrypoint
+Assim que configurado o durante o runtime do container onde as dependências são injetadas será criado o .env com as configurações desejadas, de forma automatizada via arquivo entrypoint
 
 #### passo 3: Seus serviços extras (MySql, Redis ou SMTP) estão em containers
 
@@ -168,7 +229,7 @@ Containers essenciais:
 - api_nginx
 - api_php
 
-Se estiver usado a configuração Padrao do projeto será visualizado também os seguintes serviços. Containers extras (opcionais):
+Caso esteja utilizando a configuração padrão do projeto será visualizado também os seguintes serviços. Containers extras (opcionais):
 
 - api_mysql
 - api_mailhog
